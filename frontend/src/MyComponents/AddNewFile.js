@@ -195,5 +195,118 @@
 
 // export default AddNewFile;
 
+// import './FileUpload.css'
+// import {faFileUpload, faUpload} from '@fortawesome/free-solid-svg-icons'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import {Container, Row, Col} from 'react-bootstrap'
+// import {Link, withRouter} from 'react-router-dom'
+// import {faFileExcel} from '@fortawesome/free-solid-svg-icons'
+// import {faDatabase} from '@fortawesome/free-solid-svg-icons'
+// import {faFileCsv} from '@fortawesome/free-solid-svg-icons'
+import {useState} from 'react';
 
+const AddNewFile = () => {
+
+  const [selectedFile, setSelectedFile] = useState();
+	const [isSelected, setIsSelected] = useState(false);
+
+  const changeHandler = (e) => {
+    setSelectedFile(e.target.files[0]);
+    setIsSelected(true);
+  };
+
+  const handleSubmission = () => {
+    const formData = new FormData();
+    formData.append('File', selectedFile);
+    console.log(selectedFile);
+    console.log(formData);
+    fetch('http://localhost:', 
+    {
+      method: 'POST',
+      body: formData,
+    }).then((response) => response.json())
+      .then((result) => {
+        console.log('Success', result);
+      })
+      .catch((error) => {
+        console.error('Error', error);
+      });
+  };
+
+    return(
+        <div className="fileUpload">
+           {/* <div class="wrapper">
+             <div  class="file-upload">
+                  <input  className="input" type="file" />
+                  <FontAwesomeIcon  size="xs" icon={faUpload}></FontAwesomeIcon>
+              </div>
+              <button >Upload!</button>
+            </div> */}
+             <div>
+                <input type="file" onChange={changeHandler} />
+                {isSelected ? (
+                  <div>
+                       <p>Filename: {selectedFile.name}</p>
+                        <p>Filetype: {selectedFile.type}</p>
+                        <p>Size in bytes: {selectedFile.size}</p>
+                  </div>
+                ):(
+                  <p className="text-center"> Upload A JSON File</p>
+                )}
+                <button onClick={handleSubmission}>
+                  Submit
+                </button>
+            </div>
+            {/* <p className="text-center"> Upload A JSON File</p> */}
+//             <Container>
+//                 <Row>
+//                     <Col lg="4">
+//                        <div className="box">
+//                            <Link><FontAwesomeIcon size="2x" className="fas" icon={faFileExcel} ></FontAwesomeIcon></Link>
+//                        </div>
+//                        <ul className="navbar-nav">
+//                           <li className="nav-item">
+//                             <div className="uploadButton" >
+//                                <Link to="/file-upload" className="nav-link">
+//                                      Convert To Excel
+//                                 </Link>
+//                             </div>
+//                            </li>
+//                          </ul>
+//                     </Col>
+//                     <Col lg="4">
+//                         <div className="box">
+//                            <Link><FontAwesomeIcon size="2x" className="fas" icon={faFileCsv} ></FontAwesomeIcon></Link>
+//                        </div>
+//                          <ul className="navbar-nav">
+//                           <li className="nav-item">
+//                             <div className="uploadButton">
+//                                <Link to="/file-upload" className="nav-link">
+//                                      Convert To CSV
+//                                 </Link>
+//                             </div>
+//                            </li>
+//                          </ul>
+//                     </Col>
+//                     <Col lg="4">
+//                         <div className="box">
+//                            <Link><FontAwesomeIcon size="2x" className="fas" icon={faDatabase} ></FontAwesomeIcon></Link>
+//                        </div>
+//                          <ul className="navbar-nav">
+//                           <li className="nav-item">
+//                             <div className="uploadButton" >
+//                                <Link to="/file-upload" className="nav-link">
+//                                     Save To Database
+//                                 </Link>
+//                             </div>
+//                            </li>
+//                          </ul>
+//                     </Col>
+//                 </Row>
+//             </Container>
+        </div>
+    );
+}
+
+export default AddNewFile;
 
