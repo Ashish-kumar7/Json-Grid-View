@@ -2,7 +2,7 @@ import React ,{useState} from 'react';
 import Axios from 'axios';
 
 export const AddJSON = () => {
-    const url="http://localhost:8086/addJson";
+    const url="http://127.0.0.1:5000/json";
 
     const[data,setdata]=useState({
         setJson:""
@@ -12,7 +12,7 @@ export const AddJSON = () => {
         const newdata ={...data};
         newdata[e.target.id]=e.target.value;
         setdata(newdata);
-        console.log(newdata);
+        // console.log(newdata);
     }
 
     function submit(e){
@@ -22,16 +22,15 @@ export const AddJSON = () => {
             setJson:data.setJson
         })
         .then(res=>{
-            console.log(res.data);
+            console.log(data.setJson);
         })
-        // console.log(e);
     }
 
     return (
         <>
             <h1>Add JSON</h1>
             <form onSubmit={(e)=>submit(e)}>
-                <textarea onChange={(e)=>handle(e)} id="setJson" value={data.setJson} placeholder="setJson" type="text"></textarea>
+                <textarea onChange={(e)=>handle(e)} name="setJson" id="setJson" value={data.setJson} placeholder="setJson" type="text"></textarea>
                 <button>Submit</button>
             </form>
         </>

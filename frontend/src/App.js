@@ -1,19 +1,18 @@
 // import './App.css';
-import React, { useState ,useEffect } from 'react';
 import { AddURL } from './MyComponents/AddURL';
 import { AddJSON } from './MyComponents/AddJSON';
 import { Header } from './MyComponents/Header';
 import { About } from './MyComponents/About';
-// import AddNewFile from './MyComponents/AddNewFile';
+import AddFile from './MyComponents/AddFile';
+
 function App() {
   return (
     <>
-      {/* <Router> */}
         <Header title="Json Grid Viewer"/>
         <About />
         <AddURL/>
         <AddJSON />
-        {/* <AddNewFile /> */}
+        <AddFile />
     </>
   );
 }
