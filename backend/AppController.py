@@ -6,9 +6,6 @@ from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
 from flask_cors import CORS, cross_origin
 import logging
-from jsonparser import *
-
-os.environ["SPARK_HOME"] = "E:/hadoop-env/spark-3.0.2-bin-hadoop2.7"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger('File Uploading')
@@ -24,23 +21,13 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 @app.route('/url', methods=['POST'])
 def url():
     seturl=request.json['seturl']
-    # print(requests.get(seturl).content)
-
     print(seturl)
-    print("Calling json_to_hive...")
-    json_to_hive()
-    print("json_to_hive executed!!!")
     return "post request made"
 
 # Post method for JSON
 @app.route('/json', methods=['POST'])
 def Json():
     setJson=request.json['setJson']
-    print(setJson)
-    # if(json.loads(setJson)):
-    #     print("it is valid json")
-    # else:
-    #     print("not a valid json")
     print(setJson)
     return "post request made"
 
