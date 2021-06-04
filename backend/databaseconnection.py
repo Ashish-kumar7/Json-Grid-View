@@ -1,4 +1,5 @@
 import os
+# use the Spark location of the local PC
 os.environ["SPARK_HOME"] = "E:/hadoop-env/spark-3.0.2-bin-hadoop2.7"
 
 import findspark
@@ -8,10 +9,13 @@ from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from pyspark.sql import HiveContext
 
+# call the save_to_hive() method and import the package from jsonparser import * int the file where dataframes is created 
+# to store the data to hive.
 def save_to_hive(df):
 	spark = SparkSession.builder.appName("DF from Nested JSON").getOrCreate()
 	print(spark.sparkContext.appName)
 
+    # replace the blanks with 'none'
 	df.replace('', None).show()
 
 	sc = spark.sparkContext
