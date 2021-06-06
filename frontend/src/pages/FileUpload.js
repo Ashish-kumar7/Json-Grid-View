@@ -8,20 +8,29 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import axios from "axios";
 import Button from '../components/Button'
+import {Link} from 'react-router-dom'
+var FileDownload = require('js-file-download');
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState();
+  // to check if file is selected or not
   const [isSelected, setIsSelected] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
+  // if file is selected than show the otions
   const [showOptions, setShowOptions] = useState(false);
+  // if response received , show the download button
   const [showDownload, setShowDownload] = useState(false);
+  // save download content when res received
+  const [downloadContent, setDownloadContent] = useState("");
 
+  // on selecting file
   const changeHandler = (e) => {
     setSelectedFile(e.target.files[0]);
     setIsSelected(true);
     setShowOptions(true);
   };
 
+  // on clicking any converting button
   const handleSubmission = () => {
     const formData = new FormData();
     formData.append("File", selectedFile);
@@ -66,18 +75,36 @@ const FileUpload = () => {
     //   });
     axios
       .post("http://localhost:5000/api/upload", formData, options)
-      .then((res) => {
-        console.log(res);
+      .then((response) => {
+        setDownloadContent(response.data)
+        
+        console.log(response);
         setUploadPercentage(100);
         setTimeout(() => {
           setUploadPercentage(0);
         }, 1000);
         setShowDownload(true)
+        // let url = URL.createObjectURL(new Blob([response.data]));
+        //   setDownloadUrl(url)
+        // response.blob().then((myblob) => {
+					
+				// 	// let a = document.createElement('a');
+				// 	// a.href = url;
+				// 	// a.download = 'employees.json';
+				// 	// a.click();
+				// });
+				//window.location.href = response.url;
+	
+
       })
       .catch((err) => {
         console.log(err);
         setUploadPercentage(0);
       });
+  };
+
+  const downloadFile = () => {
+    FileDownload(downloadContent, 'output.csv');
   };
 
   return (
@@ -116,9 +143,13 @@ const FileUpload = () => {
           />
         </div> 
         )}
-        {showDownload ? (<Button title={"Download"}
-              class={"downloadButton"}
-              ></Button>):<p></p>}
+        {showDownload ? (
+                
+              <Button title={"Download"}
+              class={"downloadButton"} clickFunc={downloadFile}></Button>
+              
+                ):<p></p>
+                }
         
       {/* <Footer></Footer> */}
     </div>

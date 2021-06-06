@@ -5,11 +5,13 @@ import { useState } from "react";
 import axios from 'axios'
 import { ProgressBar } from "react-bootstrap";
 import Button from '../components/Button'
+var FileDownload = require('js-file-download');
 
 const FileUrl = () => {
   const [inputUrl, setInputUrl] = useState();
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [downloadContent, setDownloadContent] = useState("");
 
   const changeHandler = (e) => {
     setInputUrl(e.target.value);
@@ -50,6 +52,7 @@ const FileUrl = () => {
     axios
     .post("http://localhost:5000/api/upload", formData, options)
     .then((res) => {
+      setDownloadContent(res.data)
       console.log(res);
       setUploadPercentage(100);
       setTimeout(() => {
@@ -62,6 +65,11 @@ const FileUrl = () => {
       setUploadPercentage(0);
     });
   };
+
+  const downloadFile = () => {
+    FileDownload(downloadContent, 'output.csv');
+  };
+
   return (
     <div className="fileUrl">
       <Navbar></Navbar>
@@ -82,7 +90,7 @@ const FileUrl = () => {
         </div> 
         )}
         {showDownload ? (<Button title={"Download"}
-              class={"downloadButton"}
+              class={"downloadButton"}  clickFunc={downloadFile}
               ></Button>):<p></p>}
     </div>
   );
