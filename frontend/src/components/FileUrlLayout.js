@@ -5,21 +5,21 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 
-const FileUrlLayout = () => {
+const FileUrlLayout = (props) => {
 return(
     <Container>
     <Row>
       <Col lg="4">
         <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
-        <Button title={"Convert to Excel"} class={"uploadButton"}></Button>
+        <Button title={"Convert to Excel"} class={"uploadButton"} clickFunc={props.buttonFunc}></Button>
       </Col>
       <Col lg="4">
         <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
-        <Button title={"Convert To CSV"} class={"uploadButton"}></Button>
+        <Button title={"Convert To CSV"} class={"uploadButton"} clickFunc={props.buttonFunc}></Button>
       </Col>
       <Col lg="4">
         <IconBox iconType={faDatabase} size={"2x"}></IconBox>
-        <Button title={"Save to Hive"} class={"uploadButton"}></Button>
+        <Button title={"Save to Hive"} class={"uploadButton"} clickFunc={props.buttonFunc}></Button>
       </Col>
     </Row>
   </Container>
