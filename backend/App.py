@@ -9,7 +9,7 @@ import pandas as pd
 import sqlalchemy
 import time
 import subprocess
-from fastparquet import write, ParquetFile
+# from fastparquet import write, ParquetFile
 
 app = Flask(__name__)
 CORS(app)
