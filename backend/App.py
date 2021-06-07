@@ -1,5 +1,5 @@
 from logging import exception
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS, cross_origin
 import json
 import urllib.request
@@ -29,6 +29,7 @@ def uploadFile():
     jsonData = {}
 
     try:
+        print("form  : " , request.form)
         startTime = time.time()
         initTime = startTime
 
@@ -90,6 +91,7 @@ def uploadFile():
         print("Time to gen xlsx : ", time.time() - startTime)
 
         # Generate SQL Database, Table
+        """
         startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
             'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
@@ -98,13 +100,15 @@ def uploadFile():
         # print("\n\nTABLE\n")
         # print(engine.execute("SELECT * FROM " + tableName).fetchall())
         sqlite_connection.close()
-
         print("Time to gen db : ", time.time() - startTime)
+        """
         startTime = time.time()
         print("Total time taken : ", startTime - initTime)
 
-        response = jsonify(message="Api server is running")
-        return response
+        return send_file(CSV_FILENAME + '.csv' , download_name = CSV_FILENAME + '.csv')
+        # response = jsonify(message="Api server is running")
+        # return response
+
 
     except Exception as e:
         print(e)

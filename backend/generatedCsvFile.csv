@@ -1,0 +1,4 @@
+,name,species,foods.likes,foods.dislikes
+0,Meowsy,cat,"['tuna', 'catnip']","['ham', 'zucchini']"
+1,Barky,dog,"['bones', 'carrots']",['tuna']
+2,Purrpaws,cat,['mice'],['cookies']
