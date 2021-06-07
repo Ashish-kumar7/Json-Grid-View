@@ -1,13 +1,13 @@
 from logging import exception
-from flask import Flask, jsonify, request
-from flask.helpers import send_from_directory
+from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS, cross_origin
 import json
 import urllib.request
 import utilities 
 import pandas as pd
-import numpy as np
+# import numpy as np
 import sqlalchemy
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -19,6 +19,9 @@ SQL_DB_NAME = 'generatedDB'
 SQL_TAB_NAME = 'table001'
 
 
+
+
+
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
 def uploadFile():
@@ -26,6 +29,12 @@ def uploadFile():
     jsonData = {}
 
     try:
+        print("form  : " , request.form)
+        startTime = time.time()
+        initTime = startTime
+
+        extension = request.form['content_type']
+
         type = request.form['input_type']
         if type == "file":
             file = request.files['File']
@@ -36,40 +45,75 @@ def uploadFile():
         if type == "text":
             jsonData = json.loads(request.form['Json'])
 
+        print("Time to load data : ", time.time() - startTime)
         # Json Loaded Successfully!
         # print(jsonData)
 
+        startTime = time.time()
         columnList, tableSchema = utilities.GenTableSchema(jsonData)
+        print("Time to gen schema : ", time.time() - startTime)
         # Generated columnList and schemaTree
         # print("columns : " , columnList)
         # print("schema Tree: ", tableSchema)
 
-        DF = pd.DataFrame(columns=columnList)
-        utilities.WriteToDF(DF, jsonData, tableSchema)
+        # startTime = time.time()
+        # DF = pd.DataFrame(columns=columnList)
+        # print("Time to create empty df : ", time.time() - startTime)
+
+        DataDict = {}
+        startTime = time.time()
+        utilities.WriteDict(DataDict, 0, '', jsonData)
+        print("Time to create DataDict: ", time.time() - startTime)
+
+        startTime = time.time()
+        DF = pd.DataFrame.from_dict(DataDict, "index")
+        print("Time to create DF from Dict: ", time.time() - startTime)
+
+        # startTime = time.time()
+        # utilities.WriteToDF(DF, jsonData, tableSchema)
+        # print("Time to write to df : ", time.time() - startTime)
+        # startTime = time.time()
         # Filled the table with values and 'null'
-        utilities.fillNaN(DF)
+        # utilities.fillNaN(DF)
+        # print("Time to fill nan: ", time.time() - startTime)
+        # startTime = time.time()
         # Fill NaN with values above them
 
         # print(DF.head())
         # View DF.head()
 
         # Generate CSV
-        DF.to_csv(CSV_FILENAME + '.csv')
+        if extension == "csv":
+            startTime = time.time()
+            DF.to_csv(CSV_FILENAME + '.csv')
+            print("Time to gen csv : ", time.time() - startTime)
+            return send_file(filename_or_fp =CSV_FILENAME + '.csv' )
 
         # Generate XLSX
-        DF.to_excel(XLSX_FILENAME + '.xlsx')
-
+        if extension == "excel":
+            startTime = time.time()
+            DF.to_excel(XLSX_FILENAME + '.xlsx')
+            print("Time to gen xlsx : ", time.time() - startTime)
+            return send_file(filename_or_fp =XLSX_FILENAME + '.xlsx')
         # Generate SQL Database, Table
-        sql_engine = sqlalchemy.create_engine(
-            'sqlite:///' + SQL_DB_NAME + '.db', echo=True)
-        sqlite_connection = sql_engine.connect()
-        DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
-        # print("\n\nTABLE\n")
-        # print(engine.execute("SELECT * FROM " + tableName).fetchall())
-        sqlite_connection.close()
+        if extension == "hive":
+            startTime = time.time()
+            sql_engine = sqlalchemy.create_engine(
+                'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            sqlite_connection = sql_engine.connect()
+            DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+            # print("\n\nTABLE\n")
+            # print(engine.execute("SELECT * FROM " + tableName).fetchall())
+            sqlite_connection.close()
+            print("Time to gen db : ", time.time() - startTime)
+            
+            startTime = time.time()
+            print("Total time taken : ", startTime - initTime)
+            return send_file(filename_or_fp =SQL_DB_NAME + '.db')
+        
+        # response = jsonify(message="Api server is running")
+        # return response
 
-        response = jsonify(message="Api server is running")
-        return send_from_directory(directory="./", filename="generatedCsvFile.csv")
 
     except Exception as e:
         print(e)

@@ -1,5 +1,9 @@
 import "./FileUpload.css";
-import { faFileUpload, faUpload } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileUpload,
+  faMarsDouble,
+  faUpload,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FileUrlLayout from "../components/FileUrlLayout";
 import { useState } from "react";
@@ -7,9 +11,14 @@ import { ProgressBar } from "react-bootstrap";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import axios from "axios";
-import Button from '../components/Button'
-import {Link} from 'react-router-dom'
-var FileDownload = require('js-file-download');
+import Button from "../components/Button";
+import { Link } from "react-router-dom";
+import IconBox from "../components/IconBox";
+import { Container, Row, Col } from "react-bootstrap";
+import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import { faDatabase } from "@fortawesome/free-solid-svg-icons";
+import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
+var FileDownload = require("js-file-download");
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState();
@@ -22,6 +31,7 @@ const FileUpload = () => {
   const [showDownload, setShowDownload] = useState(false);
   // save download content when res received
   const [downloadContent, setDownloadContent] = useState("");
+  const [fileExtension, setFileExtension] = useState("");
 
   // on selecting file
   const changeHandler = (e) => {
@@ -31,10 +41,20 @@ const FileUpload = () => {
   };
 
   // on clicking any converting button
-  const handleSubmission = () => {
+  const handleSubmission = (val) => {
     const formData = new FormData();
     formData.append("File", selectedFile);
     formData.set("input_type", "file");
+    formData.set("content_type",val);
+    if(val == "excel"){
+      setFileExtension("output.xlsx")
+    }
+    else if(val == "csv"){
+      setFileExtension("output.csv")
+    }
+    else{
+      setFileExtension("output.db")
+    }
     console.log(selectedFile);
     console.log(formData);
     const options = {
@@ -76,26 +96,24 @@ const FileUpload = () => {
     axios
       .post("http://localhost:5000/api/upload", formData, options)
       .then((response) => {
-        setDownloadContent(response.data)
-        
+        setDownloadContent(response.data);
+
         console.log(response);
         setUploadPercentage(100);
         setTimeout(() => {
           setUploadPercentage(0);
         }, 1000);
-        setShowDownload(true)
+        setShowDownload(true);
         // let url = URL.createObjectURL(new Blob([response.data]));
         //   setDownloadUrl(url)
         // response.blob().then((myblob) => {
-					
-				// 	// let a = document.createElement('a');
-				// 	// a.href = url;
-				// 	// a.download = 'employees.json';
-				// 	// a.click();
-				// });
-				//window.location.href = response.url;
-	
 
+        // 	// let a = document.createElement('a');
+        // 	// a.href = url;
+        // 	// a.download = 'employees.json';
+        // 	// a.click();
+        // });
+        //window.location.href = response.url;
       })
       .catch((err) => {
         console.log(err);
@@ -104,36 +122,74 @@ const FileUpload = () => {
   };
 
   const downloadFile = () => {
-    FileDownload(downloadContent, 'output.csv');
+    FileDownload(downloadContent, fileExtension);
   };
 
   return (
     <div className="fileUpload">
       <Navbar></Navbar>
       <div class="wrapper">
-             <div  className="file-upload">
-                  <input id="inputup" onChange={changeHandler}   className="input" type="file" />
-                  <FontAwesomeIcon className="uploadicon" size="xs" icon={faUpload}></FontAwesomeIcon>
-              </div>
-             
-            </div>
+        <div className="file-upload">
+          <input
+            id="inputup"
+            onChange={changeHandler}
+            className="input"
+            type="file"
+          />
+          <FontAwesomeIcon
+            className="uploadicon"
+            size="xs"
+            icon={faUpload}
+          ></FontAwesomeIcon>
+        </div>
+      </div>
       <div>
         {isSelected ? (
           <div>
-            <pre>Filename: {selectedFile.name}  Filetype: {selectedFile.type}  Size in bytes: {selectedFile.size}</pre>
-            
+            <pre>
+              Filename: {selectedFile.name} Filetype: {selectedFile.type} Size
+              in bytes: {selectedFile.size}
+            </pre>
           </div>
         ) : (
           <p className="text-center"> Upload A JSON File</p>
         )}
       </div>
-     { showOptions ? (
-      <FileUrlLayout buttonFunc={handleSubmission}></FileUrlLayout>
-     ):
-     <p></p>
-     }
+      {showOptions ? (
+        // <FileUrlLayout ></FileUrlLayout>
+        <Container>
+          <Row>
+            <Col lg="4">
+              <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
+              <Button
+                title={"Convert to Excel"}
+                class={"uploadButton"}
+                clickFunc={() => handleSubmission("excel")}
+              ></Button>
+            </Col>
+            <Col lg="4">
+              <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
+              <Button
+                title={"Convert To CSV"}
+                class={"uploadButton"}
+                clickFunc={() => handleSubmission("csv")}
+              ></Button>
+            </Col>
+            <Col lg="4">
+              <IconBox iconType={faDatabase} size={"2x"}></IconBox>
+              <Button
+                title={"Save to Hive"}
+                class={"uploadButton"}
+                clickFunc={() => handleSubmission("hive")}
+              ></Button>
+            </Col>
+          </Row>
+        </Container>
+      ) : (
+        <p></p>
+      )}
       {uploadPercentage > 0 && (
-       <div className="progressbar">
+        <div className="progressbar">
           <ProgressBar
             now={uploadPercentage}
             striped={true}
@@ -141,16 +197,18 @@ const FileUpload = () => {
             label={`${uploadPercentage}%`}
             variant="success"
           />
-        </div> 
-        )}
-        {showDownload ? (
-                
-              <Button title={"Download"}
-              class={"downloadButton"} clickFunc={downloadFile}></Button>
-              
-                ):<p></p>
-                }
-        
+        </div>
+      )}
+      {showDownload ? (
+        <Button
+          title={"Download"}
+          class={"downloadButton"}
+          clickFunc={downloadFile}
+        ></Button>
+      ) : (
+        <p></p>
+      )}
+
       {/* <Footer></Footer> */}
     </div>
   );
