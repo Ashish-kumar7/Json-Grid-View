@@ -42,13 +42,12 @@ def dfsGenCol(data, pref):
             dfsGenCol(x, pref)
     elif type(data) is dict:
         for x in data:
-            print("x is ", x)
             colName = str(x) if (pref == "") else (pref + '.' + str(x))
             __colTree[pref].add(colName)
-            print(__colTree)
+            # print(__colTree)
             if isScalar(data[x]):
                 __reqCols.add(colName)
-                print(__reqCols)
+                # print(__reqCols)
             else:
                 __colTree[colName] = set()
                 dfsGenCol(data[x], colName)
@@ -112,3 +111,35 @@ def fillNaN(df):
                 df.iloc[r, c] = df.iloc[r-1, c]
             c += 1
         r += 1
+
+
+
+
+
+def WriteDict(d, row, pref, data):
+    reqRows = 0
+    if isListOfDict(data):
+        for x in data:
+            curRows = WriteDict(d, row, pref, x)
+            reqRows += curRows
+            row += curRows
+
+    elif type(data) is dict:
+
+        # print("data = " , data)
+        for x in data:
+            colName = str(x) if (pref == "") else (pref + '.' + str(x))
+            if isScalar(data[x]):
+                reqRows = max(reqRows, 1)
+                towrt = str(data[x])
+                if row not in d:
+                    d[row] = {}
+                if towrt.isnumeric():
+                    d[row][colName] = data[x]
+                else:
+                    d[row][colName] = towrt
+                # print(row , colName , " = " , towrt)
+            else:
+                reqRows = max(reqRows, WriteDict(d, row, colName, data[x]))
+    return reqRows
+
