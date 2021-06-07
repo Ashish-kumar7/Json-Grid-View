@@ -94,7 +94,8 @@ def uploadFile():
             startTime = time.time()
             DF.to_excel(XLSX_FILENAME + '.xlsx')
             print("Time to gen xlsx : ", time.time() - startTime)
-            return send_file(filename_or_fp =XLSX_FILENAME + '.xlsx')
+            return send_file(filename_or_fp =XLSX_FILENAME + '.xlsx',as_attachment=True, mimetype="EXCELMIME")
+
         # Generate SQL Database, Table
         if extension == "hive":
             startTime = time.time()
