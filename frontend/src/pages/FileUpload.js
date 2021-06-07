@@ -94,7 +94,7 @@ const FileUpload = () => {
     //     setUploadPercentage(0);
     //   });
     axios
-      .post("http://localhost:5000/api/upload", formData, options)
+      .post("http://localhost:5000/api/upload", formData,{responseType: "blob"}, options)
       .then((response) => {
         setDownloadContent(response.data);
 
