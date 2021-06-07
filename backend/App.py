@@ -1,9 +1,10 @@
 from logging import exception
 from flask import Flask, jsonify, request
+from flask.helpers import send_from_directory
 from flask_cors import CORS, cross_origin
 import json
 import urllib.request
-import utilities
+import utilities 
 import pandas as pd
 import numpy as np
 import sqlalchemy
@@ -68,7 +69,7 @@ def uploadFile():
         sqlite_connection.close()
 
         response = jsonify(message="Api server is running")
-        return response
+        return send_from_directory(directory="./", filename="generatedCsvFile.csv")
 
     except Exception as e:
         print(e)
