@@ -2,9 +2,16 @@ import FileUrlLayout from "../components/FileUrlLayout";
 import Navbar from "../components/Navbar";
 import "./FileUrl.css";
 import { useState } from "react";
+import axios from 'axios'
+import { ProgressBar } from "react-bootstrap";
+import Button from '../components/Button'
+var FileDownload = require('js-file-download');
 
 const FileUrl = () => {
   const [inputUrl, setInputUrl] = useState();
+  const [showDownload, setShowDownload] = useState(false);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [downloadContent, setDownloadContent] = useState("");
 
   const changeHandler = (e) => {
     setInputUrl(e.target.value);
@@ -16,30 +23,75 @@ const FileUrl = () => {
     formData.set("input_type", "url");
     console.log(inputUrl);
     console.log(formData);
-    fetch("http://localhost:5000/api/upload", {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
+    const options = {
+      onUploadProgress: (progressEvent) => {
+        const { loaded, total } = progressEvent;
+        let percent = Math.floor((loaded * 100) / total);
+        console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+
+        if (percent < 100) {
+          setUploadPercentage(percent);
+          console.log(uploadPercentage);
+        }
       },
-      method: "POST",
-      body: formData,
+    };
+    // fetch("http://localhost:5000/api/upload", {
+    //   headers: {
+    //     "Access-Control-Allow-Origin": "*",
+    //   },
+    //   method: "POST",
+    //   body: formData,
+    // })
+    //   .then((response) => response.json())
+    //   .then((result) => {
+    //     console.log("Success", result);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Error", error);
+    //   });
+    axios
+    .post("http://localhost:5000/api/upload", formData, options)
+    .then((res) => {
+      setDownloadContent(res.data)
+      console.log(res);
+      setUploadPercentage(100);
+      setTimeout(() => {
+        setUploadPercentage(0);
+      }, 1000);
+      setShowDownload(true)
     })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log("Success", result);
-      })
-      .catch((error) => {
-        console.error("Error", error);
-      });
+    .catch((err) => {
+      console.log(err);
+      setUploadPercentage(0);
+    });
   };
+
+  const downloadFile = () => {
+    FileDownload(downloadContent, 'output.csv');
+  };
+
   return (
     <div className="fileUrl">
       <Navbar></Navbar>
-      <div>
-        <input type="text" onChange={changeHandler} />
-
-        <button onClick={handleSubmission}>Submit</button>
+      <div className="urldiv">
+        <label>URL</label>
+        <input className="urlinput" placeholder="https://google.com" type="text" onChange={changeHandler} />
       </div>
-      <FileUrlLayout></FileUrlLayout>
+      <FileUrlLayout buttonFunc={handleSubmission}></FileUrlLayout>
+      {uploadPercentage > 0 && (
+       <div className="progressbar">
+          <ProgressBar
+            now={uploadPercentage}
+            striped={true}
+            animated
+            label={`${uploadPercentage}%`}
+            variant="success"
+          />
+        </div> 
+        )}
+        {showDownload ? (<Button title={"Download"}
+              class={"downloadButton"}  clickFunc={downloadFile}
+              ></Button>):<p></p>}
     </div>
   );
 };

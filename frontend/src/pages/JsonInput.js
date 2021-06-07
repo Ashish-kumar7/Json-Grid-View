@@ -39,7 +39,7 @@ const JsonInput = () => {
 
         <button onClick={handleSubmission}>Submit</button>
       </div>
-      <FileUrlLayout></FileUrlLayout>
+      <FileUrlLayout ></FileUrlLayout>
     </div>
   );
 };

@@ -5,7 +5,7 @@ import json
 import urllib.request
 import utilities
 import pandas as pd
-import numpy as np
+# import numpy as np
 import sqlalchemy
 import time
 
