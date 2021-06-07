@@ -8,6 +8,8 @@ import pandas as pd
 # import numpy as np
 import sqlalchemy
 import time
+import subprocess
+from fastparquet import write, ParquetFile
 
 app = Flask(__name__)
 CORS(app)
@@ -110,6 +112,13 @@ def uploadFile():
             
             startTime = time.time()
             print("Total time taken : ", startTime - initTime)
+            
+            # code to convert csv file and saving it to hdfs
+            df = pd.read_csv('generatedCsvFile.csv')
+            df.to_parquet("/test_parquet", compression="GZIP")
+            hdfs_cmd = "hadoop fs -put /test_parquet /hbase/outputFileP"
+            subprocess.call(hdfs_cmd, shell=True)
+
             return send_file(filename_or_fp =SQL_DB_NAME + '.db')
         
         # response = jsonify(message="Api server is running")
