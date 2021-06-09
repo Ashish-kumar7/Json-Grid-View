@@ -1,5 +1,5 @@
 import './Footer.css'
-import SocialIcons from "./SocialIcons";
+import SocialIcons from "../socialicons/SocialIcons";
 
 const Footer = () => {
     return(
