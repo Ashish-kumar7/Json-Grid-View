@@ -9,7 +9,7 @@ import pandas as pd
 import sqlalchemy
 import time
 import subprocess
-from fastparquet import write, ParquetFile
+# from fastparquet import write, ParquetFile
 from flask_socketio import *
 app = Flask(__name__)
 CORS(app)
@@ -31,7 +31,7 @@ REPEAT_IN_COL = True
 ADD_INDEX_FOR_LIST = False
 INDEX_FOR_LIST_SUFFIX = 'INDEX'  # Index colname = par + joiner + index_suffix
 FILL_MISSING_WITH = 'null'
-GEN_CROSS_TABLE = True
+GEN_CROSS_TABLE = False
 
 @socketio.on('connect')
 def connected():
@@ -100,7 +100,7 @@ def uploadFile():
         # utilities.WriteDict(DataDict, 0, '', jsonData)
         utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
                             INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX, GEN_CROSS_TABLE = GEN_CROSS_TABLE)
-        print(DataDict)
+        # print(DataDict)
         print("Time to create DataDict: ", time.time() - startTime)
         socketio.emit('progress', 60, broadcast=True)
 
@@ -177,6 +177,9 @@ def uploadFile():
         print(e)
         return jsonify({'message:', 'error'})
 
+# @app.route('/api/convert', methods=['POST'])
+# @cross_origin()
+# def convertFile():
 
 if __name__ == "__main__":
     socketio.run(app,debug=True)

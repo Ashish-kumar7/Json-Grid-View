@@ -1,25 +1,15 @@
-import { Container, Row, Col } from "react-bootstrap";
+import Button from './Button'
 import './Editor.css'
 
-const Editor = () => {
+
+const Editor = (props) => {
   return (
-    <div className="editor">
-      <Container>
-        <Row>
-          <Col lg="6">
-            <div className="editorInput">
-              <textarea
-                
-                rows="30"
-                cols="100"
-                className="area"
-              ></textarea>
-            </div>
-          </Col>
-          <Col lg="6"></Col>
-        </Row>
-      </Container>
-    </div>
+    <div className ="editor">
+    <textarea  onChange={props.onChange} rows="25" cols="80" type="text"  />
+    <Button title={"Process"} class={"processButton"}></Button>
+    
+  </div> 
+    
   );
 };
 
