@@ -100,7 +100,7 @@ def uploadFile():
         # utilities.WriteDict(DataDict, 0, '', jsonData)
         utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
                             INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX, GEN_CROSS_TABLE = GEN_CROSS_TABLE)
-        print(DataDict)
+        # print(DataDict)
         print("Time to create DataDict: ", time.time() - startTime)
         socketio.emit('progress', 60, broadcast=True)
 
