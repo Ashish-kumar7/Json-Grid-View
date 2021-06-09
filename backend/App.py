@@ -28,9 +28,10 @@ SQL_TAB_NAME = 'table001'
 JOINER_CHAR = '.'
 JOIN_PAR_IN_COLS = True
 REPEAT_IN_COL = True
-ADD_INDEX_FOR_LIST = True
+ADD_INDEX_FOR_LIST = False
 INDEX_FOR_LIST_SUFFIX = 'INDEX'  # Index colname = par + joiner + index_suffix
 FILL_MISSING_WITH = 'null'
+GEN_CROSS_TABLE = True
 
 @socketio.on('connect')
 def connected():
@@ -98,7 +99,7 @@ def uploadFile():
         socketio.emit('progress', 50, broadcast=True)
         # utilities.WriteDict(DataDict, 0, '', jsonData)
         utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
-                            INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX)
+                            INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX, GEN_CROSS_TABLE = GEN_CROSS_TABLE)
         print(DataDict)
         print("Time to create DataDict: ", time.time() - startTime)
         socketio.emit('progress', 60, broadcast=True)

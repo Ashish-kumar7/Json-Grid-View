@@ -2,6 +2,7 @@
 import numpy as np
 import pandas as pd
 from collections import OrderedDict
+import time
 
 # Global Constants
 __reqCols = set()
@@ -51,29 +52,29 @@ def dfsGenCol(data, pref):
     global __reqCols
     global __reqColsOrd
     if isListOfDict(data):
-        if __ADD_INDEX_FOR_LIST : 
-            colName = (pref + __JOINER_CHAR + __INDEX_FOR_LIST_SUFFIX) if pref!="" else __INDEX_FOR_LIST_SUFFIX
-            if colName not in __colTree[pref] :
+        if __ADD_INDEX_FOR_LIST:
+            colName = (pref + __JOINER_CHAR +
+                       __INDEX_FOR_LIST_SUFFIX) if pref != "" else __INDEX_FOR_LIST_SUFFIX
+            if colName not in __colTree[pref]:
                 __colTreeOrd[pref].append(colName)
-                __colTree[pref].add( colName )
-            if colName not in __reqCols :
+                __colTree[pref].add(colName)
+            if colName not in __reqCols:
                 __reqColsOrd.append(colName)
                 __reqCols.add(colName)
-                
+
         for x in data:
             dfsGenCol(x, pref)
-        
 
     elif type(data) is dict:
         for x in data:
             colName = str(x) if (pref == "") else (
                 pref + __JOINER_CHAR + str(x))
-            if colName not in __colTree[pref] :
+            if colName not in __colTree[pref]:
                 __colTreeOrd[pref].append(colName)
                 __colTree[pref].add(colName)
             # print(__colTree)
             if isScalar(data[x]):
-                if colName not in __reqCols :
+                if colName not in __reqCols:
                     __reqColsOrd.append(colName)
                     __reqCols.add(colName)
                 # print(__reqCols)
@@ -86,7 +87,7 @@ def dfsGenCol(data, pref):
 
 
 def GenTableSchema(data, JOINER_CHAR='.',  ADD_INDEX_FOR_LIST=False,
-                            INDEX_FOR_LIST_SUFFIX='Index'):
+                   INDEX_FOR_LIST_SUFFIX='Index'):
     global __colTree
     global __colTreeOrd
     global __reqCols
@@ -230,7 +231,8 @@ def WriteDict_Index(d, row, pref, data):
     if isListOfDict(data):
         startRow = row
         listIdx = 0
-        colName = pref + __JOINER_CHAR + __INDEX_FOR_LIST_SUFFIX if pref!="" else __INDEX_FOR_LIST_SUFFIX
+        colName = pref + __JOINER_CHAR + \
+            __INDEX_FOR_LIST_SUFFIX if pref != "" else __INDEX_FOR_LIST_SUFFIX
         for x in data:
             curRows = WriteDict_Index(d, row, pref, x)
             reqRows += curRows
@@ -243,7 +245,7 @@ def WriteDict_Index(d, row, pref, data):
             listIdx += 1
             startRow += curRows
             __addedColumns.add(colName)
-            
+
         # for i in range(reqRows):
         #     if (i+startRow) not in d:
         #         d[i+startRow] = {}
@@ -279,8 +281,94 @@ def WriteDict_Index(d, row, pref, data):
     return reqRows
 
 
+# Generate Cross Table
+
+"""
+Generate Schema Dictionary for generating cross product table
+"""
+def GenCrossSchema(pref,prefId, data, schema):
+    reqRows = 0
+    if isListOfDict(data):
+        reqRows = 0
+        idx = 0
+        for x in data:
+            colName = pref + __JOINER_CHAR + \
+                str(idx) if pref != '' else str(idx)
+            curRows = GenCrossSchema(pref, colName, x, schema)
+            reqRows += curRows
+            idx += 1
+        schema[prefId] = reqRows
+
+    elif type(data) is dict:
+        reqRows = 1
+        # print("data = " , data)
+        for x in __tableSchema[pref]:
+            colName = x  # Name of col without prefix
+            noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
+            newPrefId = prefId + __JOINER_CHAR + noPreCol if prefId !='' else noPreCol
+            if x in __tableSchema:
+                # Recur further
+                if noPreCol in data:
+                    reqRows *= GenCrossSchema(colName,newPrefId, data[noPreCol], schema)
+                else:
+                    reqRows *= GenCrossSchema(colName,newPrefId, {}, schema)
+            else:
+                reqRows *= 1
+                schema[newPrefId] = 1
+        schema[prefId] = reqRows
+    else:
+        print("error: pref\n", pref,"\ntype\n", type(data))
+    return reqRows
+
+# Generate cross product dictionary
+def GenCrossDict(pref,prefId, row, Dict, data, schema):
+    global __isList
+    reqRows = 0
+    if isListOfDict(data):
+        idx = 0
+        for x in data:
+            colName = pref + __JOINER_CHAR + \
+                str(idx) if pref != '' else str(idx)
+            curRows = GenCrossDict(pref, colName,row,Dict, x, schema)
+            row += schema[colName]
+            idx+=1
+
+    elif type(data) is dict:
+        reqRows = 1
+        # print("data = " , data)
+        initRow = row
+        for x in __tableSchema[pref]:
+            colName = x  # Name of col without prefix
+            noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
+            newPrefId = prefId + __JOINER_CHAR + noPreCol if prefId !='' else noPreCol
+            row = initRow
+            if x in __tableSchema:
+                # Recur further
+                
+                if noPreCol in data:
+                    for i in range(schema[prefId] // schema[newPrefId]) : 
+                        GenCrossDict(colName,newPrefId,row, Dict,data[noPreCol], schema)
+                        row += schema[newPrefId]
+                else:
+                    for i in range(schema[prefId] // schema[newPrefId]) :
+                        GenCrossDict(colName,newPrefId,row, Dict,{}, schema)
+                        row += schema[newPrefId]
+            else:
+                towrt = __FILL_MISSING_WITH
+                if noPreCol in data:
+                    towrt = str(data[noPreCol])
+                    if towrt.isnumeric():
+                        towrt = int(towrt)
+                for i in range(schema[prefId] // schema[newPrefId]) : 
+                    if not (row+i) in Dict  :
+                        Dict[row +i] = {}
+                    Dict[row + i][colName] = towrt 
+    else:
+        print("error: pref\n", pref,"\ntype\n", type(data))
+
+
 def WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_FOR_LIST=False,
-              INDEX_FOR_LIST_SUFFIX='INDEX'):
+              INDEX_FOR_LIST_SUFFIX='INDEX', GEN_CROSS_TABLE = False):
 
     global __tableSchema
     global __FILL_MISSING_WITH
@@ -292,8 +380,21 @@ def WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_F
     __ADD_INDEX_FOR_LIST = ADD_INDEX_FOR_LIST
     __INDEX_FOR_LIST_SUFFIX = INDEX_FOR_LIST_SUFFIX
 
-    if ADD_INDEX_FOR_LIST:
-        __addedColumns = set()
-        WriteDict_Index(DataDict, 0, '', Data)
-    else:
-        WriteDict_NoIndex(DataDict, 0, '', Data)
+    if GEN_CROSS_TABLE :
+        crossSchema = {}
+        startTime = time.time()
+        GenCrossSchema( '' ,'', Data, crossSchema)
+        print("time to gen cross schema" , time.time() - startTime)
+        startTime = time.time()
+        GenCrossDict('' ,'', 0,DataDict, Data, crossSchema)
+        print("time to gen cross schema" , time.time() - startTime)
+    else : 
+        if ADD_INDEX_FOR_LIST:
+            __addedColumns = set()
+            WriteDict_Index(DataDict, 0, '', Data)
+        else:
+            WriteDict_NoIndex(DataDict, 0, '', Data)
+
+
+
+
