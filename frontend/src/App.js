@@ -1,12 +1,12 @@
 
 import {Route} from 'react-router-dom';
-import HomePage from './pages/HomePage';
-import OptionsPage from './pages/OptionsPage';
-import FileUpload from './pages/FileUpload';
-import Footer from './components/Footer'
-import FileUrl from './pages/FileUrl'
-import JsonInput from './pages/JsonInput'
-import Editor from './components/Editor'
+import HomePage from './components/homepage/HomePage';
+import OptionsPage from './components/optionpage/OptionsPage';
+import FileUpload from './components/fileupload/FileUpload';
+import Footer from './components/footer/Footer'
+import FileUrl from './components/fileurl/FileUrl'
+import JsonInput from './components/jsoninput/JsonInput'
+import Editor from './components/editor/Editor'
 
 function App() {
   return (
