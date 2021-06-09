@@ -1,5 +1,5 @@
-import IconBox from "../components/IconBox";
-import Button from "../components/Button";
+import IconBox from "../iconbox/IconBox";
+import Button from "../button/Button";
 import { Container, Row, Col } from "react-bootstrap";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
