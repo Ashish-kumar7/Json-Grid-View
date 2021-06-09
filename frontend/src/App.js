@@ -6,10 +6,12 @@ import FileUpload from './pages/FileUpload';
 import Footer from './components/Footer'
 import FileUrl from './pages/FileUrl'
 import JsonInput from './pages/JsonInput'
+import Editor from './components/Editor'
 
 function App() {
   return (
     <div>
+        <Route path='/editor'><Editor></Editor></Route>
         <Route path='/footer'><Footer></Footer></Route>
         <Route  path="/home" ><HomePage /></Route>
         <Route path="/options"><OptionsPage/></Route>

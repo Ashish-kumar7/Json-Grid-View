@@ -5,6 +5,11 @@ import { useState } from "react";
 import axios from 'axios'
 import { ProgressBar } from "react-bootstrap";
 import Button from '../components/Button'
+import IconBox from "../components/IconBox";
+import { Container, Row, Col } from "react-bootstrap";
+import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import { faDatabase } from "@fortawesome/free-solid-svg-icons";
+import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 var FileDownload = require('js-file-download');
 
 const FileUrl = () => {
@@ -12,15 +17,26 @@ const FileUrl = () => {
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [downloadContent, setDownloadContent] = useState("");
+  const [fileExtension, setFileExtension] = useState("");
 
   const changeHandler = (e) => {
     setInputUrl(e.target.value);
   };
 
-  const handleSubmission = () => {
+  const handleSubmission = (val) => {
     const formData = new FormData();
     formData.append("Url", inputUrl);
     formData.set("input_type", "url");
+    formData.set("content_type",val);
+    if(val == "excel"){
+      setFileExtension("output.xlsx")
+    }
+    else if(val == "csv"){
+      setFileExtension("output.csv")
+    }
+    else{
+      setFileExtension("output.db")
+    }
     console.log(inputUrl);
     console.log(formData);
     const options = {
@@ -50,7 +66,7 @@ const FileUrl = () => {
     //     console.error("Error", error);
     //   });
     axios
-    .post("http://localhost:5000/api/upload", formData, options)
+    .post("http://localhost:5000/api/upload", formData,{responseType: "blob"}, options)
     .then((res) => {
       setDownloadContent(res.data)
       console.log(res);
@@ -67,7 +83,7 @@ const FileUrl = () => {
   };
 
   const downloadFile = () => {
-    FileDownload(downloadContent, 'output.csv');
+    FileDownload(downloadContent, fileExtension);
   };
 
   return (
@@ -77,7 +93,35 @@ const FileUrl = () => {
         <label>URL</label>
         <input className="urlinput" placeholder="https://google.com" type="text" onChange={changeHandler} />
       </div>
-      <FileUrlLayout buttonFunc={handleSubmission}></FileUrlLayout>
+      {/* <FileUrlLayout buttonFunc={handleSubmission}></FileUrlLayout> */}
+      <Container>
+          <Row>
+            <Col lg="4">
+              <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
+              <Button
+                title={"Convert to Excel"}
+                class={"uploadButton"}
+                clickFunc={() => handleSubmission("excel")}
+              ></Button>
+            </Col>
+            <Col lg="4">
+              <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
+              <Button
+                title={"Convert To CSV"}
+                class={"uploadButton"}
+                clickFunc={() => handleSubmission("csv")}
+              ></Button>
+            </Col>
+            <Col lg="4">
+              <IconBox iconType={faDatabase} size={"2x"}></IconBox>
+              <Button
+                title={"Save to Hive"}
+                class={"uploadButton"}
+                clickFunc={() => handleSubmission("hive")}
+              ></Button>
+            </Col>
+          </Row>
+        </Container>
       {uploadPercentage > 0 && (
        <div className="progressbar">
           <ProgressBar
