@@ -176,6 +176,9 @@ def uploadFile():
         print(e)
         return jsonify({'message:', 'error'})
 
+# @app.route('/api/convert', methods=['POST'])
+# @cross_origin()
+# def convertFile():
 
 if __name__ == "__main__":
     socketio.run(app,debug=True)
