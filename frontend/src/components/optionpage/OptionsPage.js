@@ -1,12 +1,12 @@
 import "./OptionsPage.css";
 import { Container, Row, Col } from "react-bootstrap";
-import Button from "../components/Button";
+import Button from "../button/Button";
 import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import IconBox from "../components/IconBox";
+import Navbar from "../navbar/Navbar";
+import Footer from "../footer/Footer";
+import IconBox from "../iconbox/IconBox";
 
 const OptionsPage = () => {
   return (
