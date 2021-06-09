@@ -13,6 +13,7 @@ __NULL = 'null'
 __JOINER_CHAR = '.'
 
 __tableSchema = {}
+__addedColumns = set()
 __FILL_MISSING_WITH = 'null'
 __ADD_INDEX_FOR_LIST = False
 __INDEX_FOR_LIST_SUFFIX = 'INDEX'
@@ -224,17 +225,29 @@ def WriteDict_NoIndex(d, row, pref, data):
 
 
 def WriteDict_Index(d, row, pref, data):
+    global __addedColumns
     reqRows = 0
     if isListOfDict(data):
         startRow = row
+        listIdx = 0
+        colName = pref + __JOINER_CHAR + __INDEX_FOR_LIST_SUFFIX if pref!="" else __INDEX_FOR_LIST_SUFFIX
         for x in data:
             curRows = WriteDict_Index(d, row, pref, x)
             reqRows += curRows
             row += curRows
-        for i in range(reqRows):
-            if (i+startRow) not in d:
-                d[i+startRow] = {}
-            d[i + startRow][pref + __JOINER_CHAR + __INDEX_FOR_LIST_SUFFIX] = i
+
+            for i in range(curRows):
+                if (i+startRow) not in d:
+                    d[i+startRow] = {}
+                d[i + startRow][colName] = listIdx
+            listIdx += 1
+            startRow += curRows
+            __addedColumns.add(colName)
+            
+        # for i in range(reqRows):
+        #     if (i+startRow) not in d:
+        #         d[i+startRow] = {}
+        #     d[i + startRow][pref + __JOINER_CHAR + __INDEX_FOR_LIST_SUFFIX] = i
 
     elif type(data) is dict:
 
@@ -261,7 +274,7 @@ def WriteDict_Index(d, row, pref, data):
                         d[row][colName] = data[noPreCol]
                     else:
                         d[row][colName] = towrt
-                else:
+                elif colName not in __addedColumns:
                     d[row][colName] = __FILL_MISSING_WITH
     return reqRows
 
@@ -280,6 +293,7 @@ def WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_F
     __INDEX_FOR_LIST_SUFFIX = INDEX_FOR_LIST_SUFFIX
 
     if ADD_INDEX_FOR_LIST:
+        __addedColumns = set()
         WriteDict_Index(DataDict, 0, '', Data)
     else:
         WriteDict_NoIndex(DataDict, 0, '', Data)

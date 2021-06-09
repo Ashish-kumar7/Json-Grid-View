@@ -26,7 +26,7 @@ SQL_TAB_NAME = 'table001'
 JOINER_CHAR = '.'
 JOIN_PAR_IN_COLS = True
 REPEAT_IN_COL = True
-ADD_INDEX_FOR_LIST = False
+ADD_INDEX_FOR_LIST = True
 INDEX_FOR_LIST_SUFFIX = 'INDEX'  # Index colname = par + joiner + index_suffix
 FILL_MISSING_WITH = 'null'
 
@@ -85,7 +85,7 @@ def uploadFile():
         startTime = time.time()
         utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
                             INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX)
-        # print(DataDict)
+        print(DataDict)
         print("Time to create DataDict: ", time.time() - startTime)
 
         startTime = time.time()
