@@ -31,15 +31,12 @@ REPEAT_IN_COL = True
 ADD_INDEX_FOR_LIST = False
 INDEX_FOR_LIST_SUFFIX = 'INDEX'  # Index colname = par + joiner + index_suffix
 FILL_MISSING_WITH = 'null'
-<<<<<<< HEAD
 GEN_CROSS_TABLE = True
-=======
 
 @socketio.on('connect')
 def connected():
     print('connected')
 
->>>>>>> 5985b17c0c2143d24e760a3507ba9a0bb3593536
 
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
