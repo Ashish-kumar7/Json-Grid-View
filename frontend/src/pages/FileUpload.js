@@ -18,7 +18,9 @@ import { Container, Row, Col } from "react-bootstrap";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
+import io from 'socket.io-client'
 var FileDownload = require("js-file-download");
+const socket = io('http://localhost:5000/')
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState();
@@ -38,8 +40,13 @@ const FileUpload = () => {
     setSelectedFile(e.target.files[0]);
     setIsSelected(true);
     setShowOptions(true);
+    socket.emit('UserAdded', {'data' : {'user': "Aditi"}})
   };
 
+  socket.on('progress', (val) => {
+    setUploadPercentage(val);
+    console.log(val)
+  })
   // on clicking any converting button
   const handleSubmission = (val) => {
     const formData = new FormData();
@@ -64,7 +71,7 @@ const FileUpload = () => {
         console.log(`${loaded}kb of ${total}kb | ${percent}%`);
 
         if (percent < 100) {
-          setUploadPercentage(percent);
+          // setUploadPercentage(percent);
           console.log(uploadPercentage);
         }
       },
@@ -93,16 +100,18 @@ const FileUpload = () => {
     //     console.error("Error", error);
     //     setUploadPercentage(0);
     //   });
+    
     axios
       .post("http://localhost:5000/api/upload", formData,{responseType: "blob"}, options)
       .then((response) => {
-        setDownloadContent(response.data);
-
-        console.log(response);
+        
         setUploadPercentage(100);
         setTimeout(() => {
           setUploadPercentage(0);
-        }, 1000);
+        }, 2000);
+        setDownloadContent(response.data);
+
+        console.log(response);
         setShowDownload(true);
         // let url = URL.createObjectURL(new Blob([response.data]));
         //   setDownloadUrl(url)
