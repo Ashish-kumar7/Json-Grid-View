@@ -5,15 +5,15 @@ import {
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import FileUrlLayout from "../components/FileUrlLayout";
+import FileUrlLayout from "../fileurllayout/FileUrlLayout";
 import { useState } from "react";
 import { ProgressBar } from "react-bootstrap";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../navbar/Navbar";
+import Footer from "../footer/Footer";
 import axios from "axios";
-import Button from "../components/Button";
+import Button from "../button/Button"
 import { Link } from "react-router-dom";
-import IconBox from "../components/IconBox";
+import IconBox from "../iconbox/IconBox";
 import { Container, Row, Col } from "react-bootstrap";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
