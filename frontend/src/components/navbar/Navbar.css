@@ -1,0 +1,38 @@
+.jsonnavbar button {
+    margin: 0 1vh;
+} 
+
+.jsonnavbar .navbar {
+    background-color: #212342;
+}
+
+.jsonnavbar .navbar-brand {
+    color: yellow;
+    font-weight: bold;
+    font-family:'Times New Roman', Times, serif;
+    font-size: xx-large;
+}
+ 
+ #b2{
+ background-color: #f50057;
+ color: white;
+
+}
+
+#b3{
+    background-color: #03a9f4;
+    color: white;
+    
+   }
+
+   #b4{
+    background-color: #64dd17;
+    color: white;
+   
+   }
+   #b5{
+    background-color: #aa00ff;
+    color: white;
+   
+   }
+ 
