@@ -1,10 +1,10 @@
-import FileUrlLayout from "../fileurllayout/FileUrlLayout";
-import Navbar from "../navbar/Navbar";
+import FileUrlLayout from "../../components/fileurllayout/FileUrlLayout";
+import Navbar from "../../components/navbar/Navbar";
 import "./JsonInput.css";
-import Editor from "../editor/Editor";
+import Editor from "../../components/editor/Editor";
 import {Container,Row,Col} from 'react-bootstrap'
-import Button from '../button/Button'
-import IconBox from "../iconbox/IconBox";
+import Button from '../../components/button/Button'
+import IconBox from "../../components/iconbox/IconBox";
 import { ProgressBar } from "react-bootstrap";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
