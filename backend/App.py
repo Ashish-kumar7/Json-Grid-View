@@ -35,7 +35,7 @@ GEN_CROSS_TABLE = False
 
 @socketio.on('connect')
 def connected():
-    print('connected')
+    print('connected with socketio')
 
 
 @app.route('/api/upload', methods=['POST'])
@@ -43,7 +43,7 @@ def connected():
 def uploadFile():
 
     jsonData = {}
-    socketio.emit('progress', 10, broadcas=True)
+    socketio.emit('progress', 10, broadcast=True)
     try:
         print("form  : ", request.form)
         startTime = time.time()
