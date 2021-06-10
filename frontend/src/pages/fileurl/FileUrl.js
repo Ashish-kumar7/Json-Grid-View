@@ -3,6 +3,7 @@ import Navbar from "../../components/navbar/Navbar";
 import "./FileUrl.css";
 import { useState } from "react";
 import axios from 'axios'
+import Footer2 from "../../components/footer2/Footer2";
 import { ProgressBar } from "react-bootstrap";
 import Button from '../../components/button/Button'
 import IconBox from "../../components/iconbox/IconBox";
@@ -174,6 +175,7 @@ const FileUrl = () => {
         {showDownload ? (<Button title={"Download"}
               class={"downloadButton"}  clickFunc={downloadFile}
               ></Button>):<p></p>}
+        <Footer2/>
     </div>
   );
 };

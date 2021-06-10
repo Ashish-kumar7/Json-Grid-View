@@ -2,6 +2,7 @@ import { Row, Col, Container } from "react-bootstrap";
 import gif from "../../assets/homegif.gif";
 import "./HomePage.css";
 import Button from "../../components/button/Button";
+import Footer from "../../components/footer/Footer";
 const HomePage = () => {
   return (
     <div className="homepage">
@@ -29,6 +30,7 @@ const HomePage = () => {
           </Col>
         </Row>
       </Container>
+      <Footer />
     </div>
   );
 };
