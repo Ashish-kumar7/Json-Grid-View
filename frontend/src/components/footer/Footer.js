@@ -9,8 +9,7 @@ const Footer = () => {
                 <div className="row justify-content-between text-center">
                 <div className="col-md-12 text-md-left">
                     <p>
-                    Copyright &copy; 2021. Lorem ipsum dolor sit amet consectetur
-                    adipisicing elit.
+                    Copyright &copy; 2021.
                     </p>
                 </div>
                 <div className="col-md-12 text-md-right">
