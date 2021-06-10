@@ -1,7 +1,7 @@
 import { Row, Col, Container } from "react-bootstrap";
 import gif from "../../assets/homegif.gif";
 import "./HomePage.css";
-import Button from "../button/Button";
+import Button from "../../components/button/Button";
 const HomePage = () => {
   return (
     <div className="homepage">

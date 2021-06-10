@@ -33,6 +33,8 @@ INDEX_FOR_LIST_SUFFIX = 'INDEX'  # Index colname = par + joiner + index_suffix
 FILL_MISSING_WITH = 'null'
 GEN_CROSS_TABLE = False
 
+DF = ''
+
 @socketio.on('connect')
 def connected():
     print('connected with socketio')
@@ -49,7 +51,7 @@ def uploadFile():
         startTime = time.time()
         initTime = startTime
 
-        extension = request.form['content_type']
+        
 
         type = request.form['input_type']
         if type == "file":
@@ -109,6 +111,7 @@ def uploadFile():
         # DF = pd.DataFrame.from_dict(DataDict, "index")
         # print("Time to create DF from Dict: ", time.time() - startTime)
         columnsOrder = columnListOrd
+        global DF
         DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
         print("Time to create DF from Dict in order: ", time.time() - startTime)
 
@@ -125,6 +128,65 @@ def uploadFile():
         # print(DF.head())
         # View DF.head()
 
+        # Generate CSV
+        # if extension == "csv":
+        #     startTime = time.time()
+        #     DF.to_csv(CSV_FILENAME + '.csv')
+        #     socketio.emit('progress', 80, broadcast=True)
+        #     print("Time to gen csv : ", time.time() - startTime)
+        #     return send_file(CSV_FILENAME + '.csv')
+
+        # Generate XLSX
+        # if extension == "excel":
+        #     startTime = time.time()
+        #     DF.to_excel(XLSX_FILENAME + '.xlsx')
+        #     socketio.emit('progress', 80, broadcast=True)
+        #     print("Time to gen xlsx : ", time.time() - startTime)
+        #     return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
+
+        # Generate SQL Database, Table
+        # if extension == "hive":
+        #     startTime = time.time()
+        #     sql_engine = sqlalchemy.create_engine(
+        #         'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+        #     sqlite_connection = sql_engine.connect()
+        #     DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+        #     # print("\n\nTABLE\n")
+        #     # print(engine.execute("SELECT * FROM " + tableName).fetchall())
+        #     sqlite_connection.close()
+        #     print("Time to gen db : ", time.time() - startTime)
+
+        #     startTime = time.time()
+        #     print("Total time taken : ", startTime - initTime)
+        #     socketio.emit('progress', 80, broadcast=True)
+        #     # code to convert csv file and saving it to hdfs
+        #     # df = pd.read_csv('generatedCsvFile.csv')
+        #     # df.to_parquet("/test_parquet", compression="GZIP")
+        #     # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
+        #     # subprocess.call(hdfs_cmd, shell=True)
+
+        #     # code to convert csv file and saving it to hdfs
+        #     # df = pd.read_csv('generatedCsvFile.csv')
+        #     # df.to_parquet("/test_parquet", compression="GZIP")
+        #     # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/outputFileP"
+        #     # subprocess.call(hdfs_cmd, shell=True)
+
+        #     return send_file(SQL_DB_NAME + '.db')
+
+        response = jsonify(message="File processed")
+        return response
+
+    except Exception as e:
+        print(e)
+        return jsonify({'message:', 'error'})
+
+@app.route('/api/convert', methods=['POST'])
+@cross_origin()
+def convertFile():
+    print("convert")
+    try:
+        extension = request.form['content_type']
+        print(extension)
         # Generate CSV
         if extension == "csv":
             startTime = time.time()
@@ -170,16 +232,10 @@ def uploadFile():
 
             return send_file(SQL_DB_NAME + '.db')
 
-        # response = jsonify(message="Api server is running")
-        # return response
-
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
 
-# @app.route('/api/convert', methods=['POST'])
-# @cross_origin()
-# def convertFile():
 
 if __name__ == "__main__":
     socketio.run(app,debug=True)

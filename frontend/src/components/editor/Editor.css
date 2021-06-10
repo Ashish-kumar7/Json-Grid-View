@@ -1,8 +1,12 @@
 .editor textarea {
-    margin-top: 1vh;
+    margin-top: 2vh;
     background-color: black;
-    margin-left: -22vh;
+    
     color:white;
+}
+
+.editor {
+    margin-left: -25%;
 }
 
 .editor .processButton {
@@ -12,9 +16,9 @@
     
     
     
-          margin: 20px 10px 20px 10px;
+          margin: 20px 10px 10px 10px;
           width: 30vh;
-          
+          margin-left: 20%;
           padding: 10px;
           border-radius: 40px;
           box-shadow: 5px 10px rgba(255,255,255,0.15);
