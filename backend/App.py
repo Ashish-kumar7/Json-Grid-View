@@ -4,6 +4,7 @@ from flask_cors import CORS, cross_origin
 import json
 import urllib.request
 import utilities
+import hadoopstorage
 import pandas as pd
 # import numpy as np
 import sqlalchemy
@@ -245,7 +246,11 @@ def convertFile():
 
         # Generate SQL Database, Table
         if extension == "hive":
+            
             startTime = time.time()
+            print(type(DF))
+            DF.to_csv( 'test.csv')
+            hadoopstorage.saveFile(DF)
             sql_engine = sqlalchemy.create_engine(
                 'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
             sqlite_connection = sql_engine.connect()
