@@ -1,10 +1,12 @@
-.jsonfooter footer {
-    flex: 0 0 auto;
-    color: #fff4e3;
-    background-color: #212342;
-  }
-.jsonfooter {
-    position: relative;
+ .jsonfooter footer { 
+     flex: 0 0 auto; 
+     color: #fff4e3; 
+     position: relative; 
+     background-color: #212342; 
+     bottom:0
+ }
+.jsonfooter { 
+    height: 30px;
     bottom: 0vh;
-    top: 100%;
-}
+    margin-top:9vh;
+} 
