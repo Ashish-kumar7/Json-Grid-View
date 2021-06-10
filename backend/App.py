@@ -34,21 +34,27 @@ FILL_MISSING_WITH = 'null'
 GEN_CROSS_TABLE = False
 
 DF = ''
+jsonData ={}
+tableSchema =''
+columnListOrd =''
+initTime=''
+
 
 @socketio.on('connect')
 def connected():
-    print('connected')
+    print('connected with socketio')
 
 
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
 def uploadFile():
 
-    jsonData = {}
-    socketio.emit('progress', 10, broadcas=True)
+    global jsonData 
+    
     try:
         print("form  : ", request.form)
         startTime = time.time()
+        global initTime
         initTime = startTime
 
         
@@ -57,27 +63,28 @@ def uploadFile():
         if type == "file":
             file = request.files['File']
             jsonData = json.load(file)
-            socketio.emit('progress', 20, broadcast=True)
+            
         if type == "url":
             url = request.form['Url']
             jsonData = json.load(urllib.request.urlopen(url))
-            socketio.emit('progress', 20, broadcast=True)
+            
         if type == "text":
             jsonData = json.loads(request.form['Json'])
-            socketio.emit('progress', 20, broadcast=True)
-            print(20)
+            
+           
 
         print("Time to load data : ", time.time() - startTime)
         # Json Loaded Successfully!
         # print(jsonData)
 
         startTime = time.time()
-        socketio.emit('progress', 30, broadcast=True)
+        
+        global tableSchema, columnListOrd
         columnList, tableSchema, columnListOrd, tableSchemaOrd = utilities.GenTableSchema(
             jsonData, JOINER_CHAR=JOINER_CHAR,  ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
                             INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX)
         print("Time to gen schema : ", time.time() - startTime)
-        socketio.emit('progress', 40, broadcast=True)
+        
         # Generated columnList and schemaTree
         # print("columns : ", columnList)
         # print("schema Tree: ", tableSchema)
@@ -96,24 +103,24 @@ def uploadFile():
         # print("Join Par in Cols : ",  JOIN_PAR_IN_COLS)
         # print("Fill Missing with : ", FILL_MISSING_WITH)
 
-        DataDict = {}
-        startTime = time.time()
-        socketio.emit('progress', 50, broadcast=True)
-        # utilities.WriteDict(DataDict, 0, '', jsonData)
-        utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
-                            INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX, GEN_CROSS_TABLE = GEN_CROSS_TABLE)
-        # print(DataDict)
-        print("Time to create DataDict: ", time.time() - startTime)
-        socketio.emit('progress', 60, broadcast=True)
+        # DataDict = {}
+        # startTime = time.time()
+        # socketio.emit('progress', 50, broadcast=True)
+        # # utilities.WriteDict(DataDict, 0, '', jsonData)
+        # utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
+        #                     INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX, GEN_CROSS_TABLE = GEN_CROSS_TABLE)
+        # # print(DataDict)
+        # print("Time to create DataDict: ", time.time() - startTime)
+        # socketio.emit('progress', 60, broadcast=True)
 
-        startTime = time.time()
-        socketio.emit('progress', 70, broadcast=True)
-        # DF = pd.DataFrame.from_dict(DataDict, "index")
-        # print("Time to create DF from Dict: ", time.time() - startTime)
-        columnsOrder = columnListOrd
-        global DF
-        DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
-        print("Time to create DF from Dict in order: ", time.time() - startTime)
+        # startTime = time.time()
+        # socketio.emit('progress', 70, broadcast=True)
+        # # DF = pd.DataFrame.from_dict(DataDict, "index")
+        # # print("Time to create DF from Dict: ", time.time() - startTime)
+        # columnsOrder = columnListOrd
+        # global DF
+        # DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
+        # print("Time to create DF from Dict in order: ", time.time() - startTime)
 
         # startTime = time.time()
         # utilities.WriteToDF(DF, jsonData, tableSchema)
@@ -179,6 +186,39 @@ def uploadFile():
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
+
+@app.route('/api/process', methods=['POST'])
+@cross_origin()
+def processFile():
+    print("process")
+    try:
+        DataDict = {}
+        startTime = time.time()
+        socketio.emit('progress', 50, broadcast=True)
+        # utilities.WriteDict(DataDict, 0, '', jsonData)
+        utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
+                            INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX, GEN_CROSS_TABLE = GEN_CROSS_TABLE)
+        # print(DataDict)
+        print("Time to create DataDict: ", time.time() - startTime)
+        socketio.emit('progress', 60, broadcast=True)
+
+        startTime = time.time()
+        socketio.emit('progress', 70, broadcast=True)
+        # DF = pd.DataFrame.from_dict(DataDict, "index")
+        # print("Time to create DF from Dict: ", time.time() - startTime)
+        columnsOrder = columnListOrd
+        global DF
+        DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
+        print("Time to create DF from Dict in order: ", time.time() - startTime)
+
+        response = jsonify(message="Data frame generated")
+        return response
+        
+    except Exception as e:
+        print(e)
+        return jsonify({'message:', 'error'})
+
+
 
 @app.route('/api/convert', methods=['POST'])
 @cross_origin()
