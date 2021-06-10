@@ -1,9 +1,5 @@
 import "./FileUpload.css";
-import {
-  faFileUpload,
-  faMarsDouble,
-  faUpload,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FileUrlLayout from "../components/FileUrlLayout";
 import { useState } from "react";
@@ -18,9 +14,9 @@ import { Container, Row, Col } from "react-bootstrap";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
-import io from 'socket.io-client'
+import io from "socket.io-client";
 var FileDownload = require("js-file-download");
-const socket = io('http://localhost:5000/')
+const socket = io("http://localhost:5000/");
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState();
@@ -34,48 +30,49 @@ const FileUpload = () => {
   // save download content when res received
   const [downloadContent, setDownloadContent] = useState("");
   const [fileExtension, setFileExtension] = useState("");
+  const [processed, setProcessed] = useState(false);
 
-  // on selecting file
+  // for getting updates regarding progress 
+  socket.on("progress", (val) => {
+    setUploadPercentage(val);
+    console.log(val);
+  });
+
+  // on selecting file for upload this function is called
   const changeHandler = (e) => {
     setSelectedFile(e.target.files[0]);
     setIsSelected(true);
-    setShowOptions(true);
-    socket.emit('UserAdded', {'data' : {'user': "Aditi"}})
+    setProcessed(true);
   };
 
-  socket.on('progress', (val) => {
-    setUploadPercentage(val);
-    console.log(val)
-  })
+  
   // on clicking any converting button
-  const handleSubmission = (val) => {
+  const handleSubmission = () => {
     const formData = new FormData();
     formData.append("File", selectedFile);
     formData.set("input_type", "file");
-    formData.set("content_type",val);
-    if(val == "excel"){
-      setFileExtension("output.xlsx")
-    }
-    else if(val == "csv"){
-      setFileExtension("output.csv")
-    }
-    else{
-      setFileExtension("output.db")
-    }
+    // formData.set("content_type", val);
+    // if (val == "excel") {
+    //   setFileExtension("output.xlsx");
+    // } else if (val == "csv") {
+    //   setFileExtension("output.csv");
+    // } else {
+    //   setFileExtension("output.db");
+    // }
     console.log(selectedFile);
     console.log(formData);
-    const options = {
-      onUploadProgress: (progressEvent) => {
-        const { loaded, total } = progressEvent;
-        let percent = Math.floor((loaded * 100) / total);
-        console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+    // const options = {
+    //   onUploadProgress: (progressEvent) => {
+    //     const { loaded, total } = progressEvent;
+    //     let percent = Math.floor((loaded * 100) / total);
+    //     console.log(`${loaded}kb of ${total}kb | ${percent}%`);
 
-        if (percent < 100) {
-          // setUploadPercentage(percent);
-          console.log(uploadPercentage);
-        }
-      },
-    };
+    //     if (percent < 100) {
+    //       // setUploadPercentage(percent);
+    //       console.log(uploadPercentage);
+    //     }
+    //   },
+    // };
     // fetch("http://localhost:5000/api/upload", {
     //   headers: {
     //     "Access-Control-Allow-Origin": "*",
@@ -100,35 +97,52 @@ const FileUpload = () => {
     //     console.error("Error", error);
     //     setUploadPercentage(0);
     //   });
-    
+
     axios
-      .post("http://localhost:5000/api/upload", formData,{responseType: "blob"}, options)
+      .post(
+        "http://localhost:5000/api/upload",
+        formData
+      )
+      .then((res) => {
+        console.log("data frame generated");
+        setProcessed(false);
+        setShowOptions(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleConversion = (val)=>{
+    const formData = new FormData();
+    formData.set("content_type", val);
+    if (val == "excel") {
+      setFileExtension("output.xlsx");
+    } else if (val == "csv") {
+      setFileExtension("output.csv");
+    } else {
+      setFileExtension("output.db");
+    }
+    axios
+      .post(
+        "http://localhost:5000/api/convert",
+        formData,
+        { responseType: "blob" }  
+      )
       .then((response) => {
-        
         setUploadPercentage(100);
         setTimeout(() => {
           setUploadPercentage(0);
-        }, 2000);
+        }, 1000);
         setDownloadContent(response.data);
-
         console.log(response);
         setShowDownload(true);
-        // let url = URL.createObjectURL(new Blob([response.data]));
-        //   setDownloadUrl(url)
-        // response.blob().then((myblob) => {
-
-        // 	// let a = document.createElement('a');
-        // 	// a.href = url;
-        // 	// a.download = 'employees.json';
-        // 	// a.click();
-        // });
-        //window.location.href = response.url;
       })
       .catch((err) => {
         console.log(err);
         setUploadPercentage(0);
       });
-  };
+  }
 
   const downloadFile = () => {
     FileDownload(downloadContent, fileExtension);
@@ -164,16 +178,26 @@ const FileUpload = () => {
           <p className="text-center"> Upload A JSON File</p>
         )}
       </div>
+      {processed ? (
+        <Button
+          title={"Process"}
+          class={"downloadButton"}  
+          clickFunc={() => handleSubmission()} 
+        ></Button>
+      ) : (
+        <p></p>
+      )}
       {showOptions ? (
         // <FileUrlLayout ></FileUrlLayout>
         <Container>
+          <h3>SELECT A CATEGORY</h3>
           <Row>
             <Col lg="4">
               <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
               <Button
                 title={"Convert to Excel"}
                 class={"uploadButton"}
-                clickFunc={() => handleSubmission("excel")}
+                clickFunc={() => handleConversion("excel")}
               ></Button>
             </Col>
             <Col lg="4">
@@ -181,7 +205,7 @@ const FileUpload = () => {
               <Button
                 title={"Convert To CSV"}
                 class={"uploadButton"}
-                clickFunc={() => handleSubmission("csv")}
+                clickFunc={() => handleConversion("csv")}
               ></Button>
             </Col>
             <Col lg="4">
@@ -189,7 +213,7 @@ const FileUpload = () => {
               <Button
                 title={"Save to Hive"}
                 class={"uploadButton"}
-                clickFunc={() => handleSubmission("hive")}
+                clickFunc={() => handleConversion("hive")}
               ></Button>
             </Col>
           </Row>
