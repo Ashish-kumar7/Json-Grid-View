@@ -42,7 +42,7 @@ initTime=''
 
 @socketio.on('connect')
 def connected():
-    print('connected')
+    print('connected with socketio')
 
 
 @app.route('/api/upload', methods=['POST'])
