@@ -15,6 +15,7 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 import io from "socket.io-client";
+import Modal from '../../components/modal/Modal';
 var FileDownload = require("js-file-download");
 const socket = io("http://localhost:5000/");
 
@@ -30,7 +31,19 @@ const FileUpload = () => {
   // save download content when res received
   const [downloadContent, setDownloadContent] = useState("");
   const [fileExtension, setFileExtension] = useState("");
-  const [processed, setProcessed] = useState(false);
+  const [customize, setCustomize] = useState(false);
+
+  // on clicking customize button modal will be shown (show modal variable)
+  const [open, setOpen] = useState(false);
+
+  const hideModal = () => {
+    setOpen(false);
+    
+  };
+
+  const showModal = () => {
+    setOpen(true);
+  }
 
   // for getting updates regarding progress 
   socket.on("progress", (val) => {
@@ -42,15 +55,40 @@ const FileUpload = () => {
   const changeHandler = (e) => {
     setSelectedFile(e.target.files[0]);
     setIsSelected(true);
-    setProcessed(true);
+    setCustomize(true);
+    
   };
 
-  
-  // on clicking any converting button
-  const handleSubmission = () => {
+  // on clicking customize button ,file will be sent to backend, schema will be received and customize modal will be shown
+  const handleCustomize = async (e) => {
+    
     const formData = new FormData();
     formData.append("File", selectedFile);
     formData.set("input_type", "file");
+    showModal();
+      await  axios
+      .post(
+        "http://localhost:5000/api/upload",
+        formData
+      )
+      .then((res) => {
+        
+        console.log("schema created");
+        showModal();
+        console.log(open)
+      })
+      
+      .catch((err) => {
+        console.log(err);
+      });
+      
+  }
+  
+  // on clicking any process button
+  const handleSubmission = () => {
+    const formData = new FormData();
+    // formData.append("File", selectedFile);
+    // formData.set("input_type", "file");
     // formData.set("content_type", val);
     // if (val == "excel") {
     //   setFileExtension("output.xlsx");
@@ -59,8 +97,8 @@ const FileUpload = () => {
     // } else {
     //   setFileExtension("output.db");
     // }
-    console.log(selectedFile);
-    console.log(formData);
+    // console.log(selectedFile);
+    // console.log(formData);
     // const options = {
     //   onUploadProgress: (progressEvent) => {
     //     const { loaded, total } = progressEvent;
@@ -98,14 +136,15 @@ const FileUpload = () => {
     //     setUploadPercentage(0);
     //   });
 
+    // process with options , data frame received
     axios
       .post(
-        "http://localhost:5000/api/upload",
-        formData
+        "http://localhost:5000/api/process", formData
       )
       .then((res) => {
         console.log("data frame generated");
-        setProcessed(false);
+        hideModal();
+        setCustomize(false)
         setShowOptions(true);
       })
       .catch((err) => {
@@ -178,12 +217,15 @@ const FileUpload = () => {
           <p className="text-center"> Upload A JSON File</p>
         )}
       </div>
-      {processed ? (
+      {customize ? (
+        <>
         <Button
-          title={"Process"}
+          title={"Customize"}
           class={"downloadButton"}  
-          clickFunc={() => handleSubmission()} 
+          clickFunc={() => handleCustomize()} 
         ></Button>
+        <Modal show={open} openFunc={showModal} closeFunc={hideModal} processFunc={()=>handleSubmission()}></Modal>
+       </> 
       ) : (
         <p></p>
       )}
