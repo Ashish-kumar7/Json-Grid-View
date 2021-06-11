@@ -24,14 +24,12 @@ const Button = ({
 Button.propTypes = {
   title: string,
   id: string,
-  link: string,
   classId: string
 };
 
 Button.defaultProps = {
   title: '',
   id: '',
-  link: '',
   classId: ''
 };
 
