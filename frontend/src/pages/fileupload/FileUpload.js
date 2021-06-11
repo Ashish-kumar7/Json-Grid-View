@@ -38,7 +38,7 @@ const FileUpload = () => {
 
   const hideModal = () => {
     setOpen(false);
-    
+
   };
 
   const showModal = () => {
@@ -56,34 +56,34 @@ const FileUpload = () => {
     setSelectedFile(e.target.files[0]);
     setIsSelected(true);
     setCustomize(true);
-    
+
   };
 
   // on clicking customize button ,file will be sent to backend, schema will be received and customize modal will be shown
   const handleCustomize = async (e) => {
-    
+
     const formData = new FormData();
     formData.append("File", selectedFile);
     formData.set("input_type", "file");
     showModal();
-      await  axios
+    await axios
       .post(
         "http://localhost:5000/api/upload",
         formData
       )
       .then((res) => {
-        
+
         console.log("schema created");
         showModal();
         console.log(open)
       })
-      
+
       .catch((err) => {
         console.log(err);
       });
-      
+
   }
-  
+
   // on clicking any process button
   const handleSubmission = () => {
     const formData = new FormData();
@@ -152,7 +152,7 @@ const FileUpload = () => {
       });
   };
 
-  const handleConversion = (val)=>{
+  const handleConversion = (val) => {
     const formData = new FormData();
     formData.set("content_type", val);
     if (val == "excel") {
@@ -166,7 +166,7 @@ const FileUpload = () => {
       .post(
         "http://localhost:5000/api/convert",
         formData,
-        { responseType: "blob" }  
+        { responseType: "blob" }
       )
       .then((response) => {
         setUploadPercentage(100);
@@ -219,13 +219,13 @@ const FileUpload = () => {
       </div>
       {customize ? (
         <>
-        <Button
-          title={"Customize"}
-          class={"downloadButton"}  
-          clickFunc={() => handleCustomize()} 
-        ></Button>
-        <Modal show={open} openFunc={showModal} closeFunc={hideModal} processFunc={()=>handleSubmission()}></Modal>
-       </> 
+          <Button
+            title={"Customize"}
+            classId={"downloadButton"}
+            clickFunc={() => handleCustomize()}
+          ></Button>
+          <Modal show={open} openFunc={showModal} closeFunc={hideModal} processFunc={() => handleSubmission()}></Modal>
+        </>
       ) : (
         <p></p>
       )}
@@ -238,7 +238,7 @@ const FileUpload = () => {
               <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
               <Button
                 title={"Convert to Excel"}
-                class={"uploadButton"}
+                classId={"uploadButton"}
                 clickFunc={() => handleConversion("excel")}
               ></Button>
             </Col>
@@ -246,7 +246,7 @@ const FileUpload = () => {
               <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
               <Button
                 title={"Convert To CSV"}
-                class={"uploadButton"}
+                classId={"uploadButton"}
                 clickFunc={() => handleConversion("csv")}
               ></Button>
             </Col>
@@ -254,7 +254,7 @@ const FileUpload = () => {
               <IconBox iconType={faDatabase} size={"2x"}></IconBox>
               <Button
                 title={"Save to Hive"}
-                class={"uploadButton"}
+                classId={"uploadButton"}
                 clickFunc={() => handleConversion("hive")}
               ></Button>
             </Col>
@@ -277,7 +277,7 @@ const FileUpload = () => {
       {showDownload ? (
         <Button
           title={"Download"}
-          class={"downloadButton"}
+          classId={"downloadButton"}
           clickFunc={downloadFile}
         ></Button>
       ) : (

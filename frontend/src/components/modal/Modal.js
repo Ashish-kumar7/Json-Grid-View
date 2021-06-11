@@ -2,19 +2,16 @@ import "./Modal.css";
 import { Modal } from "react-bootstrap";
 import { useState } from "react";
 import Button from '../button/Button'
-const CustomizeModal = (props) => {
 
-  
-    
-  
+const CustomizeModal = (props) => {
 
   return (
     <Modal
-    className="customize"
+      className="customize"
       show={props.show}
-    onHide={props.closeFunc}
-    backdrop="static"
-    
+      onHide={props.closeFunc}
+      backdrop="static"
+
       dialogClassName="modal-90w"
       aria-labelledby="example-custom-modal-styling-title"
     >
@@ -34,8 +31,8 @@ const CustomizeModal = (props) => {
         </p>
         <Button
           title={"Process"}
-          class={"downloadButton"}  
-          clickFunc={props.processFunc} 
+          classId={"downloadButton"}
+          clickFunc={props.processFunc}
         ></Button>
       </Modal.Body>
     </Modal>
