@@ -23,7 +23,6 @@ describe('ButtonComponent PropType', () => {
         expect(Button.propTypes).toEqual({
             title: PropTypes.string,
             id: PropTypes.string,
-            link: PropTypes.string,
             classId: PropTypes.string
         });
     });
@@ -71,7 +70,7 @@ it('should call mock function when button is clicked', () => {
 it('throws error if given the wrong props', () => {
     shallow(
         <Button
-            title={123} id="123" link="/options" classId="classId"
+            title={123} id="123" classId="classId"
         />
     );
     expect(consoleErrorSpy).toBeCalled();
