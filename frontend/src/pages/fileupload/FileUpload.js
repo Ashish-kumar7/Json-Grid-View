@@ -5,7 +5,6 @@ import FileUrlLayout from "../../components/fileurllayout/FileUrlLayout";
 import { useState } from "react";
 import { ProgressBar } from "react-bootstrap";
 import Navbar from "../../components/navbar/Navbar";
-import Footer2 from "../../components/footer2/Footer2";
 import axios from "axios";
 import Button from "../../components/button/Button"
 import { Link } from "react-router-dom";
@@ -283,8 +282,6 @@ const FileUpload = () => {
       ) : (
         <p></p>
       )}
-
-      <Footer2 />
     </div>
   );
 };
