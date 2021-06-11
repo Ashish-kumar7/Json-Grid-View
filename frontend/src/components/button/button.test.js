@@ -38,14 +38,27 @@ it('should return a <ul />', () => {
     expect(shallowWrapper.type()).toEqual('ul');
 });
 
-it('able to find an li element', () => {
+// Find the li element
+it('able to find the <li> element', () => {
+    expect(shallowWrapper.find('li').exists()).toEqual(true);
+});
+
+// Count of li element
+it('able to find the count of <li> element', () => {
     expect(shallowWrapper.find('li').length).toBe(1);
 });
 
-it('able to find an Link element', () => {
+// Find the link element
+it('able to find an <Link> element', () => {
     expect(shallowWrapper.find('Link').exists()).toEqual(true);
 });
 
+// Count of link element
+it('able to find the count of <Link> element', () => {
+    expect(shallowWrapper.find('Link').length).toBe(1);
+});
+
+//button Onclick 
 it('should call mock function when button is clicked', () => {
     const tree = shallow(
         <Button name='button test' clickFunc={mockFn} />
@@ -54,12 +67,12 @@ it('should call mock function when button is clicked', () => {
     expect(mockFn).toHaveBeenCalled();
 });
 
+//Props recieved into the button 
 it('throws error if given the wrong props', () => {
     shallow(
         <Button
             title={123} id="123" link="/options" classId="classId"
         />
     );
-
     expect(consoleErrorSpy).toBeCalled();
 });
