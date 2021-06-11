@@ -1,17 +1,38 @@
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { string } from 'prop-types';
 
-const Button = (props) => {
-  return(
-    <ul className="navbar-nav" onClick={props.clickFunc}>
-    <li className="nav-item">
-      <div className={props.class} id={props.id}>
-        <Link to={props.link} className="nav-link">
-          {props.title}
-        </Link>
-      </div>
-    </li>
-  </ul>
+const Button = ({
+  clickFunc,
+  title,
+  id,
+  link,
+  classId
+}) => {
+  return (
+    <ul className="navbar-nav" onClick={clickFunc}>
+      <li className="nav-item">
+        <div className={classId} id={id}>
+          <Link to={link} className="nav-link">
+            {title}
+          </Link>
+        </div>
+      </li>
+    </ul>
   );
 }
+
+Button.propTypes = {
+  title: string,
+  id: string,
+  link: string,
+  classId: string
+};
+
+Button.defaultProps = {
+  title: '',
+  id: '',
+  link: '',
+  classId: ''
+};
 
 export default Button;
