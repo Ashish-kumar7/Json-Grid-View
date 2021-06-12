@@ -102,6 +102,7 @@ const JsonInput = () => {
       .catch((err) => {
         console.log(err);
         setUploadPercentage(0);
+        alert("Oops it breaks " + err);
       });
   }
 

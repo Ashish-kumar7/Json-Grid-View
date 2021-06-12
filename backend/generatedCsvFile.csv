@@ -1,0 +1,13 @@
+,name,details.bank,details.accNo,details.addr,frnds.name,frnds.best
+0,abhi,bank1,2345,null,frnd1,false
+1,,bank2,3456,address1111,frnd2,null
+2,,,,,frnd3,null
+3,,,,,frnd4,null
+4,aditi,bank3,98765,null,frnd5,false
+5,,bank4,12345,null,frnd6,null
+6,,bank5,null,address2222,frnd8,true
+7,,,,,frnd9,null
+8,,,,,frnd10,null
+9,ashish,f,2345,null,frnd10,false
+10,,g,3456,address3333,frnd11,null
+11,,,,,frnd12,null

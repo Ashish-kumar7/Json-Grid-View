@@ -14,6 +14,7 @@
 
 .mystyle tr:nth-child(even) {
     background: #383838;
+    
 }
 .mystyle tr:nth-child(odd) {
     background: #454545;

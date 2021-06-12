@@ -5,6 +5,7 @@ import Button from "../button/Button";
 import artboard from "../../assets/artboard.jpg";
 import axios from "axios";
 import { useHistory } from "react-router";
+import initialDF from '../../global_variable';
 import { Container, Row, Col, InputGroup, Card, Form } from "react-bootstrap";
 import PreviewPage from "../../pages/previewpage/PreviewPage";
 
@@ -47,10 +48,13 @@ const CustomizeModal = (props) => {
         props.closeFunc();
         // setTotalPage();
         // setDataFrame();
-       history.push("/preview", {state: {'pages': {totalPage},'df':res.data.table}});
+        initialDF.df = res.data.table;
+        initialDF.pages = {totalPage};
+       history.push("/preview");
       })
       .catch((err) => {
         console.log(err);
+        alert("Oops it breaks " + err);
       });
   };
 
