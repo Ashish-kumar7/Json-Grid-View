@@ -17,6 +17,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Pagination from '@material-ui/lab/Pagination';
 import Navbar from "../../components/navbar/Navbar";
 import '../../components/scrollbar/ScrollBar.css'
+import { useHistory } from "react-router";
+import initialDataFrame from '../../global_variable';
 var FileDownload = require("js-file-download");
 var parse = require("html-react-parser");
 
@@ -44,7 +46,7 @@ const PreviewPage = (props) => {
 
     const classes = useStyles();
   // props containd top 20 rows and total pages
-  const location = useLocation();
+  // const location = useLocation();
   console.log("preview pageeeeeee");
   // console.log(location.state.state.df);
 
@@ -52,7 +54,16 @@ const PreviewPage = (props) => {
   const [fileExtension, setFileExtension] = useState("");
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [table, setTable] = useState(location.state.df);
+  const [table, setTable] = useState('');
+//  if(location.state){
+//    setTable('<p>Download</p>')
+//  }
+//  else{
+//     setTable(location.state.state.df);
+//  }
+  
+ 
+let history = useHistory();
   const handleConversion = (val) => {
     const formData = new FormData();
     formData.set("content_type", val);
@@ -68,6 +79,7 @@ const PreviewPage = (props) => {
         responseType: "blob",
       })
       .then((response) => {
+        
         setUploadPercentage(100);
         setTimeout(() => {
           setUploadPercentage(0);
@@ -93,7 +105,7 @@ const PreviewPage = (props) => {
 
       <div className="preview ">
         <Container className="display scrollbar scrollbar-secondary  ">
-          <div dangerouslySetInnerHTML={{__html: location.state.state.df }} />
+          <div dangerouslySetInnerHTML={{__html: initialDataFrame.df }} />
           {/* <div id="tableDisplay">
                 parse(location.state.state.df);
           </div> */}
@@ -103,7 +115,7 @@ const PreviewPage = (props) => {
       
       <Pagination count={10} color="primary" />
       <Pagination className={classes.num} count={10} color="secondary" />
-     
+      {/* <Pagination.Item key={1}></Pagination.Item> */}
     </div>
       <Container>
         <h3>SELECT A CATEGORY {props.totalPages}</h3>
