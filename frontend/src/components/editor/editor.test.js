@@ -8,7 +8,7 @@ configure({ adapter: new Adapter() });
 let shallowWrapper = ShallowWrapper;
 
 beforeEach(() => {
-    shallowWrapper = shallow(<div />);
+    shallowWrapper = shallow(<Editor />);
 });
 
 it('should return a <div>', () => {
@@ -26,11 +26,14 @@ it('able to find the count of <div> element', () => {
 });
 
 // Find the <textarea> element
-// it('able to find the <textarea> element', () => {
-//     expect(shallowWrapper.find('textarea').exists()).toEqual(true);
-// });
+it('able to find the <textarea> element', () => {
+    expect(shallowWrapper.find('textarea').exists()).toEqual(true);
+});
 
-
+// Find the count of the <textarea> element.
+it('able to find the count of <textarea> element', () => {
+    expect(shallowWrapper.find('textarea').length).toBe(1);
+});
 
 
 
