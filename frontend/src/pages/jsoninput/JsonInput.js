@@ -25,6 +25,8 @@ const JsonInput = () => {
   const [fileExtension, setFileExtension] = useState("");
   const [showOptions, setShowOptions] = useState(false);
 
+  var validJSON = true;
+
   // for getting updates regarding progress 
   socket.on("progress", (val) => {
     setUploadPercentage(val);
@@ -66,6 +68,8 @@ const JsonInput = () => {
       })
       .catch((err) => {
         console.log(err);
+        validJSON = false;
+        alert("Invalid JSON Input !!");
       });
   };
 
