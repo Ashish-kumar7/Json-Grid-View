@@ -184,7 +184,7 @@ def processFile():
 
         html_string = GenPageHTML(DF, 1)
         TOTAL_PAGES = ceil(DF.shape[0]/ROWS_PER_PAGE)
-        response = jsonify(table=html_string, total_pages=TOTAL_PAGES) 
+        response = jsonify(table=html_string, total_records=DF.shape[0], rows_per_page=ROWS_PER_PAGE) 
         return response
     
     
@@ -203,7 +203,7 @@ def returnDataFrame():
         print(type(page))
         print(page)
         html_string = GenPageHTML(DF, page)
-        response = jsonify(table=html_string) 
+        response = jsonify(table=html_string,total_records=DF.shape[0], rows_per_page=ROWS_PER_PAGE) 
         return response
     except Exception as e:
         print(e)

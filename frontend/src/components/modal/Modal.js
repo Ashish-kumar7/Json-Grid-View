@@ -8,6 +8,7 @@ import { useHistory } from "react-router";
 import initialDF from '../../global_variable';
 import { Container, Row, Col, InputGroup, Card, Form } from "react-bootstrap";
 import PreviewPage from "../../pages/previewpage/PreviewPage";
+import initialDataFrame from "../../global_variable";
 
 
 const CustomizeModal = (props) => {
@@ -20,7 +21,8 @@ const CustomizeModal = (props) => {
   const [tableName, setTablename] = useState("table001");
 
   
-  const [totalPage,setTotalPage]= useState(1);
+  const [totalRecords,setTotalRecords]= useState(1);
+  const [rows,setRows]= useState(1);
   const [dataframe, setDataframe]= useState("faltu string");
   let history = useHistory();
   // on clicking any process button
@@ -46,10 +48,12 @@ const CustomizeModal = (props) => {
         // console.log(dataframe);
         // response contains top 20 rows and total pages input
         props.closeFunc();
-        // setTotalPage();
+        // setTotalPage(res.data.total_pages);
+        // setRows(res.data.rows_per_page);
         // setDataFrame();
         initialDF.df = res.data.table;
-        initialDF.pages = {totalPage};
+        initialDF.rows = res.data.rows_per_page;
+        initialDF.records = res.data.total_records;
        history.push("/preview");
       })
       .catch((err) => {

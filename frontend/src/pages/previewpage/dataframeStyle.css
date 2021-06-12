@@ -12,11 +12,11 @@
     padding: 5px;
 }
 
-.mystyle tr:nth-child(even) {
+.mystyle tr:nth-child(odd) {
     background: #383838;
     
 }
-.mystyle tr:nth-child(odd) {
+.mystyle tr:nth-child(even) {
     background: #454545;
 }
 

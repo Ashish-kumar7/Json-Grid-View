@@ -156,8 +156,8 @@ let history = useHistory();
       <div className={classes.num} >
 
       <PaginationP 
-                totalRecords={3600}
-                pageLimit={18}
+                totalRecords={ initialDataFrame.records }
+                pageLimit={ initialDataFrame.rows }
                 pageNeighbours={1}
                 onPageChanged={onPageChanged}
               />
