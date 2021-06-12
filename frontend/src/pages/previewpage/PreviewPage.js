@@ -106,7 +106,7 @@ const PreviewPage = (props) => {
             <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
             <Button
               title={"Convert to Excel"}
-              class={"uploadButton"}
+              classId={"uploadButton"}
               clickFunc={() => handleConversion("excel")}
             ></Button>
           </Col>
@@ -114,7 +114,7 @@ const PreviewPage = (props) => {
             <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
             <Button
               title={"Convert To CSV"}
-              class={"uploadButton"}
+              classId={"uploadButton"}
               clickFunc={() => handleConversion("csv")}
             ></Button>
           </Col>
@@ -122,7 +122,7 @@ const PreviewPage = (props) => {
             <IconBox iconType={faDatabase} size={"2x"}></IconBox>
             <Button
               title={"Save to Hive"}
-              class={"uploadButton"}
+              classId={"uploadButton"}
               clickFunc={() => handleConversion("hive")}
             ></Button>
           </Col>
@@ -131,7 +131,7 @@ const PreviewPage = (props) => {
       {showDownload ? (
         <Button
           title={"Download"}
-          class={"downloadButton"}
+          classId={"downloadButton"}
           clickFunc={downloadFile}
         ></Button>
       ) : (

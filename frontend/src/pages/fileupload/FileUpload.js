@@ -18,7 +18,7 @@ import io from "socket.io-client";
 import Modal from "../../components/modal/Modal";
 
 var FileDownload = require("js-file-download");
-const socket = io("http://localhost:5000/");
+// const socket = io("http://localhost:5000/");
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState();
@@ -170,7 +170,7 @@ const FileUpload = () => {
   // const downloadFile = () => {
   //   FileDownload(downloadContent, fileExtension);
   // };
-
+    };
   return (
     <div className="fileUpload">
       <Navbar></Navbar>
@@ -219,62 +219,9 @@ const FileUpload = () => {
       ) : (
         <p></p>
       )}
-      {/* {showOptions ? (
-        // <FileUrlLayout ></FileUrlLayout>
-        <Container>
-          <h3>SELECT A CATEGORY</h3>
-          <Row>
-            <Col lg="4">
-              <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
-              <Button
-                title={"Convert to Excel"}
-                classId={"uploadButton"}
-                clickFunc={() => handleConversion("excel")}
-              ></Button>
-            </Col>
-            <Col lg="4">
-              <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
-              <Button
-                title={"Convert To CSV"}
-                classId={"uploadButton"}
-                clickFunc={() => handleConversion("csv")}
-              ></Button>
-            </Col>
-            <Col lg="4">
-              <IconBox iconType={faDatabase} size={"2x"}></IconBox>
-              <Button
-                title={"Save to Hive"}
-                classId={"uploadButton"}
-                clickFunc={() => handleConversion("hive")}
-              ></Button>
-            </Col>
-          </Row>
-        </Container>
-      ) : (
-        <p></p>
-      )}
-      {uploadPercentage > 0 && (
-        <div className="progressbar">
-          <ProgressBar
-            now={uploadPercentage}
-            striped={true}
-            animated
-            label={`${uploadPercentage}%`}
-            variant="success"
-          />
-        </div>
-      )}
-      {showDownload ? (
-        <Button
-          title={"Download"}
-          classId={"downloadButton"}
-          clickFunc={downloadFile}
-        ></Button>
-      ) : (
-        <p></p>
-      )} */}
+      
 
-      {/* <Footer2 /> */}
+     
     </div>
   );
 };
