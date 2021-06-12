@@ -2,10 +2,13 @@ HADOOP_INSTALLED = False
 
 
 from logging import exception
+import re
 from flask import Flask, jsonify, request, send_file
 from flask_cors import CORS, cross_origin
 import json
 import urllib.request
+
+from numpy import ceil
 import utilities
 
 if HADOOP_INSTALLED:
@@ -41,7 +44,7 @@ FILL_MISSING_WITH = 'null'
 GEN_CROSS_TABLE = False
 TABLE_TYPE = '1'
 
-ROWS_PER_PAGE = 50
+ROWS_PER_PAGE = 20
 CURRENT_PAGE = 1
 TOTAL_PAGES = 1
 
@@ -97,6 +100,14 @@ def uploadFile():
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
+
+
+def GenPageHTML(df, Page) :
+    if Page > ceil(df.shape[0]/ROWS_PER_PAGE):
+        return ''
+    startRow = (Page-1) * ROWS_PER_PAGE
+    endRow = min(df.shape[0] , startRow + ROWS_PER_PAGE)
+    return DF.iloc[ startRow : endRow ][:].to_html(classes='mystyle')
 
 @app.route('/api/process', methods=['POST'])
 @cross_origin()
@@ -171,9 +182,9 @@ def processFile():
             
         print("Time to create DF from Dict in order: ", time.time() - startTime)
 
-        html_string = DF.to_html(classes='mystyle')
-
-        response = jsonify(table=html_string) 
+        html_string = GenPageHTML(DF, 1)
+        TOTAL_PAGES = ceil(DF.shape[0]/ROWS_PER_PAGE)
+        response = jsonify(table=html_string, total_records=DF.shape[0], rows_per_page=ROWS_PER_PAGE) 
         return response
     
     
@@ -185,18 +196,14 @@ def processFile():
 @cross_origin()
 def returnDataFrame():
     print('page number')
+    print()
+    print('form\n\n\n\n\n' , request.form)
     try:
         page = int(request.form['page_number'])
         print(type(page))
         print(page)
-        if page != 1:
-           html_string = DF.loc[0:2,:].to_html(classes='mystyle')
-
-           response = jsonify(table=html_string) 
-        else :
-           html_string = DF.to_html(classes='mystyle')
-
-           response = jsonify(table=html_string) 
+        html_string = GenPageHTML(DF, page)
+        response = jsonify(table=html_string,total_records=DF.shape[0], rows_per_page=ROWS_PER_PAGE) 
         return response
     except Exception as e:
         print(e)
