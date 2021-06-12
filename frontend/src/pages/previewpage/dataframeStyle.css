@@ -1,0 +1,25 @@
+.mystyle {
+    font-size: 11pt; 
+    font-family: 'Roboto','Noto',sans-serif;
+    font-weight: 400;
+    color: #d5d5d5;
+    border-collapse: collapse; 
+    border: 1px solid silver;
+    text-align: center;
+}
+
+.mystyle td, th {
+    padding: 5px;
+}
+
+.mystyle tr:nth-child(even) {
+    background: #383838;
+}
+.mystyle tr:nth-child(odd) {
+    background: #454545;
+}
+
+.mystyle tr:hover {
+    background: #42a5f5;
+    cursor: pointer;
+}

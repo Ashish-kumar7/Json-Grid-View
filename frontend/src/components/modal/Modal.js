@@ -15,11 +15,12 @@ const CustomizeModal = (props) => {
   const [parentCol, setParentCol] = useState(true);
   // const [missingVal, setMissingVal] = useState("null");
   const [sheetName, setSheetName] = useState("Sheet1");
+  const [nullName, setNullName] = useState("null");
   const [tableName, setTablename] = useState("table001");
 
   
   const [totalPage,setTotalPage]= useState(1);
-  const [dataframe, setDataFrame]= useState("");
+  const [dataframe, setDataframe]= useState("faltu string");
   let history = useHistory();
   // on clicking any process button
   const handleSubmission = () => {
@@ -30,17 +31,23 @@ const CustomizeModal = (props) => {
     formData.set('parentCol', parentCol);
     formData.set('sheetName', sheetName);
     formData.set('tableName', tableName);
+    formData.set('nullName' , nullName);
     // process with options , data frame received
     
     axios
       .post("http://localhost:5000/api/process", formData)
       .then((res) => {
         console.log("data frame generated");
+        console.log(res.data.table);
+        setDataframe(res);
+        console.log(typeof res.data.table);
+        console.log("model pageeee");
+        console.log(dataframe);
         // response contains top 20 rows and total pages input
         props.closeFunc();
         // setTotalPage();
         // setDataFrame();
-       history.push("/preview", {state: {'pages': {totalPage},'df':{dataframe}}});
+       history.push("/preview", {state: {'pages': {totalPage},'df':res.data.table}});
       })
       .catch((err) => {
         console.log(err);
@@ -60,6 +67,11 @@ const CustomizeModal = (props) => {
   const sheethandler = (e) => {
     console.log(e.target.value);
     setSheetName(e.target.value);
+  }
+
+  const nullhandler = (e) => {
+    console.log(e.target.value);
+    setNullName(e.target.value);
   }
 
   const tableNamehandler = (e) => {
@@ -93,36 +105,40 @@ const CustomizeModal = (props) => {
       <Modal.Body>
         <Row>
           <Col>
-            <Row className="entry" onChange={tablehandler}>
+            <Row className="entry" >
               <h6>Select Table Type: </h6>
               <Col>
                 <InputGroup>
-                  <InputGroup.Radio
+                  <InputGroup.Radio 
+                    onChange={tablehandler}
                     name="tableType"
                     value="1"
                     aria-label="Radio button for following text input"
+                    defaultChecked
                   />
-                  Table with index
+                  Normal Table
                 </InputGroup>
               </Col>
               <Col>
                 <InputGroup>
                   <InputGroup.Radio
+                    onChange={tablehandler}
                     name="tableType"
                     value="2"
                     aria-label="Radio button for following text input"
                   />
-                  Table without index
+                  Cross Product Table
                 </InputGroup>
               </Col>
               <Col>
                 <InputGroup>
                   <InputGroup.Radio
+                    onChange={tablehandler}
                     name="tableType"
                     value="3"
                     aria-label="Radio button for following text input"
                   />
-                  Table for Query
+                  Table with added index
                 </InputGroup>
               </Col>
             </Row>
@@ -132,9 +148,10 @@ const CustomizeModal = (props) => {
               <Col>
                 <InputGroup>
                   <InputGroup.Radio
-                    name="tableType"
+                    name="parentType"
                     value={true}
                     aria-label="Radio button for following text input"
+                    defaultChecked
                   />
                   Yes
                 </InputGroup>
@@ -142,7 +159,7 @@ const CustomizeModal = (props) => {
               <Col>
                 <InputGroup>
                   <InputGroup.Radio
-                    name="tableType"
+                    name="parentType"
                     value={false}
                     aria-label="Radio button for following text input"
                   />
@@ -159,13 +176,22 @@ const CustomizeModal = (props) => {
                 <option value=".">_</option>
               </select>
             </Row>
+            <Row className="entry" onChange={nullhandler}>
+            <Form.Label>Fill Missing Value</Form.Label>
+          <Form.Control
+            required
+            type="text"
+            placeholder="Fill Missing Value"
+            defaultValue="null"
+          />
+            </Row>
             <Row className="entry" onChange={sheethandler}>
             <Form.Label>Sheet name</Form.Label>
           <Form.Control
             required
             type="text"
             placeholder="First name"
-            defaultValue="Mark"
+            defaultValue="Sheet1"
           />
             </Row>
             <Row className="entry" onChange={tableNamehandler}>
@@ -174,7 +200,7 @@ const CustomizeModal = (props) => {
             required
             type="text"
             placeholder="First name"
-            defaultValue="Mark"
+            defaultValue="table001"
           />
             </Row>
           </Col>
