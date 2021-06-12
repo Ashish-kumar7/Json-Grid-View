@@ -30,7 +30,7 @@ const HomePage = () => {
           </Col>
         </Row>
       </Container>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

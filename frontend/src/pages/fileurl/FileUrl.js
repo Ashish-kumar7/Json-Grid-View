@@ -170,12 +170,12 @@ const FileUrl = () => {
             label={`${uploadPercentage}%`}
             variant="success"
           />
-        </div>
-      )}
-      {showDownload ? (<Button title={"Download"}
-        classId={"downloadButton"} clickFunc={downloadFile}
-      ></Button>) : <p></p>}
-      <Footer2 />
+        </div> 
+        )}
+        {showDownload ? (<Button title={"Download"}
+              classId={"downloadButton"}  clickFunc={downloadFile}
+              ></Button>):<p></p>}
+        {/* <Footer2/> */}
     </div>
   );
 };
