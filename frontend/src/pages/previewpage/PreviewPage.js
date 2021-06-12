@@ -52,8 +52,13 @@ const PreviewPage = (props) => {
   const [fileExtension, setFileExtension] = useState("");
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [table, setTable] = useState(location.state.state.df);
+  const [table, setTable] = useState('');
 
+  // try {
+  //   setTable(location.state.state.df);
+  // } catch {
+  //     setTable('faltu ki table h');
+  // }
 
   const handleConversion = (val) => {
     const formData = new FormData();
@@ -70,6 +75,10 @@ const PreviewPage = (props) => {
         responseType: "blob",
       })
       .then((response) => {
+        try {
+          setTable(location.state.state.df);
+        } catch {
+        }
         setUploadPercentage(100);
         setTimeout(() => {
           setUploadPercentage(0);
