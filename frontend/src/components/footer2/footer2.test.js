@@ -30,12 +30,12 @@ it('able to find the count of <div> element', () => {
     expect(shallowWrapper.find('div').length).toBe(5);
 });
 
-// Find the <footer> element
+// Find the <footer2> element
 it('able to find the <footer2> element', () => {
     expect(shallowWrapper.find('footer2').exists()).toEqual(true);
 });
 
-// Find the count of the <footer> element.
+// Find the count of the <footer2> element.
 it('able to find the count of <footer2> element', () => {
     expect(shallowWrapper.find('footer2').length).toBe(1);
 });
