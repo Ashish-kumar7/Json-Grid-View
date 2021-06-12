@@ -175,7 +175,7 @@ const FileUrl = () => {
         {showDownload ? (<Button title={"Download"}
               class={"downloadButton"}  clickFunc={downloadFile}
               ></Button>):<p></p>}
-        <Footer2/>
+        {/* <Footer2/> */}
     </div>
   );
 };
