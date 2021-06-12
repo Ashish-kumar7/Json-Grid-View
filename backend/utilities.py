@@ -9,6 +9,7 @@ __reqCols = set()
 __colTree = {"": set()}
 __colTreeOrd = OrderedDict()
 __reqColsOrd = []
+__reqColsOrdNoPar = []
 __NULL = 'null'
 
 __JOINER_CHAR = '.'
@@ -51,6 +52,7 @@ def dfsGenCol(data, pref):
     global __colTreeOrd
     global __reqCols
     global __reqColsOrd
+    global __reqColsOrdNoPar
     if isListOfDict(data):
         if __ADD_INDEX_FOR_LIST:
             colName = (pref + __JOINER_CHAR +
@@ -60,6 +62,7 @@ def dfsGenCol(data, pref):
                 __colTree[pref].add(colName)
             if colName not in __reqCols:
                 __reqColsOrd.append(colName)
+                __reqColsOrdNoPar.append(colName)
                 __reqCols.add(colName)
 
         for x in data:
@@ -76,6 +79,7 @@ def dfsGenCol(data, pref):
             if isScalar(data[x]):
                 if colName not in __reqCols:
                     __reqColsOrd.append(colName)
+                    __reqColsOrdNoPar.append(x)
                     __reqCols.add(colName)
                 # print(__reqCols)
             else:
@@ -92,6 +96,7 @@ def GenTableSchema(data, JOINER_CHAR='.',  ADD_INDEX_FOR_LIST=False,
     global __colTreeOrd
     global __reqCols
     global __reqColsOrd
+    global __reqColsOrdNoPar
     global __JOINER_CHAR
     global __ADD_INDEX_FOR_LIST
     global __INDEX_FOR_LIST_SUFFIX
@@ -104,8 +109,9 @@ def GenTableSchema(data, JOINER_CHAR='.',  ADD_INDEX_FOR_LIST=False,
     __colTreeOrd[''] = []
     __reqCols = set()
     __reqColsOrd = []
+    __reqColsOrdNoPar = []
     dfsGenCol(data, '')
-    return (__reqCols, __colTree, __reqColsOrd, __colTreeOrd)
+    return (__reqCols, __colTree, __reqColsOrd, __colTreeOrd, __reqColsOrdNoPar)
 
 
 def Write(cdf, row, pref, colTree, data, __NULL='null'):

@@ -54,6 +54,7 @@ const CustomizeModal = (props) => {
       })
       .catch((err) => {
         console.log(err);
+        alert("Oops it breaks " + err);
       });
   };
 

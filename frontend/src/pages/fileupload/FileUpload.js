@@ -37,6 +37,8 @@ const FileUpload = () => {
   // on clicking customize button modal will be shown (show modal variable)
   const [open, setOpen] = useState(false);
 
+  var validJSON = true;
+
   const hideModal = () => {
     setOpen(false);
   };
@@ -53,9 +55,11 @@ const FileUpload = () => {
 
   // on selecting file for upload this function is called
   const changeHandler = (e) => {
-    setSelectedFile(e.target.files[0]);
-    setIsSelected(true);
-    setCustomize(true);
+    if(e.target.files[0]){
+      setSelectedFile(e.target.files[0]);
+      setIsSelected(true);
+      setCustomize(true);
+    }
   };
 
   // on clicking customize button ,file will be sent to backend, schema will be received and customize modal will be shown
@@ -75,6 +79,8 @@ const FileUpload = () => {
       .catch((err) => {
         // display alert for wrong json
         console.log(err);
+        validJSON = false;
+        alert("Invalid JSON File !!");
       });
     // formData.set("input_type", "file");
     // formData.set("content_type", val);
@@ -209,12 +215,15 @@ const FileUpload = () => {
             classId={"downloadButton"}
             clickFunc={() => handleCustomize()}
           ></Button>
+          {validJSON ? (
           <Modal
             show={open}
             openFunc={showModal}
-            closeFunc={hideModal}
-            
+            closeFunc={hideModal}  
           ></Modal>
+          ):(
+            <p></p>
+          )}
         </>
       ) : (
         <p></p>

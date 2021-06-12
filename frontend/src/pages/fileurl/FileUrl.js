@@ -24,6 +24,8 @@ const FileUrl = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [processed, setProcessed] = useState(true);
 
+  var validJSON = true;
+
   // for getting updates regarding progress 
   socket.on("progress", (val) => {
     setUploadPercentage(val);
@@ -75,6 +77,8 @@ const FileUrl = () => {
       })
       .catch((err) => {
         console.log(err);
+        validJSON = false;
+        alert("Invalid JSON URL !!");
       });
   };
 
@@ -106,6 +110,7 @@ const FileUrl = () => {
       .catch((err) => {
         console.log(err);
         setUploadPercentage(0);
+        alert("Oops it Breaks!!" + err);
       });
   }
 
