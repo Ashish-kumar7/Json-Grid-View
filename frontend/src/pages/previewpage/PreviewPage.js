@@ -156,7 +156,7 @@ let history = useHistory();
       <div className={classes.num} >
 
       <PaginationP 
-                totalRecords={3600}
+                totalRecords={9888}
                 pageLimit={18}
                 pageNeighbours={1}
                 onPageChanged={onPageChanged}

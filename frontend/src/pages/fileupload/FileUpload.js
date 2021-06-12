@@ -16,23 +16,31 @@ import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 import io from "socket.io-client";
 import Modal from "../../components/modal/Modal";
+import { css } from "@emotion/react";
+import RingLoader from "react-spinners/RingLoader";
+import BounceLoader from "react-spinners/BounceLoader";
+import ClockLoader from "react-spinners/ClockLoader";
 
 var FileDownload = require("js-file-download");
+
+
 // const socket = io("http://localhost:5000/");
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
+
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState();
   // to check if file is selected or not
   const [isSelected, setIsSelected] = useState(false);
-  // const [uploadPercentage, setUploadPercentage] = useState(0);
-  // if file is selected than show the otions
-  // const [showOptions, setShowOptions] = useState(false);
-  // if response received , show the download button
-  // const [showDownload, setShowDownload] = useState(false);
-  // save download content when res received
-  // const [downloadContent, setDownloadContent] = useState("");
-  // const [fileExtension, setFileExtension] = useState("");
   const [customize, setCustomize] = useState(false);
+
+  let [loading, setLoading] = useState(false);
+  let [color, setColor] = useState("#ea80fc");
 
   // on clicking customize button modal will be shown (show modal variable)
   const [open, setOpen] = useState(false);
@@ -64,6 +72,7 @@ const FileUpload = () => {
 
   // on clicking customize button ,file will be sent to backend, schema will be received and customize modal will be shown
   const handleCustomize =  () => {
+    setLoading(true);
     const formData = new FormData();
     formData.append("File", selectedFile);
     formData.set("input_type", "file");
@@ -72,15 +81,20 @@ const FileUpload = () => {
       .post("http://localhost:5000/api/upload", formData)
       .then((res) => {
         console.log("json loaded and checked");
+        setLoading(false);
         showModal();
         
       })
 
       .catch((err) => {
         // display alert for wrong json
+        setLoading(false);
+       
         console.log(err);
         validJSON = false;
-        alert("Invalid JSON File !!");
+        setTimeout(()=>{
+          alert("Invalid JSON File !!");
+        },1000);
       });
     // formData.set("input_type", "file");
     // formData.set("content_type", val);
@@ -207,7 +221,9 @@ const FileUpload = () => {
           <p className="text-center"> Upload A JSON File</p>
         )}
       </div>
-    
+      <RingLoader color={color} loading={loading} css={override} size={150} />
+      
+      
       {customize ? (
         <>
           <Button
