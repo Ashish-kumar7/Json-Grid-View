@@ -52,7 +52,9 @@ const PreviewPage = (props) => {
   const [fileExtension, setFileExtension] = useState("");
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  // const [table, setTable] = useState(location.state.state.df);
+  const [table, setTable] = useState(location.state.state.df);
+
+
   const handleConversion = (val) => {
     const formData = new FormData();
     formData.set("content_type", val);
@@ -93,7 +95,7 @@ const PreviewPage = (props) => {
 
       <div className="preview ">
         <Container className="display scrollbar scrollbar-secondary  ">
-          <div dangerouslySetInnerHTML={{__html: location.state.state.df }} />
+          <div dangerouslySetInnerHTML={{__html: table }} />
           {/* <div id="tableDisplay">
                 parse(location.state.state.df);
           </div> */}

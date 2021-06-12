@@ -48,6 +48,7 @@ TOTAL_PAGES = 1
 
 
 DF = ''
+HTML_PREV_STR = ''
 jsonData ={}
 tableSchema =''
 columnListOrd =''
