@@ -11,8 +11,8 @@ beforeEach(() => {
     shallowWrapper = shallow(<SocialIcons />);
 });
 
-// error  part
-it('should return a <div>', () => {
+
+it('should return a <React.Fragment>', () => {
     expect(shallowWrapper.type().toString()).toEqual(React.Fragment.toString());
 });
 
