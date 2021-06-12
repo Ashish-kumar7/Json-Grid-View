@@ -224,9 +224,11 @@ def processFile():
         startTime = time.time()
         
         global tableSchema, columnListOrd
-        columnList, tableSchema, columnListOrd, tableSchemaOrd = utilities.GenTableSchema(
+        columnList, tableSchema, columnListOrd, tableSchemaOrd, columnListOrdNoPar = utilities.GenTableSchema(
             jsonData, JOINER_CHAR=JOINER_CHAR,  ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
                             INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX)
+        
+        print("\n\n\n\nNoParCols",columnListOrdNoPar)
         print("Time to gen schema : ", time.time() - startTime)
         
         # Generated columnList and schemaTree
@@ -253,6 +255,11 @@ def processFile():
         columnsOrder = columnListOrd
         global DF
         DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
+
+        if not JOIN_PAR_IN_COLS : 
+            # Remove parent names from columns
+            DF.columns = columnListOrdNoPar
+            
         print("Time to create DF from Dict in order: ", time.time() - startTime)
 
         html_string = DF.to_html(classes='mystyle')
@@ -286,7 +293,7 @@ def convertFile():
         # Generate XLSX
         if extension == "excel":
             startTime = time.time()
-            DF.to_excel(XLSX_FILENAME + '.xlsx')
+            DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen xlsx : ", time.time() - startTime)
             return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
