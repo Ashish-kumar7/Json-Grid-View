@@ -46,7 +46,7 @@ const PreviewPage = (props) => {
   // props containd top 20 rows and total pages
   const location = useLocation();
   console.log("preview pageeeeeee");
-  console.log(location.state.state.df);
+  // console.log(location.state.state.df);
 
   const [downloadContent, setDownloadContent] = useState("");
   const [fileExtension, setFileExtension] = useState("");

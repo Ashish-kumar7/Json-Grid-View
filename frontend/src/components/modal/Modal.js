@@ -37,12 +37,12 @@ const CustomizeModal = (props) => {
     axios
       .post("http://localhost:5000/api/process", formData)
       .then((res) => {
-        console.log("data frame generated");
-        console.log(res.data.table);
+        // console.log("data frame generated");
+        // console.log(res.data.table);
         setDataframe(res);
-        console.log(typeof res.data.table);
+        // console.log(typeof res.data.table);
         console.log("model pageeee");
-        console.log(dataframe);
+        // console.log(dataframe);
         // response contains top 20 rows and total pages input
         props.closeFunc();
         // setTotalPage();
