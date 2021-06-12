@@ -19,7 +19,7 @@ const HomePage = () => {
             </div>
             <Button
               title={"Start Converting"}
-              class={"startButton"}
+              classId={"startButton"}
               link={"/options"}
             ></Button>
           </Col>

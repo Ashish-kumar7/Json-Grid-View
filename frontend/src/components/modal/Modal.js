@@ -195,7 +195,7 @@ const CustomizeModal = (props) => {
 
         <Button
           title={"Process"}
-          class={"downloadButton"}
+          classId={"downloadButton"}
           clickFunc={handleSubmission}
         ></Button>
       </Modal.Body>

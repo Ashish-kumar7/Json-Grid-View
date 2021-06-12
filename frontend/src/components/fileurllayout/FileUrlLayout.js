@@ -6,27 +6,25 @@ import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 
 const FileUrlLayout = (props) => {
-return(
+  return (
     <Container>
-    <Row>
-      <Col lg="4">
-        <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
-        <Button title={"Convert to Excel"} class={"uploadButton"} clickFunc={props.buttonFunc}></Button>
-      </Col>
-      <Col lg="4">
-        <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
-        <Button title={"Convert To CSV"} class={"uploadButton"} clickFunc={props.buttonFunc}></Button>
-      </Col>
-      <Col lg="4">
-        <IconBox iconType={faDatabase} size={"2x"}></IconBox>
-        <Button title={"Save to Hive"} class={"uploadButton"} clickFunc={props.buttonFunc}></Button>
-      </Col>
-    </Row>
-  </Container>
-);
+      <Row>
+        <Col lg="4">
+          <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
+          <Button title={"Convert to Excel"} classId={"uploadButton"} clickFunc={props.buttonFunc}></Button>
+        </Col>
+        <Col lg="4">
+          <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
+          <Button title={"Convert To CSV"} classId={"uploadButton"} clickFunc={props.buttonFunc}></Button>
+        </Col>
+        <Col lg="4">
+          <IconBox iconType={faDatabase} size={"2x"}></IconBox>
+          <Button title={"Save to Hive"} classId={"uploadButton"} clickFunc={props.buttonFunc}></Button>
+        </Col>
+      </Row>
+    </Container>
+  );
 
 }
 
-
 export default FileUrlLayout;
-

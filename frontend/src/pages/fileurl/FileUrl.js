@@ -24,8 +24,8 @@ const FileUrl = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [processed, setProcessed] = useState(true);
 
-   // for getting updates regarding progress 
-   socket.on("progress", (val) => {
+  // for getting updates regarding progress 
+  socket.on("progress", (val) => {
     setUploadPercentage(val);
     console.log(val);
   });
@@ -67,18 +67,18 @@ const FileUrl = () => {
     //     console.error("Error", error);
     //   });
     axios
-    .post("http://localhost:5000/api/upload", formData)
-    .then((res) => {
-      console.log("data frame generated");
+      .post("http://localhost:5000/api/upload", formData)
+      .then((res) => {
+        console.log("data frame generated");
         setProcessed(false);
         setShowOptions(true);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
-  const handleConversion = (val)=>{
+  const handleConversion = (val) => {
     const formData = new FormData();
     formData.set("content_type", val);
     if (val == "excel") {
@@ -92,7 +92,7 @@ const FileUrl = () => {
       .post(
         "http://localhost:5000/api/convert",
         formData,
-        { responseType: "blob" }  
+        { responseType: "blob" }
       )
       .then((response) => {
         setUploadPercentage(100);
@@ -123,22 +123,22 @@ const FileUrl = () => {
       {processed ? (
         <Button
           title={"Process"}
-          class={"downloadButton"}  
-          clickFunc={() => handleSubmission()} 
+          classId={"downloadButton"}
+          clickFunc={() => handleSubmission()}
         ></Button>
       ) : (
         <p></p>
       )}
       {/* <FileUrlLayout buttonFunc={handleSubmission}></FileUrlLayout> */}
-      {showOptions?
-      (<Container>
-        <h3>SELECT A CATEGORY</h3>
+      {showOptions ?
+        (<Container>
+          <h3>SELECT A CATEGORY</h3>
           <Row>
             <Col lg="4">
               <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
               <Button
                 title={"Convert to Excel"}
-                class={"uploadButton"}
+                classId={"uploadButton"}
                 clickFunc={() => handleConversion("excel")}
               ></Button>
             </Col>
@@ -146,7 +146,7 @@ const FileUrl = () => {
               <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
               <Button
                 title={"Convert To CSV"}
-                class={"uploadButton"}
+                classId={"uploadButton"}
                 clickFunc={() => handleConversion("csv")}
               ></Button>
             </Col>
@@ -154,15 +154,15 @@ const FileUrl = () => {
               <IconBox iconType={faDatabase} size={"2x"}></IconBox>
               <Button
                 title={"Save to Hive"}
-                class={"uploadButton"}
+                classId={"uploadButton"}
                 clickFunc={() => handleConversion("hive")}
               ></Button>
             </Col>
           </Row>
-        </Container>):<p></p>
+        </Container>) : <p></p>
       }
       {uploadPercentage > 0 && (
-       <div className="progressbar">
+        <div className="progressbar">
           <ProgressBar
             now={uploadPercentage}
             striped={true}
@@ -173,7 +173,7 @@ const FileUrl = () => {
         </div> 
         )}
         {showDownload ? (<Button title={"Download"}
-              class={"downloadButton"}  clickFunc={downloadFile}
+              classId={"downloadButton"}  clickFunc={downloadFile}
               ></Button>):<p></p>}
         {/* <Footer2/> */}
     </div>

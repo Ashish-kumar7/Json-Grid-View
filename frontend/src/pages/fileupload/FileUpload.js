@@ -76,12 +76,6 @@ const FileUpload = () => {
         // display alert for wrong json
         console.log(err);
       });
-  };
-
-  // on clicking any process button
-  // const handleSubmission = () => {
-  //   const formData = new FormData();
-    // formData.append("File", selectedFile);
     // formData.set("input_type", "file");
     // formData.set("content_type", val);
     // if (val == "excel") {
@@ -212,7 +206,7 @@ const FileUpload = () => {
         <>
           <Button
             title={"Customize"}
-            class={"downloadButton"}
+            classId={"downloadButton"}
             clickFunc={() => handleCustomize()}
           ></Button>
           <Modal
@@ -234,7 +228,7 @@ const FileUpload = () => {
               <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
               <Button
                 title={"Convert to Excel"}
-                class={"uploadButton"}
+                classId={"uploadButton"}
                 clickFunc={() => handleConversion("excel")}
               ></Button>
             </Col>
@@ -242,7 +236,7 @@ const FileUpload = () => {
               <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
               <Button
                 title={"Convert To CSV"}
-                class={"uploadButton"}
+                classId={"uploadButton"}
                 clickFunc={() => handleConversion("csv")}
               ></Button>
             </Col>
@@ -250,7 +244,7 @@ const FileUpload = () => {
               <IconBox iconType={faDatabase} size={"2x"}></IconBox>
               <Button
                 title={"Save to Hive"}
-                class={"uploadButton"}
+                classId={"uploadButton"}
                 clickFunc={() => handleConversion("hive")}
               ></Button>
             </Col>
@@ -273,7 +267,7 @@ const FileUpload = () => {
       {showDownload ? (
         <Button
           title={"Download"}
-          class={"downloadButton"}
+          classId={"downloadButton"}
           clickFunc={downloadFile}
         ></Button>
       ) : (

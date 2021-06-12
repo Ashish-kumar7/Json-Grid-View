@@ -57,8 +57,9 @@
   },
   "devDependencies": {
     "enzyme": "^3.11.0",
-    "jest": "26.6.0",
     "enzyme-adapter-react-16": "^1.15.6",
-    "jest-enzyme": "^7.1.2"
+    "jest": "26.6.0",
+    "jest-enzyme": "^7.1.2",
+    "mock-prop-types": "^2.1.5"
   }
 }

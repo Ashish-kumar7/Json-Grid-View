@@ -1,5 +1,5 @@
 
-import {Route} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import HomePage from './pages/homepage/HomePage';
 import OptionsPage from './pages/optionpage/OptionsPage';
 import FileUpload from './pages/fileupload/FileUpload';
@@ -21,7 +21,7 @@ function App() {
         <Route path="/file-url"><FileUrl /></Route>
         <Route path="/json-input"><JsonInput /></Route>
     </div>
-    
+
   );
 }
 

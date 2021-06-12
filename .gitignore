@@ -1,2 +1,3 @@
-/test-cases
-/test-cases/citylots.json
+/test-cases/
+/backend/__pycache__/
+/backend/spark-warehouse/

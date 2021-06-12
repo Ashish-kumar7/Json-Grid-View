@@ -19,7 +19,7 @@ const OptionsPage = () => {
             <Button
               id={"btn1"}
               title={"Upload A File"}
-              class={"optionButton"}
+              classId={"optionButton"}
               link={"/file-upload"}
             ></Button>
           </Col>
@@ -28,7 +28,7 @@ const OptionsPage = () => {
             <Button
               id={"btn2"}
               title={"Provide A URL"}
-              class={"optionButton"}
+              classId={"optionButton"}
               link={"/file-url"}
             ></Button>
           </Col>
@@ -37,7 +37,7 @@ const OptionsPage = () => {
             <Button
               id={"btn3"}
               title={"Go To Editor"}
-              class={"optionButton"}
+              classId={"optionButton"}
               link={"/json-input"}
             ></Button>
           </Col>
