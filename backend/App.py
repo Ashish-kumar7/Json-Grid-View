@@ -273,6 +273,26 @@ def processFile():
         print(e)
         return jsonify({'message:', 'error'})
 
+@app.route('/api/page', methods=['POST'])
+@cross_origin()
+def returnDataFrame():
+    print('page number')
+    try:
+        page = int(request.form['page_number'])
+        print(type(page))
+        print(page)
+        if page != 1:
+           html_string = DF.loc[0:2,:].to_html(classes='mystyle')
+
+           response = jsonify(table=html_string) 
+        else :
+           html_string = DF.to_html(classes='mystyle')
+
+           response = jsonify(table=html_string) 
+        return response
+    except Exception as e:
+        print(e)
+        return jsonify({'message:', 'error'})
 
 
 @app.route('/api/convert', methods=['POST'])

@@ -1,6 +1,6 @@
 import "./PreviewPage.css";
 import "./dataframeStyle.css";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Pagination, PageItem } from "react-bootstrap";
 import FileUrlLayout from "../../components/fileurllayout/FileUrlLayout";
 import Button from "../../components/button/Button";
 import IconBox from "../../components/iconbox/IconBox";
@@ -14,11 +14,13 @@ import { useLocation } from "react-router-dom";
 // import { useDemoData } from '@material-ui/x-grid-data-generator';
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Pagination from '@material-ui/lab/Pagination';
+// import Pagination from '@material-ui/lab/Pagination';
 import Navbar from "../../components/navbar/Navbar";
 import '../../components/scrollbar/ScrollBar.css'
 import { useHistory } from "react-router";
 import initialDataFrame from '../../global_variable';
+import { PaginationItem } from '@material-ui/lab';
+import PaginationP from "../../components/pagination/Pagination";
 var FileDownload = require("js-file-download");
 var parse = require("html-react-parser");
 
@@ -35,9 +37,12 @@ const useStyles = makeStyles((theme) => ({
       
     },
     num:{
-        color:'white',
-        backgroundColor:'#00b0ff',
-        fontSize:'30px',
+        // color:'black',
+        // backgroundColor:'#00b0ff',
+        marginLeft:'36%',
+        marginRight:'30%',
+        padding:'2%',
+        
     },
   }));
 
@@ -54,7 +59,7 @@ const PreviewPage = (props) => {
   const [fileExtension, setFileExtension] = useState("");
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [table, setTable] = useState('');
+  const [table, setTable] = useState(initialDataFrame.df);
 //  if(location.state){
 //    setTable('<p>Download</p>')
 //  }
@@ -98,6 +103,43 @@ let history = useHistory();
     FileDownload(downloadContent, fileExtension);
   };
 
+  const pagehandler = (number) => {
+     console.log(number);
+  };
+
+  let active = 2;
+  let items = [];
+  for (let number = 1; number <= 5; number++) {
+    items.push(
+      <PaginationItem className={classes.num}   shape="round" size="large" color='secondary' type="page" page={number} active={number === active}  onClick={()=>pagehandler(number)}>
+        {number}
+      </PaginationItem>
+
+    );
+  }
+
+  const onPageChanged = (data) => {
+    // const { allCountries } = this.state;
+    const { currentPage, totalPages, pageLimit } = data;
+    console.log(currentPage);
+    const offset = (currentPage - 1) * pageLimit;
+    const formData = new FormData();
+    formData.set("page_number", currentPage);
+    axios
+      .post("http://localhost:5000/api/page", formData)
+      .then((response) => {
+        console.log(response);
+        setTable(response.data.table);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  
+    // const currentCountries = allCountries.slice(offset, offset + pageLimit);
+
+    // this.setState({ currentPage, currentCountries, totalPages });
+  };
+
   return (
       <>
       <Navbar></Navbar>
@@ -105,17 +147,20 @@ let history = useHistory();
 
       <div className="preview ">
         <Container className="display scrollbar scrollbar-secondary  ">
-          <div dangerouslySetInnerHTML={{__html: initialDataFrame.df }} />
+          <div dangerouslySetInnerHTML={{__html: table }} />
           {/* <div id="tableDisplay">
                 parse(location.state.state.df);
           </div> */}
         </Container>
       </div>
-      <div className={classes.root}>
-      
-      <Pagination count={10} color="primary" />
-      <Pagination className={classes.num} count={10} color="secondary" />
-      {/* <Pagination.Item key={1}></Pagination.Item> */}
+      <div className={classes.num} >
+
+      <PaginationP 
+                totalRecords={3600}
+                pageLimit={18}
+                pageNeighbours={1}
+                onPageChanged={onPageChanged}
+              />
     </div>
       <Container>
         <h3>SELECT A CATEGORY {props.totalPages}</h3>
