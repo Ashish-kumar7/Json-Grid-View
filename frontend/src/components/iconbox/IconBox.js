@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-
 import { Link } from 'react-router-dom'
+import { string } from 'prop-types';
 
 const IconBox = (props) => {
     return (
@@ -9,5 +9,13 @@ const IconBox = (props) => {
         </div>
     );
 }
+
+IconBox.propTypes = {
+    size: string
+};
+
+IconBox.defaultProps = {
+    size: ''
+};
 
 export default IconBox;
