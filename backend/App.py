@@ -153,7 +153,7 @@ def processFile():
         
         # Generated columnList and schemaTree
         # print("columns : ", columnList)
-        # print("schema Tree: ", tableSchema)
+        print("schema Tree: ", tableSchema)
         # print("ord cols :" , columnListOrd)
         # print("schema Tree Ord: ", tableSchemaOrd)
 

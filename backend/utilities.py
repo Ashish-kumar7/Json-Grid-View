@@ -305,15 +305,19 @@ def GenCrossSchema(pref,prefId, data, schema):
             idx += 1
         schema[prefId] = reqRows
 
-    elif type(data) is dict:
+    else :
         reqRows = 1
         # print("data = " , data)
         for x in __tableSchema[pref]:
-            colName = x  # Name of col without prefix
+            colName = x 
             noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
             newPrefId = prefId + __JOINER_CHAR + noPreCol if prefId !='' else noPreCol
+            if prefId == 'features.45503.geometry' :
+                print(pref , prefId, colName, noPreCol, newPrefId)
             if x in __tableSchema:
                 # Recur further
+                if prefId == 'features.45503.geometry' :
+                    print("x " , x)
                 if noPreCol in data:
                     reqRows *= GenCrossSchema(colName,newPrefId, data[noPreCol], schema)
                 else:
@@ -322,8 +326,8 @@ def GenCrossSchema(pref,prefId, data, schema):
                 reqRows *= 1
                 schema[newPrefId] = 1
         schema[prefId] = reqRows
-    else:
-        print("error: pref\n", pref,"\ntype\n", type(data))
+    # else:
+    #     print("error in generating schema\n: pref\n", pref,"\ntype\n", type(data))
     return reqRows
 
 # Generate cross product dictionary
@@ -339,7 +343,7 @@ def GenCrossDict(pref,prefId, row, Dict, data, schema):
             row += schema[colName]
             idx+=1
 
-    elif type(data) is dict:
+    else:
         reqRows = 1
         # print("data = " , data)
         initRow = row
@@ -351,7 +355,7 @@ def GenCrossDict(pref,prefId, row, Dict, data, schema):
             if x in __tableSchema:
                 # Recur further
                 
-                if noPreCol in data:
+                if (not data is None) and (noPreCol in data):
                     for i in range(schema[prefId] // schema[newPrefId]) : 
                         GenCrossDict(colName,newPrefId,row, Dict,data[noPreCol], schema)
                         row += schema[newPrefId]
@@ -361,7 +365,7 @@ def GenCrossDict(pref,prefId, row, Dict, data, schema):
                         row += schema[newPrefId]
             else:
                 towrt = __FILL_MISSING_WITH
-                if noPreCol in data:
+                if (not data is None) and (noPreCol in data):
                     towrt = str(data[noPreCol])
                     if towrt.isnumeric():
                         towrt = int(towrt)
@@ -369,8 +373,8 @@ def GenCrossDict(pref,prefId, row, Dict, data, schema):
                     if not (row+i) in Dict  :
                         Dict[row +i] = {}
                     Dict[row + i][colName] = towrt 
-    else:
-        print("error: pref\n", pref,"\ntype\n", type(data))
+    # else:
+    #     print("error in gen cross data dict: pref\n", pref,"\ntype\n", type(data))
 
 
 def WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_FOR_LIST=False,
