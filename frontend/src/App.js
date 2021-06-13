@@ -15,7 +15,7 @@ function App() {
         <Route path='/preview'><QueryPage /></Route>
         <Route path='/footer'><Footer /></Route>
         <Route path='/footer2'><Footer2 /></Route>
-        <Route  path="/home" ><HomePage /></Route>
+        <Route  exact path="/" ><HomePage /></Route>
         <Route path="/options"><OptionsPage/></Route>
         <Route path="/file-upload"><FileUpload /></Route>
         <Route path="/file-url"><FileUrl /></Route>

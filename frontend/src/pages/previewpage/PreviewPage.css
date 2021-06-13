@@ -2,6 +2,7 @@
     background-color: #000a29;
     height: auto;
     min-height: 110vh;
+    scroll-behavior:inherit;
 }
 
 .preview {
@@ -106,4 +107,13 @@
        font-family:Arial, Helvetica, sans-serif;
        word-spacing: 5px;
        
+     }
+
+     .colList {
+       background-color: white;
+       width: 50%;
+     }
+
+     .textList {
+       color: black;
      }

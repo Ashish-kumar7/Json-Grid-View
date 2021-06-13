@@ -13,102 +13,110 @@ import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import io from "socket.io-client";
 import axios from 'axios'
-var FileDownload = require("js-file-download");
-const socket = io("http://localhost:5000/");
+import Modal from "../../components/modal/Modal";
+import { css } from "@emotion/react";
+import RingLoader from "react-spinners/RingLoader";
+// const socket = io("http://localhost:5000/");
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 const JsonInput = () => {
   const [inputJson, setInputJson] = useState();
-  const [processed, setProcessed] = useState(true);
-  const [showDownload, setShowDownload] = useState(false);
-  const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [downloadContent, setDownloadContent] = useState("");
-  const [fileExtension, setFileExtension] = useState("");
-  const [showOptions, setShowOptions] = useState(false);
+ 
+  let [loading, setLoading] = useState(false);
+  let [color, setColor] = useState("#ea80fc");
+
+  // on clicking customize button modal will be shown (show modal variable)
+  const [open, setOpen] = useState(false);
 
   var validJSON = true;
 
   // for getting updates regarding progress 
-  socket.on("progress", (val) => {
-    setUploadPercentage(val);
-    console.log(val);
-  });
+  // socket.on("progress", (val) => {
+  //   setUploadPercentage(val);
+  //   console.log(val);
+  // });
 
   const changeHandler = (e) => {
     setInputJson(e.target.value);
   };
 
-  const handleSubmission = () => {
+  const hideModal = () => {
+    setOpen(false);
+  };
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+
+   
+  
+
+
+  // const handleConversion = (val) => {
+  //   const formData = new FormData();
+  //   formData.set("content_type", val);
+  //   console.log(val)
+  //   if (val == "excel") {
+  //     setFileExtension("output.xlsx");
+  //   } else if (val == "csv") {
+  //     setFileExtension("output.csv");
+  //   } else {
+  //     setFileExtension("output.db");
+  //   }
+  //   axios
+  //     .post(
+  //       "http://localhost:5000/api/convert",
+  //       formData,
+  //       { responseType: "blob" }
+  //     )
+  //     .then((response) => {
+  //       setUploadPercentage(100);
+  //       setTimeout(() => {
+  //         setUploadPercentage(0);
+  //       }, 1000);
+  //       setDownloadContent(response.data);
+  //       console.log(response);
+  //       setShowDownload(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setUploadPercentage(0);
+  //       alert("Oops it breaks " + err);
+  //     });
+  // }
+
+  const handleCustomize =  () => {
+    setLoading(true);
+   
     const formData = new FormData();
     formData.append("Json", inputJson);
     formData.set("input_type", "text");
-    console.log(inputJson);
-    console.log(formData);
-    //   fetch("http://localhost:5000/api/upload", {
-    //     headers: {
-    //       "Access-Control-Allow-Origin": "*",
-    //     },
-    //     method: "POST",
-    //     body: formData,
-    //   })
-    //     .then((response) => response.json())
-    //     .then((result) => {
-    //       console.log("Success", result);
-    //       setProcessed(true);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error", error);
-    //     });
-    // };
-
-    axios
+     axios
       .post("http://localhost:5000/api/upload", formData)
       .then((res) => {
-        setProcessed(false);
-        setShowOptions(true);
+        console.log("json loaded and checked");
+        setLoading(false);
+        showModal();
+        
       })
+
       .catch((err) => {
+        // display alert for wrong json
+        setLoading(false);
+       
         console.log(err);
         validJSON = false;
-        alert("Invalid JSON Input !!");
+        setTimeout(()=>{
+          alert("Invalid JSON File !!");
+        },1000);
       });
-  };
-
-  const handleConversion = (val) => {
-    const formData = new FormData();
-    formData.set("content_type", val);
-    console.log(val)
-    if (val == "excel") {
-      setFileExtension("output.xlsx");
-    } else if (val == "csv") {
-      setFileExtension("output.csv");
-    } else {
-      setFileExtension("output.db");
-    }
-    axios
-      .post(
-        "http://localhost:5000/api/convert",
-        formData,
-        { responseType: "blob" }
-      )
-      .then((response) => {
-        setUploadPercentage(100);
-        setTimeout(() => {
-          setUploadPercentage(0);
-        }, 1000);
-        setDownloadContent(response.data);
-        console.log(response);
-        setShowDownload(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        setUploadPercentage(0);
-        alert("Oops it breaks " + err);
-      });
-  }
-
-  const downloadFile = () => {
-    FileDownload(downloadContent, fileExtension);
-  };
+    }; 
 
   return (
     <div className="jsonInput">
@@ -116,52 +124,15 @@ const JsonInput = () => {
       <Container>
         <Row>
           <Col lg="6">
-            <Editor process={processed} onChange={changeHandler} click={() => handleSubmission()} ></Editor>
+            <Editor process={true} onChange={changeHandler} click={() => handleCustomize()} ></Editor>
           </Col>
           <Col lg="6">
-            {showOptions ? (<Container>
-              <Row>
-                <Col lg="4" className="colspace">
-                  <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
-                  <Button
-                    title={"Convert to Excel"}
-                    classId={"uploadButton"}
-                    clickFunc={() => handleConversion("excel")}
-                  ></Button>
-                </Col>
-                <Col lg="4" className="colspace">
-                  <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
-                  <Button
-                    title={"Convert To CSV"}
-                    classId={"uploadButton"}
-                    clickFunc={() => handleConversion("csv")}
-                  ></Button>
-                </Col>
-                <Col lg="4" className="colspace">
-                  <IconBox iconType={faDatabase} size={"2x"}></IconBox>
-                  <Button
-                    title={"Save to Hive"}
-                    classId={"uploadButton"}
-                    clickFunc={() => handleConversion("hive")}
-                  ></Button>
-                </Col>
-              </Row>
-            </Container>) : <p></p>}
-            {uploadPercentage > 0 && (
-              <div className="progressbar">
-                <ProgressBar
-                  now={uploadPercentage}
-                  striped={true}
-                  animated
-                  label={`${uploadPercentage}%`}
-                  variant="success"
-                />
-              </div>
-            )}
-            {showDownload ? (<Button title={"Download"}
-              classId={"downloadButton"} clickFunc={downloadFile}
-            ></Button>) : <p></p>}
-            {/* <FileUrlLayout ></FileUrlLayout> */}
+          <Modal
+            show={open}
+            openFunc={showModal}
+            closeFunc={hideModal}  
+          ></Modal>
+          <RingLoader color={color} loading={loading} css={override} size={150} />
           </Col>
         </Row>
       </Container>

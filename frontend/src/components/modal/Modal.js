@@ -54,6 +54,8 @@ const CustomizeModal = (props) => {
         initialDF.df = res.data.table;
         initialDF.rows = res.data.rows_per_page;
         initialDF.records = res.data.total_records;
+        initialDF.cols = res.data.columns;
+        console.log( initialDF.cols.length);
        history.push("/preview");
       })
       .catch((err) => {

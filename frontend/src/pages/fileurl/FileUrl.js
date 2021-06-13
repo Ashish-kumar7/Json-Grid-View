@@ -1,47 +1,59 @@
-import FileUrlLayout from "../../components/fileurllayout/FileUrlLayout";
+
 import Navbar from "../../components/navbar/Navbar";
 import "./FileUrl.css";
 import { useState } from "react";
 import axios from 'axios'
-import Footer2 from "../../components/footer2/Footer2";
 import { ProgressBar } from "react-bootstrap";
 import Button from '../../components/button/Button'
-import IconBox from "../../components/iconbox/IconBox";
-import { Container, Row, Col } from "react-bootstrap";
-import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { faDatabase } from "@fortawesome/free-solid-svg-icons";
-import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
-import io from "socket.io-client";
-var FileDownload = require("js-file-download");
-const socket = io("http://localhost:5000/");
+import Modal from "../../components/modal/Modal";
+import { css } from "@emotion/react";
+import RingLoader from "react-spinners/RingLoader";
+
+// const socket = io("http://localhost:5000/");
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 const FileUrl = () => {
   const [inputUrl, setInputUrl] = useState();
-  const [showDownload, setShowDownload] = useState(false);
-  const [uploadPercentage, setUploadPercentage] = useState(0);
-  const [downloadContent, setDownloadContent] = useState("");
-  const [fileExtension, setFileExtension] = useState("");
-  const [showOptions, setShowOptions] = useState(false);
-  const [processed, setProcessed] = useState(true);
+  // const [uploadPercentage, setUploadPercentage] = useState(0);
+  
+
+
+  let [loading, setLoading] = useState(false);
+  let [color, setColor] = useState("#ea80fc");
+
+  // on clicking customize button modal will be shown (show modal variable)
+  const [open, setOpen] = useState(false);
 
   var validJSON = true;
 
   // for getting updates regarding progress 
-  socket.on("progress", (val) => {
-    setUploadPercentage(val);
-    console.log(val);
-  });
+  // socket.on("progress", (val) => {
+  //   setUploadPercentage(val);
+  //   console.log(val);
+  // });
 
   const changeHandler = (e) => {
     setInputUrl(e.target.value);
   };
 
-  const handleSubmission = () => {
-    const formData = new FormData();
-    formData.append("Url", inputUrl);
-    formData.set("input_type", "url");
-    console.log(inputUrl);
-    console.log(formData);
+  const hideModal = () => {
+    setOpen(false);
+  };
+
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  // const handleSubmission = () => {
+  //   const formData = new FormData();
+  //   formData.append("Url", inputUrl);
+  //   formData.set("input_type", "url");
+  //   console.log(inputUrl);
+  //   console.log(formData);
     // const options = {
     //   onUploadProgress: (progressEvent) => {
     //     const { loaded, total } = progressEvent;
@@ -68,55 +80,78 @@ const FileUrl = () => {
     //   .catch((error) => {
     //     console.error("Error", error);
     //   });
-    axios
+  //   axios
+  //     .post("http://localhost:5000/api/upload", formData)
+  //     .then((res) => {
+  //       console.log("data frame generated");
+  //       setProcessed(false);
+  //       setShowOptions(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       validJSON = false;
+  //       alert("Invalid JSON URL !!");
+  //     });
+  // };
+
+  // const handleConversion = (val) => {
+  //   const formData = new FormData();
+  //   formData.set("content_type", val);
+  //   if (val == "excel") {
+  //     setFileExtension("output.xlsx");
+  //   } else if (val == "csv") {
+  //     setFileExtension("output.csv");
+  //   } else {
+  //     setFileExtension("output.db");
+  //   }
+  //   axios
+  //     .post(
+  //       "http://localhost:5000/api/convert",
+  //       formData,
+  //       { responseType: "blob" }
+  //     )
+  //     .then((response) => {
+  //       setUploadPercentage(100);
+  //       setTimeout(() => {
+  //         setUploadPercentage(0);
+  //       }, 1000);
+  //       setDownloadContent(response.data);
+  //       console.log(response);
+  //       setShowDownload(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setUploadPercentage(0);
+  //       alert("Oops it Breaks!!" + err);
+  //     });
+  // }
+
+  const handleCustomize =  () => {
+    setLoading(true);
+   
+    const formData = new FormData();
+    formData.append("Url", inputUrl);
+    formData.set("input_type", "url");
+     axios
       .post("http://localhost:5000/api/upload", formData)
       .then((res) => {
-        console.log("data frame generated");
-        setProcessed(false);
-        setShowOptions(true);
+        console.log("json loaded and checked");
+        setLoading(false);
+        showModal();
+        
       })
+
       .catch((err) => {
+        // display alert for wrong json
+        setLoading(false);
+       
         console.log(err);
         validJSON = false;
-        alert("Invalid JSON URL !!");
+        setTimeout(()=>{
+          alert("Invalid JSON File !!");
+        },1000);
       });
-  };
-
-  const handleConversion = (val) => {
-    const formData = new FormData();
-    formData.set("content_type", val);
-    if (val == "excel") {
-      setFileExtension("output.xlsx");
-    } else if (val == "csv") {
-      setFileExtension("output.csv");
-    } else {
-      setFileExtension("output.db");
-    }
-    axios
-      .post(
-        "http://localhost:5000/api/convert",
-        formData,
-        { responseType: "blob" }
-      )
-      .then((response) => {
-        setUploadPercentage(100);
-        setTimeout(() => {
-          setUploadPercentage(0);
-        }, 1000);
-        setDownloadContent(response.data);
-        console.log(response);
-        setShowDownload(true);
-      })
-      .catch((err) => {
-        console.log(err);
-        setUploadPercentage(0);
-        alert("Oops it Breaks!!" + err);
-      });
-  }
-
-  const downloadFile = () => {
-    FileDownload(downloadContent, fileExtension);
-  };
+    };  
 
   return (
     <div className="fileUrl">
@@ -125,48 +160,26 @@ const FileUrl = () => {
         <label>URL</label>
         <input className="urlinput" placeholder="https://google.com" type="text" onChange={changeHandler} />
       </div>
-      {processed ? (
+      <RingLoader color={color} loading={loading} css={override} size={150} />
+      
+        <>
         <Button
-          title={"Process"}
+          title={"Customize"}
           classId={"downloadButton"}
-          clickFunc={() => handleSubmission()}
+          clickFunc={() => handleCustomize()}
         ></Button>
-      ) : (
-        <p></p>
-      )}
-      {/* <FileUrlLayout buttonFunc={handleSubmission}></FileUrlLayout> */}
-      {showOptions ?
-        (<Container>
-          <h3>SELECT A CATEGORY</h3>
-          <Row>
-            <Col lg="4">
-              <IconBox iconType={faFileExcel} size={"2x"}></IconBox>
-              <Button
-                title={"Convert to Excel"}
-                classId={"uploadButton"}
-                clickFunc={() => handleConversion("excel")}
-              ></Button>
-            </Col>
-            <Col lg="4">
-              <IconBox iconType={faFileCsv} size={"2x"}></IconBox>
-              <Button
-                title={"Convert To CSV"}
-                classId={"uploadButton"}
-                clickFunc={() => handleConversion("csv")}
-              ></Button>
-            </Col>
-            <Col lg="4">
-              <IconBox iconType={faDatabase} size={"2x"}></IconBox>
-              <Button
-                title={"Save to Hive"}
-                classId={"uploadButton"}
-                clickFunc={() => handleConversion("hive")}
-              ></Button>
-            </Col>
-          </Row>
-        </Container>) : <p></p>
-      }
-      {uploadPercentage > 0 && (
+        <Modal
+            show={open}
+            openFunc={showModal}
+            closeFunc={hideModal}  
+          ></Modal>
+          </>
+      ) 
+  
+     
+      
+      
+      {/* {uploadPercentage > 0 && (
         <div className="progressbar">
           <ProgressBar
             now={uploadPercentage}
@@ -176,11 +189,9 @@ const FileUrl = () => {
             variant="success"
           />
         </div> 
-        )}
-        {showDownload ? (<Button title={"Download"}
-              classId={"downloadButton"}  clickFunc={downloadFile}
-              ></Button>):<p></p>}
-        {/* <Footer2/> */}
+        )} */}
+       
+      
     </div>
   );
 };

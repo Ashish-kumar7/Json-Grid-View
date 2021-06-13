@@ -1,19 +1,11 @@
 import "./FileUpload.css";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
 import { useState } from "react";
 import { ProgressBar } from "react-bootstrap";
 import Navbar from "../../components/navbar/Navbar";
-import { RadioGroup, RadioButton } from "react-radio-buttons";
 import axios from "axios";
 import Button from "../../components/button/Button";
-import { Link } from "react-router-dom";
-import IconBox from "../../components/iconbox/IconBox";
-import { Container, Row, Col, InputGroup, Card } from "react-bootstrap";
-import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { faDatabase } from "@fortawesome/free-solid-svg-icons";
-import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 import io from "socket.io-client";
 import Modal from "../../components/modal/Modal";
 import { css } from "@emotion/react";
@@ -21,7 +13,6 @@ import RingLoader from "react-spinners/RingLoader";
 import BounceLoader from "react-spinners/BounceLoader";
 import ClockLoader from "react-spinners/ClockLoader";
 
-var FileDownload = require("js-file-download");
 
 
 // const socket = io("http://localhost:5000/");
@@ -96,78 +87,7 @@ const FileUpload = () => {
           alert("Invalid JSON File !!");
         },1000);
       });
-    // formData.set("input_type", "file");
-    // formData.set("content_type", val);
-    // if (val == "excel") {
-    //   setFileExtension("output.xlsx");
-    // } else if (val == "csv") {
-    //   setFileExtension("output.csv");
-    // } else {
-    //   setFileExtension("output.db");
-    // }
-    // console.log(selectedFile);
-    // console.log(formData);
-    // const options = {
-    //   onUploadProgress: (progressEvent) => {
-    //     const { loaded, total } = progressEvent;
-    //     let percent = Math.floor((loaded * 100) / total);
-    //     console.log(`${loaded}kb of ${total}kb | ${percent}%`);
-
-    //     if (percent < 100) {
-    //       // setUploadPercentage(percent);
-    //       console.log(uploadPercentage);
-    //     }
-    //   },
-    // };
-    // fetch("http://localhost:5000/api/upload", {
-    //   headers: {
-    //     "Access-Control-Allow-Origin": "*",
-    //   },
-    //   method: "POST",
-    //   body: formData,
-
-    // },options)
-    //   .then((response) => {
-    //     response.json()
-    //     console.log(response);
-    //    setUploadPercentage(100);
-    //    setTimeout(() => {
-    //      setUploadPercentage(0);
-    //    },1000);
-    //   })
-    //   .then((result) => {
-    //     console.log("Success", result);
-
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error", error);
-    //     setUploadPercentage(0);
-    //   });
-
-    // process with options , data frame received
-  //   axios
-  //     .post("http://localhost:5000/api/process", formData)
-  //     .then((res) => {
-  //       console.log("data frame generated");
-  //       hideModal();
-  //       setCustomize(false);
-  //       setShowOptions(true);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  // const handleConversion = (val) => {
-  //   const formData = new FormData();
-  //   formData.set("content_type", val);
-  //   if (val == "excel") {
-  //     setFileExtension("output.xlsx");
-  //   } else if (val == "csv") {
-  //     setFileExtension("output.csv");
-  //   } else {
-  //     setFileExtension("output.db");
-  //   }
+    };  
   //   axios
   //     .post("http://localhost:5000/api/convert", formData, {
   //       responseType: "blob",
@@ -185,12 +105,10 @@ const FileUpload = () => {
   //       console.log(err);
   //       setUploadPercentage(0);
   //     });
-  // };
 
-  // const downloadFile = () => {
-  //   FileDownload(downloadContent, fileExtension);
-  // };
-    };
+
+ 
+
   return (
     <div className="fileUpload">
       <Navbar></Navbar>
