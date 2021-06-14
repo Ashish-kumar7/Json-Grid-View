@@ -127,6 +127,8 @@ const PreviewPage = (props) => {
     }
   };
 
+
+ 
   // let active = 2;
   // let items = [];
   // for (let number = 1; number <= 5; number++) {
@@ -145,11 +147,15 @@ const PreviewPage = (props) => {
   //     </PaginationItem>
   //   );
   // }
-
+  const [showValue, setShowValue] = useState(false);
+  const [values, setValues] = useState([]);
+  let initcheck2 ={};
+  
   // create dictionary to store selected values for columns
   const dictIntermediate ={};
   for (var i = 0; i < initialDataFrame.cols.length; i++) {
     dictIntermediate[initialDataFrame.cols[i]] = new Set();
+    initcheck2[initialDataFrame.cols[i]]=new Array(values.length).fill(false);
   }
   let [dict, setDict] = useState(dictIntermediate);
  
@@ -168,14 +174,14 @@ const PreviewPage = (props) => {
       .post("http://localhost:5000/api/page", formData)
       .then((response) => {
         console.log(response);
-        setTable(response.data.table);
+         setTable(response.data.table);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const onUniqueValuePageChanged = () => {
+  const onUniqueValuePageChanged = (data) => {
     const { currentPage, totalPages, pageLimit } = data;
     console.log(currentPage);
 
@@ -187,7 +193,7 @@ const PreviewPage = (props) => {
       .then((response) => {
         // receive  20 unique values
         console.log(response);
-        // setValues();
+        setValues(response.data.unique_data);
       })
       .catch((err) => {
         console.log(err);
@@ -199,12 +205,17 @@ const PreviewPage = (props) => {
   let colWithIdx = [];
 
   // const values = ['aditi', 'aditya','abhishek', 'ashish', 'neha', 'prakriti'];
-  const [showValue, setShowValue] = useState(false);
-  const [values, setValues] = useState();
+  
+  
+
+  let initCheck =new Array(values.length).fill(false);
+  const [check,setCheck] = useState(initCheck);
+  const [check2,setCheck2] = useState(initcheck2);
+
   const handleListItemClick = (event, index) => {
     console.log(colWithIdx[index]);
-    
-
+    //  initCheck =new Array(values.length).fill(false);
+    //  setCheck(initCheck);
    // index selected for column name
     setSelectedIndex(index);
     const formData = new FormData();
@@ -215,7 +226,7 @@ const PreviewPage = (props) => {
       .then((response) => {
         // receive first 20 unique values
         console.log(response);
-        // setValues();
+        setValues(response.data.unique_data);
         setShowValue(true);
       })
       .catch((err) => {
@@ -247,27 +258,30 @@ const PreviewPage = (props) => {
   let valueList = [];
  
   
-  const initCheck =new Array(values.length).fill(false);
-  const [check,setCheck] = useState(initCheck);
+  
 
   //  setDict(dictIntermediate);
 
 
   const handleValueToggle  = (event, num) =>{
-    const newcheck = check;
+    const newcheck = check2;
      
     console.log("selectedcol" + colWithIdx[selectedIndex]);
-    if(newcheck[num]){
-      newcheck[num]=false;
+    if(newcheck[colWithIdx[selectedIndex]][num]){
+      newcheck[colWithIdx[selectedIndex]][num]=false;
+      const newdict =  dict;
+      newdict[colWithIdx[selectedIndex]].delete(values[num]);
+      setDict(newdict);
     }
     else{
-      newcheck[num]=true;
+      newcheck[colWithIdx[selectedIndex]][num]=true;
+      const newdict =  dict;
+      newdict[colWithIdx[selectedIndex]].add(values[num]);
+      setDict(newdict);
     }
     // console.log(initCheck)
-    setCheck(newcheck);
-    const newdict =  dict;
-    newdict[colWithIdx[selectedIndex]].add(values[num]);
-    setDict(newdict);
+    setCheck2(newcheck);
+   
     setState({});
   };
 
@@ -280,7 +294,7 @@ const PreviewPage = (props) => {
       <ListItemIcon>
         <Checkbox
           edge="start"
-          checked={check[number]}
+          checked={check2[colWithIdx[selectedIndex]][number]}
           tabIndex={-1}
           disableRipple
         />

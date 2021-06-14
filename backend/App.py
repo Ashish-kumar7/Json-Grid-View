@@ -206,7 +206,7 @@ def returnDataFrame():
 
 
 
-@app.route('/api/uiquery', methods=['POST'])
+@app.route('/api/uniqueValues', methods=['POST'])
 @cross_origin()
 def returnQueryData():
     global prevQueryCols
@@ -216,10 +216,10 @@ def returnQueryData():
     print('form\n\n\n\n\n' , request.form)
     try:
         q_selected_column = request.form['col_name']
-        q_selected_page = int(request.form['page_no']) if 'page_no' in request.form else 1
-        q_rows_per_page = int(request.form['rows_per_page'])
-        unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=DF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=q_rows_per_page)
-        response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=q_rows_per_page, unique_data = unique_data) 
+        q_selected_page = int(request.form['page_number']) if 'page_number' in request.form else 1
+        # q_rows_per_page = int(request.form['rows_per_page'])
+        unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=DF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=20)
+        response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=20, unique_data = unique_data) 
         return response
     except Exception as e:
         print(e)
