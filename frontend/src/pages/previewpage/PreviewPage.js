@@ -28,10 +28,13 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import SelectedValues from "../../components/selectedvaluespreview/SelectedValues";
+import IOSSwitch from "../../material-styles";
 
 var FileDownload = require("js-file-download");
 var parse = require("html-react-parser");
-
+ let dict = {};
 const useStyles = makeStyles((theme) => ({
   // root: {
   //   "& > *": {
@@ -57,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PreviewPage = (props) => {
-  // create dictionary to display all columns
+  
 
   
 
@@ -148,17 +151,23 @@ const PreviewPage = (props) => {
   }
 
   const [selectedIndex, setSelectedIndex] = useState(1);
-
+  let colWithIdx = [];
   const handleListItemClick = (event, index) => {
+    console.log(colWithIdx[index]);
+    dict[colWithIdx[index]].add("aditi");
+    console.log(dict);
     console.log(index);
     setSelectedIndex(index);
   };
 
+  // create dictionary to display all columns
   let colList = [];
-  let dict = {};
+ 
+ 
   for (var i = 0; i < initialDataFrame.cols.length; i++) {
     dict[initialDataFrame.cols[i]] = new Set();
     let number = i;
+    colWithIdx[number]=initialDataFrame.cols[i];
     colList.push(
     <ListItem
     button
@@ -214,21 +223,30 @@ const PreviewPage = (props) => {
             onPageChanged={onPageChanged}
           />
         </div>
-        <div>
-          <Switch
+        <div className="formtoggle">
+          <h5>Toggle the switch to perform query on data</h5>
+          {/* <Switch className="formswitch"
             checked={formDisplay}
             onChange={switchhandler}
             name="checkedA"
             inputProps={{ "aria-label": "secondary checkbox" }}
-          />
+          /> */}
+          <FormControlLabel className="formswitch"
+        control={<IOSSwitch checked={formDisplay} onChange={switchhandler} name="checkedB" />}
+        
+      />
         </div>
+          
         {formDisplay ? (
+          <>
+          <SelectedValues dict = {dict}></SelectedValues>
           <div className="colList">
           <Divider />
       <List component="nav" aria-label="secondary mailbox folder">
         {colList}
       </List>
       </div>
+      </>
         ) : (
           <p></p>
         )}

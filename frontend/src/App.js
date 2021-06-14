@@ -7,14 +7,15 @@ import Footer from './components/footer/Footer'
 import Footer2 from './components/footer2/Footer2'
 import FileUrl from './pages/fileurl/FileUrl'
 import JsonInput from './pages/jsoninput/JsonInput'
-import QueryPage from './pages/previewpage/PreviewPage'
+import SelectedValues from './components/selectedvaluespreview/SelectedValues'
+import PreviewPage from './pages/previewpage/PreviewPage';
 
 function App() {
   return (
     <div>
-        <Route path='/preview'><QueryPage /></Route>
+        <Route path='/preview'><PreviewPage /></Route>
         <Route path='/footer'><Footer /></Route>
-        <Route path='/footer2'><Footer2 /></Route>
+        <Route path='/selected'><SelectedValues /></Route>
         <Route  exact path="/" ><HomePage /></Route>
         <Route path="/options"><OptionsPage/></Route>
         <Route path="/file-upload"><FileUpload /></Route>

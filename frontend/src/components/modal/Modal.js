@@ -2,7 +2,7 @@ import "./Modal.css";
 import { Modal } from "react-bootstrap";
 import { useState } from "react";
 import Button from "../button/Button";
-import artboard from "../../assets/artboard.jpg";
+import artboard from "../../assets/table.png";
 import axios from "axios";
 import { useHistory } from "react-router";
 import initialDF from '../../global_variable';
@@ -107,7 +107,7 @@ const CustomizeModal = (props) => {
       dialogClassName="modal-90w"
       aria-labelledby="example-custom-modal-styling-title"
     >
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="modalheader"> 
         <Modal.Title id="example-custom-modal-styling-title">
           Customization Page
         </Modal.Title>
@@ -126,7 +126,7 @@ const CustomizeModal = (props) => {
                     aria-label="Radio button for following text input"
                     defaultChecked
                   />
-                  Normal Table
+                  <label>Normal Table</label>
                 </InputGroup>
               </Col>
               <Col>
@@ -148,7 +148,7 @@ const CustomizeModal = (props) => {
                     value="3"
                     aria-label="Radio button for following text input"
                   />
-                  Table with added index
+                 <label>Table with added index</label> 
                 </InputGroup>
               </Col>
             </Row>
@@ -177,7 +177,7 @@ const CustomizeModal = (props) => {
                 </InputGroup>
               </Col>
             </Row>
-            <Row className="entry" onChange={charhandler}>
+            <Row className="entry2" onChange={charhandler}>
               <h6>Join Column name with character</h6>
               <select aria-label="Default select example">
                 <option>Open this select menu</option>
@@ -186,7 +186,7 @@ const CustomizeModal = (props) => {
                 <option value=".">_</option>
               </select>
             </Row>
-            <Row className="entry" onChange={nullhandler}>
+            <Row className="entry2" onChange={nullhandler}>
             <Form.Label>Fill Missing Value</Form.Label>
           <Form.Control
             required
@@ -195,7 +195,9 @@ const CustomizeModal = (props) => {
             defaultValue="null"
           />
             </Row>
-            <Row className="entry" onChange={sheethandler}>
+            <Row>
+              <Col lg="6">
+              <Row className="entry3" onChange={sheethandler}>
             <Form.Label>Sheet name</Form.Label>
           <Form.Control
             required
@@ -204,7 +206,9 @@ const CustomizeModal = (props) => {
             defaultValue="Sheet1"
           />
             </Row>
-            <Row className="entry" onChange={tableNamehandler}>
+              </Col>
+              <Col lg="6">
+              <Row className="entry3" onChange={tableNamehandler}>
             <Form.Label>Table name</Form.Label>
           <Form.Control
             required
@@ -213,10 +217,14 @@ const CustomizeModal = (props) => {
             defaultValue="table001"
           />
             </Row>
+              </Col>
+            </Row>
+            
+            
           </Col>
           <Col>
-          <h4>Example</h4>
-            <Card style={{ width: "18rem", marginLeft:"20vh" }}>
+          <h4>Preview of how sheet will look</h4>
+            <Card className="look" >
               <Card.Img variant="top" src={artboard} />
               <Card.Body>
                 <Card.Title>Card Title</Card.Title>

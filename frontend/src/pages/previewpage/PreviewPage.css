@@ -1,7 +1,7 @@
 .previewpage {
     background-color: #000a29;
     height: auto;
-    min-height: 110vh;
+    min-height: 160vh;
     scroll-behavior:inherit;
 }
 
@@ -11,6 +11,7 @@
     min-height: 40vh;
     max-height: 90vh;
     display: flex;
+    
 }
 
 /* ::-webkit-scrollbar {
@@ -37,11 +38,11 @@
 
 
 .previewpage .display {
-  border : 8px #878787 ;
+  border : 4px #878787 ;
   border-style: double;
   min-height: 40vh;
   max-height: 90vh;
-  margin-top: 1vh;
+  margin-top: 3vh;
  
   flex-grow: 1;
     padding: 24px 24px 0 24px;
@@ -116,4 +117,17 @@
 
      .textList {
        color: black;
+     }
+
+     .previewpage .formtoggle {
+       margin-left: 38%;
+       margin-right: 38%;
+       margin-top: 1% ;
+       margin-bottom: 5%;
+       color: orange;
+     }
+
+     .previewpage .formswitch {
+       margin-left: 40%;
+       margin-right: 40%;
      }

@@ -6,6 +6,7 @@ import Footer from "../../components/footer/Footer";
 const HomePage = () => {
   return (
     <div className="homepage">
+      
       <Container>
         <Row>
           <Col lg="5">
@@ -30,7 +31,7 @@ const HomePage = () => {
           </Col>
         </Row>
       </Container>
-      <Footer />
+     
     </div>
   );
 };
