@@ -227,9 +227,7 @@ const PreviewPage = (props) => {
       .then((response) => {
         // receive first 20 unique values
         
-        console.log(response.data);
-        console.log(JSON.parse(response.data));
-         console.log(eval(response.data));
+       
        
         setValues(response.data.unique_data);
         setShowValue(true);
