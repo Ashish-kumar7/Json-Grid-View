@@ -23,7 +23,7 @@ const CustomizeModal = (props) => {
   
   const [totalRecords,setTotalRecords]= useState(1);
   const [rows,setRows]= useState(1);
-  const [dataframe, setDataframe]= useState("faltu string");
+  const [dataframe, setDataframe]= useState("");
   let history = useHistory();
   // on clicking any process button
   const handleSubmission = () => {
