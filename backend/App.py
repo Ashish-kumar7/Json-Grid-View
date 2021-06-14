@@ -106,26 +106,7 @@ def uploadFile():
         return jsonify({'message:', 'error'})
 
 
-def GenPageHTML(df, Page) :
-    if Page > ceil(df.shape[0]/ROWS_PER_PAGE):
-        return ''
-    startRow = (Page-1) * ROWS_PER_PAGE
-    endRow = min(df.shape[0] , startRow + ROWS_PER_PAGE)
-    return DF.iloc[ startRow : endRow ][:].to_html(classes='mystyle')
 
-def GenPageData(prevQueryCols, selected_col, selected_page, rows_per_page) :
-    if not selected_col in prevQueryCols :
-        # Load data here
-        prevQueryCols[selected_col] = [pd.unique(PreviewDF)] # Showing only available data
-        # prevQueryCols[q_selected_column] = [pd.unique(DF)] # Showing all data
-
-    total_records= len(prevQueryCols[selected_col])
-    total_pages = ceil( total_records/rows_per_page)
-    if selected_page > total_pages :
-        return []
-    startIdx = (selected_page - 1) * rows_per_page
-    endIdx = min( total_records, startIdx + rows_per_page )
-    return prevQueryCols[selected_col][startIdx:endIdx]
 
 @app.route('/api/process', methods=['POST'])
 @cross_origin()
@@ -205,7 +186,7 @@ def processFile():
 
         PreviewDF = DF.copy()
 
-        html_string = GenPageHTML(PreviewDF, 1)
+        html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
         response = jsonify(table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=columnListOrd) 
         return response
@@ -225,7 +206,7 @@ def returnDataFrame():
         page = int(request.form['page_number'])
         print(type(page))
         print(page)
-        html_string = GenPageHTML(PreviewDF, page)
+        html_string = utilities.GenPageHTML(df = PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
         response = jsonify(table=html_string,total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE) 
         return response
     except Exception as e:
@@ -247,7 +228,7 @@ def returnQueryData():
         q_selected_page = request.form['page_no'] if 'page_no' in request.form else 1
         q_rows_per_page = request.form['rows_per_page']
         
-        unique_data = GenPageData(prevQueryCols, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=q_rows_per_page)
+        unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=PreviewDF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=q_rows_per_page)
         response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=q_rows_per_page, unique_data = unique_data) 
         return response
     except Exception as e:
