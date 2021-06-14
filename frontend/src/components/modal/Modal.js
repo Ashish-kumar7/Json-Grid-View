@@ -181,7 +181,7 @@ const CustomizeModal = (props) => {
               <h6>Join Column name with character</h6>
               <select aria-label="Default select example">
                 <option>Open this select menu</option>
-                <option value="." selected>.</option>
+                <option value="." defaultChecked>.</option>
                 <option value="-">-</option>
                 <option value=".">_</option>
               </select>
