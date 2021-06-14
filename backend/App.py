@@ -48,8 +48,6 @@ ROWS_PER_PAGE = 20
 CURRENT_PAGE = 1
 TOTAL_PAGES = 1
 
-
-
 DF = ''
 PreviewDF = ''
 prevQueryCols = {}
@@ -61,11 +59,9 @@ tableSchema =''
 columnListOrd =''
 initTime=''
 
-
 @socketio.on('connect')
 def connected():
     print('connected with socketio')
-
 
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
@@ -79,8 +75,6 @@ def uploadFile():
         global initTime
         initTime = startTime
 
-        
-
         type = request.form['input_type']
         if type == "file":
             file = request.files['File']
@@ -92,8 +86,6 @@ def uploadFile():
             
         if type == "text":
             jsonData = json.loads(request.form['Json'])
-            
-           
 
         print("Time to load data : ", time.time() - startTime)
         # Json Loaded Successfully!
@@ -103,10 +95,8 @@ def uploadFile():
 
     except Exception as e:
         print(e)
-        return jsonify({'message:', 'error'})
-
-
-
+        response = jsonify(message="Error: " + str(e))
+        return response
 
 @app.route('/api/process', methods=['POST'])
 @cross_origin()
