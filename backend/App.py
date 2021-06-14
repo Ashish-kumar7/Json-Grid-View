@@ -9,6 +9,7 @@ import json
 import urllib.request
 
 from numpy import ceil
+from pandas.core.algorithms import unique
 import utilities
 
 if HADOOP_INSTALLED:
@@ -51,6 +52,9 @@ TOTAL_PAGES = 1
 
 
 DF = ''
+PreviewDF = ''
+prevQueryCols = {}
+
 HTML_PREV_STR = ''
 jsonData ={}
 tableSchema =''
@@ -109,6 +113,20 @@ def GenPageHTML(df, Page) :
     endRow = min(df.shape[0] , startRow + ROWS_PER_PAGE)
     return DF.iloc[ startRow : endRow ][:].to_html(classes='mystyle')
 
+def GenPageData(prevQueryCols, selected_col, selected_page, rows_per_page) :
+    if not selected_col in prevQueryCols :
+        # Load data here
+        prevQueryCols[selected_col] = [pd.unique(PreviewDF)] # Showing only available data
+        # prevQueryCols[q_selected_column] = [pd.unique(DF)] # Showing all data
+
+    total_records= len(prevQueryCols[selected_col])
+    total_pages = ceil( total_records/rows_per_page)
+    if selected_page > total_pages :
+        return []
+    startIdx = (selected_page - 1) * rows_per_page
+    endIdx = min( total_records, startIdx + rows_per_page )
+    return prevQueryCols[selected_col][startIdx:endIdx]
+
 @app.route('/api/process', methods=['POST'])
 @cross_origin()
 def processFile():
@@ -116,6 +134,9 @@ def processFile():
     print("\n\n\n\nForm Data in /api/process\n" , request.form)
     try:
         # Assign global variables based on received
+        global DF
+        global PreviewDF
+
         global JOINER_CHAR
         global JOIN_PAR_IN_COLS
         global SHEET_NAME
@@ -173,7 +194,7 @@ def processFile():
         # DF = pd.DataFrame.from_dict(DataDict, "index")
         # print("Time to create DF from Dict: ", time.time() - startTime)
         columnsOrder = columnListOrd
-        global DF
+        
         DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
 
         if not JOIN_PAR_IN_COLS : 
@@ -182,9 +203,11 @@ def processFile():
             
         print("Time to create DF from Dict in order: ", time.time() - startTime)
 
-        html_string = GenPageHTML(DF, 1)
-        TOTAL_PAGES = ceil(DF.shape[0]/ROWS_PER_PAGE)
-        response = jsonify(table=html_string, total_records=DF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=columnListOrd) 
+        PreviewDF = DF.copy()
+
+        html_string = GenPageHTML(PreviewDF, 1)
+        TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
+        response = jsonify(table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=columnListOrd) 
         return response
     
     
@@ -202,8 +225,30 @@ def returnDataFrame():
         page = int(request.form['page_number'])
         print(type(page))
         print(page)
-        html_string = GenPageHTML(DF, page)
-        response = jsonify(table=html_string,total_records=DF.shape[0], rows_per_page=ROWS_PER_PAGE) 
+        html_string = GenPageHTML(PreviewDF, page)
+        response = jsonify(table=html_string,total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE) 
+        return response
+    except Exception as e:
+        print(e)
+        return jsonify({'message:', 'error'})
+
+
+
+@app.route('/api/uiquery', methods=['POST'])
+@cross_origin()
+def returnQueryData():
+    global prevQueryCols
+   
+    print('page ui query')
+    print()
+    print('form\n\n\n\n\n' , request.form)
+    try:
+        q_selected_column = request.form['col_name']
+        q_selected_page = request.form['page_no'] if 'page_no' in request.form else 1
+        q_rows_per_page = request.form['rows_per_page']
+        
+        unique_data = GenPageData(prevQueryCols, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=q_rows_per_page)
+        response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=q_rows_per_page, unique_data = unique_data) 
         return response
     except Exception as e:
         print(e)
