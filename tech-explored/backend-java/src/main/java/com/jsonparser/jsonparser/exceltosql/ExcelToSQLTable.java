@@ -19,7 +19,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.jsonparser.jsonparser.database.DatabaseConnection;
 
 public class ExcelToSQLTable {
-	//	private static final String FILE_NAME = "E://DBInternProject//testing//testxl2.xlsx";
 
 	private static final String JS_TABLE_NAME = "JSON_TABLE5";
 	public static void saveIntoDatabase(String fileName) {
