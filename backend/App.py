@@ -1,6 +1,7 @@
 HADOOP_INSTALLED = False
 
 
+from enum import unique
 from logging import exception
 import re
 from flask import Flask, jsonify, request, send_file
@@ -9,7 +10,9 @@ import json
 import urllib.request
 
 from numpy import ceil
+from numpy.core.fromnumeric import reshape
 import utilities
+import numpy as np
 
 if HADOOP_INSTALLED:
     import hadoopstorage
@@ -63,6 +66,37 @@ initTime=''
 def connected():
     print('connected with socketio')
 
+# Custom JSON Encoder for Numpy data types
+class NumpyEncoder(json.JSONEncoder):
+    """ Custom encoder for numpy data types """
+    def default(self, obj):
+        if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
+                            np.int16, np.int32, np.int64, np.uint8,
+                            np.uint16, np.uint32, np.uint64)):
+
+            return int(obj)
+
+        elif isinstance(obj, (np.float_, np.float16, np.float32, np.float64)):
+            return float(obj)
+
+        elif isinstance(obj, (np.complex_, np.complex64, np.complex128)):
+            return {'real': obj.real, 'imag': obj.imag}
+
+        elif isinstance(obj, (np.ndarray,)):
+            return obj.tolist()
+
+        elif isinstance(obj, (np.bool_)):
+            return bool(obj)
+
+        elif isinstance(obj, (np.void)): 
+            return None
+            
+        return json.JSONEncoder.default(self, obj)
+
+app.json_encoder = NumpyEncoder
+
+
+
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
 def uploadFile():
@@ -114,6 +148,8 @@ def processFile():
         global SQL_TAB_NAME
         global TABLE_TYPE
         global FILL_MISSING_WITH
+        global prevQueryCols
+        prevQueryCols = {}
 
         JOINER_CHAR = request.form['join_char']
         JOIN_PAR_IN_COLS = True if request.form['parentCol']=='true' else False
@@ -167,7 +203,8 @@ def processFile():
         columnsOrder = columnListOrd
         
         DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
-
+        DF.fillna('', inplace=True)
+        print("\n\n\n\n\ unique\n\n", pd.unique(DF['name']))
         if not JOIN_PAR_IN_COLS : 
             # Remove parent names from columns
             DF.columns = columnListOrdNoPar
@@ -198,11 +235,11 @@ def returnDataFrame():
         print(page)
         html_string = utilities.GenPageHTML(df = PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
         response = jsonify(table=html_string,total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE) 
-        print("generated response is" , response)
         return response
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
+
 
 
 
@@ -219,6 +256,9 @@ def returnQueryData():
         q_selected_page = int(request.form['page_number']) if 'page_number' in request.form else 1
         # q_rows_per_page = int(request.form['rows_per_page'])
         unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=DF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=20)
+        print("unique_data" , unique_data)
+        for i in unique_data :
+            print(i , type(i))
         response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=20, unique_data = unique_data) 
         return response
     except Exception as e:
