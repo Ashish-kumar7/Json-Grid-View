@@ -19,7 +19,7 @@ const override = css`
 const FileUrl = () => {
   const [inputUrl, setInputUrl] = useState();
   // const [uploadPercentage, setUploadPercentage] = useState(0);
-  
+
 
 
   let [loading, setLoading] = useState(false);
@@ -54,32 +54,32 @@ const FileUrl = () => {
   //   formData.set("input_type", "url");
   //   console.log(inputUrl);
   //   console.log(formData);
-    // const options = {
-    //   onUploadProgress: (progressEvent) => {
-    //     const { loaded, total } = progressEvent;
-    //     let percent = Math.floor((loaded * 100) / total);
-    //     console.log(`${loaded}kb of ${total}kb | ${percent}%`);
+  // const options = {
+  //   onUploadProgress: (progressEvent) => {
+  //     const { loaded, total } = progressEvent;
+  //     let percent = Math.floor((loaded * 100) / total);
+  //     console.log(`${loaded}kb of ${total}kb | ${percent}%`);
 
-    //     if (percent < 100) {
-    //       setUploadPercentage(percent);
-    //       console.log(uploadPercentage);
-    //     }
-    //   },
-    // };
-    // fetch("http://localhost:5000/api/upload", {
-    //   headers: {
-    //     "Access-Control-Allow-Origin": "*",
-    //   },
-    //   method: "POST",
-    //   body: formData,
-    // })
-    //   .then((response) => response.json())
-    //   .then((result) => {
-    //     console.log("Success", result);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error", error);
-    //   });
+  //     if (percent < 100) {
+  //       setUploadPercentage(percent);
+  //       console.log(uploadPercentage);
+  //     }
+  //   },
+  // };
+  // fetch("http://localhost:5000/api/upload", {
+  //   headers: {
+  //     "Access-Control-Allow-Origin": "*",
+  //   },
+  //   method: "POST",
+  //   body: formData,
+  // })
+  //   .then((response) => response.json())
+  //   .then((result) => {
+  //     console.log("Success", result);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error", error);
+  //   });
   //   axios
   //     .post("http://localhost:5000/api/upload", formData)
   //     .then((res) => {
@@ -126,34 +126,38 @@ const FileUrl = () => {
   //     });
   // }
   const [showCustomizeButton, setShowCustomizeButton] = useState(true);
-  const handleCustomize =  () => {
+  const handleCustomize = () => {
     setShowCustomizeButton(false);
     setLoading(true);
-   
+
     const formData = new FormData();
     formData.append("Url", inputUrl);
     formData.set("input_type", "url");
-     axios
+    axios
       .post("http://localhost:5000/api/upload", formData)
       .then((res) => {
         console.log("json loaded and checked");
-        setShowCustomizeButton(true);
         setLoading(false);
-        showModal();
-        
+
+        if (res.data.message.startsWith("Error")) {
+          alert(res.data.message);
+        } else {
+          setShowCustomizeButton(true);
+          showModal();
+        }
       })
 
       .catch((err) => {
         // display alert for wrong json
         setLoading(false);
-       
+
         console.log(err);
         validJSON = false;
-        setTimeout(()=>{
-          alert("Invalid JSON File !!");
-        },1000);
+        setTimeout(() => {
+          alert("Invalid JSON URL !!");
+        }, 1000);
       });
-    };  
+  };
 
   return (
     <div className="fileUrl">
@@ -163,24 +167,21 @@ const FileUrl = () => {
         <input className="urlinput" placeholder="https://google.com" type="text" onChange={changeHandler} />
       </div>
       <RingLoader color={color} loading={loading} css={override} size={150} />
-      
-        <>
+
+      <>
         {showCustomizeButton ? (<Button
-            title={"Customize"}
-            classId={"downloadButton"}
-            clickFunc={() => handleCustomize()}
-          ></Button>): "none" }
+          title={"Customize"}
+          classId={"downloadButton"}
+          clickFunc={() => handleCustomize()}
+        ></Button>) : ""}
         <Modal
-            show={open}
-            openFunc={showModal}
-            closeFunc={hideModal}  
-          ></Modal>
-          </>
-      ) 
-  
-     
-      
-      
+          show={open}
+          openFunc={showModal}
+          closeFunc={hideModal}
+        ></Modal>
+      </>
+      )
+
       {/* {uploadPercentage > 0 && (
         <div className="progressbar">
           <ProgressBar
@@ -192,8 +193,7 @@ const FileUrl = () => {
           />
         </div> 
         )} */}
-       
-      
+
     </div>
   );
 };
