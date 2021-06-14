@@ -205,7 +205,6 @@ def processFile():
         
         DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
         DF.fillna( FILL_NA , inplace=True)
-        print("\n\n\n\n\ unique\n\n", pd.unique(DF['name']))
         if not JOIN_PAR_IN_COLS : 
             # Remove parent names from columns
             DF.columns = columnListOrdNoPar
