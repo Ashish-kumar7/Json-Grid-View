@@ -125,8 +125,9 @@ const FileUrl = () => {
   //       alert("Oops it Breaks!!" + err);
   //     });
   // }
-
+  const [showCustomizeButton, setShowCustomizeButton] = useState(true);
   const handleCustomize =  () => {
+    setShowCustomizeButton(false);
     setLoading(true);
    
     const formData = new FormData();
@@ -136,6 +137,7 @@ const FileUrl = () => {
       .post("http://localhost:5000/api/upload", formData)
       .then((res) => {
         console.log("json loaded and checked");
+        setShowCustomizeButton(true);
         setLoading(false);
         showModal();
         
@@ -163,11 +165,11 @@ const FileUrl = () => {
       <RingLoader color={color} loading={loading} css={override} size={150} />
       
         <>
-        <Button
-          title={"Customize"}
-          classId={"downloadButton"}
-          clickFunc={() => handleCustomize()}
-        ></Button>
+        {showCustomizeButton ? (<Button
+            title={"Customize"}
+            classId={"downloadButton"}
+            clickFunc={() => handleCustomize()}
+          ></Button>): "none" }
         <Modal
             show={open}
             openFunc={showModal}
