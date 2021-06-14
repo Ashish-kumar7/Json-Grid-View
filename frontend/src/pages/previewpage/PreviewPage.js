@@ -226,10 +226,6 @@ const PreviewPage = (props) => {
       .post("http://localhost:5000/api/uniqueValues", formData,{ responseType: "application/json"})
       .then((response) => {
         // receive first 20 unique values
-        
-        console.log(response.data);
-        console.log(JSON.parse(response.data));
-         console.log(eval(response.data));
        
         setValues(response.data.unique_data);
         setShowValue(true);
