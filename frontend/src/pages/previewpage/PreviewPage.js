@@ -189,10 +189,11 @@ const PreviewPage = (props) => {
     formData.set("col_name", colWithIdx[selectedIndex]);
     formData.set("page_number", currentPage);
     axios
-      .post("http://localhost:5000/api/uniqueValues", formData)
+      .post("http://localhost:5000/api/uniqueValues", formData, { responseType: "application/json"})
       .then((response) => {
         // receive  20 unique values
-        console.log(response);
+        
+         console.log(response.data)
         setValues(response.data.unique_data);
       })
       .catch((err) => {
@@ -222,10 +223,14 @@ const PreviewPage = (props) => {
     formData.set("col_name", colWithIdx[index]);
     formData.set("page_number", 1);
     axios
-      .post("http://localhost:5000/api/uniqueValues", formData)
+      .post("http://localhost:5000/api/uniqueValues", formData,{ responseType: "application/json"})
       .then((response) => {
         // receive first 20 unique values
-        console.log(response);
+        
+        console.log(response.data);
+        console.log(JSON.parse(response.data));
+         console.log(eval(response.data));
+       
         setValues(response.data.unique_data);
         setShowValue(true);
       })
