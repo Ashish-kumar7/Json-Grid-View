@@ -3,12 +3,12 @@ import { Table } from "react-bootstrap";
 import Value from "../value/Value";
 
 const SelectedValues = (props) => {
-  const dict = {
-    name: new Set(["Aditi", "Abhishek", "Ashish", "Prakriti"]),
-    age: new Set([20, 21]),
-    subject: new Set(["history", "computer"]),
-  };
-//   let dict = props.dict;
+//   const dict = {
+//     name: new Set(["Aditi", "Abhishek", "Ashish", "Prakriti"]),
+//     age: new Set([20, 21]),
+//     subject: new Set(["history", "computer"]),
+//   };
+  let dict = props.dict;
   let table = [];
 
   for (var key in dict) {
