@@ -54,6 +54,7 @@ TOTAL_PAGES = 1
 DF = ''
 PreviewDF = ''
 prevQueryCols = {}
+queryDict = {}
 
 HTML_PREV_STR = ''
 jsonData ={}
@@ -208,6 +209,7 @@ def returnDataFrame():
         print(page)
         html_string = utilities.GenPageHTML(df = PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
         response = jsonify(table=html_string,total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE) 
+        print("generated response is" , response)
         return response
     except Exception as e:
         print(e)
@@ -225,10 +227,9 @@ def returnQueryData():
     print('form\n\n\n\n\n' , request.form)
     try:
         q_selected_column = request.form['col_name']
-        q_selected_page = request.form['page_no'] if 'page_no' in request.form else 1
-        q_rows_per_page = request.form['rows_per_page']
-        
-        unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=PreviewDF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=q_rows_per_page)
+        q_selected_page = int(request.form['page_no']) if 'page_no' in request.form else 1
+        q_rows_per_page = int(request.form['rows_per_page'])
+        unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=DF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=q_rows_per_page)
         response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=q_rows_per_page, unique_data = unique_data) 
         return response
     except Exception as e:

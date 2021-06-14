@@ -153,11 +153,30 @@ const PreviewPage = (props) => {
   const [selectedIndex, setSelectedIndex] = useState(1);
   let colWithIdx = [];
   const handleListItemClick = (event, index) => {
+    console.log("in handle List Item Click");
     console.log(colWithIdx[index]);
-    dict[colWithIdx[index]].add("aditi");
+    // dict[colWithIdx[index]].add("aditi");
     console.log(dict);
     console.log(index);
     setSelectedIndex(index);
+
+    const formData = new FormData();
+    formData.set("col_name", colWithIdx[index]);
+    formData.set("page_no" , 1);
+    formData.set("rows_per_page", 20);
+    formData.set("add" , "add"+index);
+
+    axios
+      .post("http://localhost:5000/api/uiquery", formData)
+      .then((response) => {
+        console.log("rec response");
+        console.log(response);
+      })
+      .catch((err) => {
+        console.log(err);
+        setUploadPercentage(0);
+      });
+
   };
 
   // create dictionary to display all columns

@@ -416,10 +416,12 @@ def GenPageHTML(df, Page, ROWS_PER_PAGE) :
     return df.iloc[ startRow : endRow ][:].to_html(classes='mystyle')
 
 def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page) :
+    print('in gen page data')
     if not selected_col in prevQueryCols :
         # Load data here
-        prevQueryCols[selected_col] = [pd.unique(PreviewDF)] # Showing only available data
-        # prevQueryCols[q_selected_column] = [pd.unique(DF)] # Showing all data
+        print('load data for ', selected_col)
+        prevQueryCols[selected_col] = list(pd.unique(PreviewDF[selected_col])) 
+        print(prevQueryCols)
 
     total_records= len(prevQueryCols[selected_col])
     total_pages = np.ceil( total_records/rows_per_page)
