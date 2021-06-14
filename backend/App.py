@@ -45,6 +45,7 @@ ADD_INDEX_FOR_LIST = False
 INDEX_FOR_LIST_SUFFIX = '_INDEX'  # Index colname = par + joiner + index_suffix
 FILL_MISSING_WITH = 'null'
 GEN_CROSS_TABLE = False
+FILL_NA = ''
 TABLE_TYPE = '1'
 
 ROWS_PER_PAGE = 20
@@ -203,7 +204,7 @@ def processFile():
         columnsOrder = columnListOrd
         
         DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
-        DF.fillna('', inplace=True)
+        DF.fillna( FILL_NA , inplace=True)
         print("\n\n\n\n\ unique\n\n", pd.unique(DF['name']))
         if not JOIN_PAR_IN_COLS : 
             # Remove parent names from columns
