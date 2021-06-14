@@ -443,13 +443,12 @@ def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_
     print('in gen page data')
     if not selected_col in prevQueryCols :
         # Load data here
-        print('load data for ', selected_col)
-        prevQueryCols[selected_col] = list()
-        tmp = list(pd.unique(PreviewDF[selected_col])) 
-        print("tmp = ", tmp)
-        for obj in tmp :
-            prevQueryCols[selected_col].append( Encode(obj) )
-        print(prevQueryCols)
+        # print('load data for ', selected_col)
+        prevQueryCols[selected_col] = list(pd.unique(PreviewDF[selected_col]))
+        # prevQueryCols[selected_col] = list()
+        # tmp = list(pd.unique(PreviewDF[selected_col])) 
+        # for obj in tmp :
+        #     prevQueryCols[selected_col].append( Encode(obj) )
 
     total_records= len(prevQueryCols[selected_col])
     total_pages = int(np.ceil( total_records/rows_per_page))
