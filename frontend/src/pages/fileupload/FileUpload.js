@@ -29,6 +29,7 @@ const FileUpload = () => {
   // to check if file is selected or not
   const [isSelected, setIsSelected] = useState(false);
   const [customize, setCustomize] = useState(false);
+  const [showCustomizeButton, setShowCustomizeButton] = useState(true);
 
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ea80fc");
@@ -54,7 +55,7 @@ const FileUpload = () => {
 
   // on selecting file for upload this function is called
   const changeHandler = (e) => {
-    if(e.target.files[0]){
+    if (e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
       setIsSelected(true);
       setCustomize(true);
@@ -62,32 +63,37 @@ const FileUpload = () => {
   };
 
   // on clicking customize button ,file will be sent to backend, schema will be received and customize modal will be shown
-  const handleCustomize =  () => {
+  const handleCustomize = () => {
+    setShowCustomizeButton(false);
     setLoading(true);
     const formData = new FormData();
     formData.append("File", selectedFile);
     formData.set("input_type", "file");
-    
-     axios
+
+    axios
       .post("http://localhost:5000/api/upload", formData)
       .then((res) => {
         console.log("json loaded and checked");
         setLoading(false);
-        showModal();
-        
+        if (res.data.message.startsWith("Error")) {
+          alert(res.data.message);
+        }
+        else {
+          setShowCustomizeButton(true);
+          showModal();
+        }
       })
-
       .catch((err) => {
         // display alert for wrong json
         setLoading(false);
-       
+
         console.log(err);
         validJSON = false;
-        setTimeout(()=>{
+        setTimeout(() => {
           alert("Invalid JSON File !!");
-        },1000);
+        }, 1000);
       });
-    };  
+  };
   //   axios
   //     .post("http://localhost:5000/api/convert", formData, {
   //       responseType: "blob",
@@ -105,9 +111,6 @@ const FileUpload = () => {
   //       console.log(err);
   //       setUploadPercentage(0);
   //     });
-
-
- 
 
   return (
     <div className="fileUpload">
@@ -140,31 +143,32 @@ const FileUpload = () => {
         )}
       </div>
       <RingLoader color={color} loading={loading} css={override} size={150} />
-      
-      
+
+
       {customize ? (
         <>
-          <Button
+          {showCustomizeButton ? (<Button
             title={"Customize"}
             classId={"downloadButton"}
             clickFunc={() => handleCustomize()}
-          ></Button>
+          ></Button>) : ""}
+
           {validJSON ? (
-          <Modal
-            show={open}
-            openFunc={showModal}
-            closeFunc={hideModal}  
-          ></Modal>
-          ):(
+            <Modal
+              show={open}
+              openFunc={showModal}
+              closeFunc={hideModal}
+            ></Modal>
+          ) : (
             <p></p>
           )}
         </>
       ) : (
         <p></p>
       )}
-      
 
-     
+
+
     </div>
   );
 };

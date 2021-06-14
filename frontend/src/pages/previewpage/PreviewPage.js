@@ -145,6 +145,8 @@ const PreviewPage = (props) => {
   //     </PaginationItem>
   //   );
   // }
+
+  // create dictionary to store selected values for columns
   const dictIntermediate ={};
   for (var i = 0; i < initialDataFrame.cols.length; i++) {
     dictIntermediate[initialDataFrame.cols[i]] = new Set();
@@ -152,15 +154,58 @@ const PreviewPage = (props) => {
   let [dict, setDict] = useState(dictIntermediate);
  
   // index to get col name 
+  
+
+  // page change function for df preview
+  const onPageChanged = (data) => {
+   
+    const { currentPage, totalPages, pageLimit } = data;
+    console.log(currentPage);
+    const offset = (currentPage - 1) * pageLimit;
+    const formData = new FormData();
+    formData.set("page_number", currentPage);
+    axios
+      .post("http://localhost:5000/api/page", formData)
+      .then((response) => {
+        console.log(response);
+        setTable(response.data.table);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const onUniqueValuePageChanged = () => {
+    const { currentPage, totalPages, pageLimit } = data;
+    console.log(currentPage);
+
+    const formData = new FormData();
+    formData.set("col_name", colWithIdx[selectedIndex]);
+    formData.set("page_number", currentPage);
+    axios
+      .post("http://localhost:5000/api/uniqueValues", formData)
+      .then((response) => {
+        // receive  20 unique values
+        console.log(response);
+        // setValues();
+      })
+      .catch((err) => {
+        console.log(err);
+        
+      });
+  }
+
   const [selectedIndex, setSelectedIndex] = useState(1);
   let colWithIdx = [];
+
+  // const values = ['aditi', 'aditya','abhishek', 'ashish', 'neha', 'prakriti'];
+  const [showValue, setShowValue] = useState(false);
+  const [values, setValues] = useState();
   const handleListItemClick = (event, index) => {
     console.log(colWithIdx[index]);
-    const newdict =  dict;
-    newdict[colWithIdx[index]].add("adti");
-    setDict(newdict);
-    console.log(dict);
-    console.log(index);
+    
+
+   // index selected for column name
     setSelectedIndex(index);
     const formData = new FormData();
     formData.set("col_name", colWithIdx[index]);
@@ -168,7 +213,10 @@ const PreviewPage = (props) => {
     axios
       .post("http://localhost:5000/api/uniqueValues", formData)
       .then((response) => {
+        // receive first 20 unique values
         console.log(response);
+        // setValues();
+        setShowValue(true);
       })
       .catch((err) => {
         console.log(err);
@@ -197,8 +245,8 @@ const PreviewPage = (props) => {
 
   // create list to display unique values of column
   let valueList = [];
-  var [val, setVal] = useState([]);
-  const values = ['aditi', 'aditya','abhishek', 'ashish', 'neha', 'prakriti'];
+ 
+  
   const initCheck =new Array(values.length).fill(false);
   const [check,setCheck] = useState(initCheck);
 
@@ -206,9 +254,6 @@ const PreviewPage = (props) => {
 
 
   const handleValueToggle  = (event, num) =>{
-    
-    console.log(event.target.value)
-    console.log("value" + values[num]);
     const newcheck = check;
      
     console.log("selectedcol" + colWithIdx[selectedIndex]);
@@ -220,9 +265,10 @@ const PreviewPage = (props) => {
     }
     // console.log(initCheck)
     setCheck(newcheck);
+    const newdict =  dict;
+    newdict[colWithIdx[selectedIndex]].add(values[num]);
+    setDict(newdict);
     setState({});
-    console.log(check);
-    // setCheck(!check);
   };
 
 
@@ -247,27 +293,7 @@ const PreviewPage = (props) => {
  
 
 
-  const onPageChanged = (data) => {
-    // const { allCountries } = this.state;
-    const { currentPage, totalPages, pageLimit } = data;
-    console.log(currentPage);
-    const offset = (currentPage - 1) * pageLimit;
-    const formData = new FormData();
-    formData.set("page_number", currentPage);
-    axios
-      .post("http://localhost:5000/api/page", formData)
-      .then((response) => {
-        console.log(response);
-        setTable(response.data.table);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-    // const currentCountries = allCountries.slice(offset, offset + pageLimit);
-
-    // this.setState({ currentPage, currentCountries, totalPages });
-  };
+  
 
   return (
     <>
@@ -313,6 +339,7 @@ const PreviewPage = (props) => {
           <>
             <SelectedValues dict={dict}></SelectedValues>
             <Row className="fullform">
+ {/* list of column values in dataframe    */}
               <Col lg="4">
               <h5>Select Column</h5> 
               <div className="colList">
@@ -324,23 +351,28 @@ const PreviewPage = (props) => {
             </div>
               </Col>
               <Col lg="4">
-              <h5>Select Values</h5> 
-              <div className="colList">
-              
-              <Divider />
-              <List component="nav" aria-label="secondary mailbox folder">
-                {valueList}
-                
-              </List>
-            </div>
-            <div className={classes.num}>
-          <PaginationP
-            totalRecords={40}
-            pageLimit={4}
-            pageNeighbours={1}
-            onPageChanged={onPageChanged}
-          />
-        </div>
+                {showValue?(
+                  <>
+                   <h5>Select Values</h5> 
+                   <div className="colList">
+                   
+                   <Divider />
+                   <List component="nav" aria-label="secondary mailbox folder">
+                     {valueList}
+                     
+                   </List>
+                 </div>
+                 <div className={classes.num}>
+               <PaginationP
+                 totalRecords={40}
+                 pageLimit={4}
+                 pageNeighbours={1}
+                 onPageChanged={onUniqueValuePageChanged}
+               />
+             </div>
+             </>
+                ):<></>}
+             
               </Col>
             </Row>
             

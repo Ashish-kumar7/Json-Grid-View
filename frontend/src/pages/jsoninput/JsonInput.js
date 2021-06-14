@@ -26,7 +26,7 @@ const override = css`
 
 const JsonInput = () => {
   const [inputJson, setInputJson] = useState();
- 
+
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ea80fc");
 
@@ -52,11 +52,6 @@ const JsonInput = () => {
   const showModal = () => {
     setOpen(true);
   };
-
-
-   
-  
-
 
   // const handleConversion = (val) => {
   //   const formData = new FormData();
@@ -91,32 +86,35 @@ const JsonInput = () => {
   //     });
   // }
 
-  const handleCustomize =  () => {
+  const handleCustomize = () => {
     setLoading(true);
-   
+
     const formData = new FormData();
     formData.append("Json", inputJson);
     formData.set("input_type", "text");
-     axios
+    axios
       .post("http://localhost:5000/api/upload", formData)
       .then((res) => {
         console.log("json loaded and checked");
         setLoading(false);
-        showModal();
-        
+        if (res.data.message.startsWith("Error")) {
+          alert(res.data.message);
+        }
+        else {
+          showModal();
+        }
       })
-
       .catch((err) => {
         // display alert for wrong json
         setLoading(false);
-       
+
         console.log(err);
         validJSON = false;
-        setTimeout(()=>{
-          alert("Invalid JSON File !!");
-        },1000);
+        setTimeout(() => {
+          alert("Invalid JSON Input !!");
+        }, 1000);
       });
-    }; 
+  };
 
   return (
     <div className="jsonInput">
@@ -127,12 +125,12 @@ const JsonInput = () => {
             <Editor process={true} onChange={changeHandler} click={() => handleCustomize()} ></Editor>
           </Col>
           <Col lg="6">
-          <Modal
-            show={open}
-            openFunc={showModal}
-            closeFunc={hideModal}  
-          ></Modal>
-          <RingLoader color={color} loading={loading} css={override} size={150} />
+            <Modal
+              show={open}
+              openFunc={showModal}
+              closeFunc={hideModal}
+            ></Modal>
+            <RingLoader color={color} loading={loading} css={override} size={150} />
           </Col>
         </Row>
       </Container>

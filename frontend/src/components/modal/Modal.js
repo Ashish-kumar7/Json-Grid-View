@@ -23,7 +23,7 @@ const CustomizeModal = (props) => {
   
   const [totalRecords,setTotalRecords]= useState(1);
   const [rows,setRows]= useState(1);
-  const [dataframe, setDataframe]= useState("faltu string");
+  const [dataframe, setDataframe]= useState("");
   let history = useHistory();
   // on clicking any process button
   const handleSubmission = () => {
@@ -70,6 +70,7 @@ const CustomizeModal = (props) => {
   }
 
   const charhandler = (e) => {
+    console.log("joiner changed")
     console.log(e.target.value);
     setJoinChar(e.target.value);
   }
@@ -179,11 +180,11 @@ const CustomizeModal = (props) => {
             </Row>
             <Row className="entry2" onChange={charhandler}>
               <h6>Join Column name with character</h6>
-              <select aria-label="Default select example">
+              <select aria-label="Default select example" >
                 <option>Open this select menu</option>
                 <option value="." selected>.</option>
                 <option value="-">-</option>
-                <option value=".">_</option>
+                <option value="_">_</option>
               </select>
             </Row>
             <Row className="entry2" onChange={nullhandler}>

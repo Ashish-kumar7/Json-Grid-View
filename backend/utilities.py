@@ -408,3 +408,27 @@ def WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_F
 
 
 
+def GenPageHTML(df, Page, ROWS_PER_PAGE) :
+    if Page > np.ceil(df.shape[0]/ROWS_PER_PAGE):
+        return ''
+    startRow = (Page-1) * ROWS_PER_PAGE
+    endRow = min(df.shape[0] , startRow + ROWS_PER_PAGE)
+    return df.iloc[ startRow : endRow ][:].to_html(classes='mystyle')
+
+def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page) :
+    print('in gen page data')
+    if not selected_col in prevQueryCols :
+        # Load data here
+        print('load data for ', selected_col)
+        prevQueryCols[selected_col] = list(pd.unique(PreviewDF[selected_col])) 
+        print(prevQueryCols)
+
+    total_records= len(prevQueryCols[selected_col])
+    total_pages = np.ceil( total_records/rows_per_page)
+    if selected_page > total_pages :
+        return []
+    startIdx = (selected_page - 1) * rows_per_page
+    endIdx = min( total_records, startIdx + rows_per_page )
+    return prevQueryCols[selected_col][startIdx:endIdx]
+
+
