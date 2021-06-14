@@ -1,3 +1,8 @@
 /test-cases/
 /backend/__pycache__/
 /backend/spark-warehouse/
+/backend-java/.mvn/
+/backend-java/target/
+/backend-java/.settings/
+/backend-java/.project
+/backend-java/.classpath
