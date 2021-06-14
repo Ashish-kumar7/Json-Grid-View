@@ -9,7 +9,6 @@ import json
 import urllib.request
 
 from numpy import ceil
-from pandas.core.algorithms import unique
 import utilities
 
 if HADOOP_INSTALLED:
@@ -40,7 +39,7 @@ JOINER_CHAR = '.'
 JOIN_PAR_IN_COLS = True
 REPEAT_IN_COL = True
 ADD_INDEX_FOR_LIST = False
-INDEX_FOR_LIST_SUFFIX = 'INDEX'  # Index colname = par + joiner + index_suffix
+INDEX_FOR_LIST_SUFFIX = '_INDEX'  # Index colname = par + joiner + index_suffix
 FILL_MISSING_WITH = 'null'
 GEN_CROSS_TABLE = False
 TABLE_TYPE = '1'

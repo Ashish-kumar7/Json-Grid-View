@@ -29,6 +29,7 @@ const FileUpload = () => {
   // to check if file is selected or not
   const [isSelected, setIsSelected] = useState(false);
   const [customize, setCustomize] = useState(false);
+  const [showCustomizeButton, setShowCustomizeButton] = useState(true);
 
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ea80fc");
@@ -63,6 +64,7 @@ const FileUpload = () => {
 
   // on clicking customize button ,file will be sent to backend, schema will be received and customize modal will be shown
   const handleCustomize =  () => {
+    setShowCustomizeButton(false);
     setLoading(true);
     const formData = new FormData();
     formData.append("File", selectedFile);
@@ -73,6 +75,7 @@ const FileUpload = () => {
       .then((res) => {
         console.log("json loaded and checked");
         setLoading(false);
+        setShowCustomizeButton(true);
         showModal();
         
       })
@@ -144,11 +147,12 @@ const FileUpload = () => {
       
       {customize ? (
         <>
-          <Button
+        {showCustomizeButton ? (<Button
             title={"Customize"}
             classId={"downloadButton"}
             clickFunc={() => handleCustomize()}
-          ></Button>
+          ></Button>): "none" }
+          
           {validJSON ? (
           <Modal
             show={open}
