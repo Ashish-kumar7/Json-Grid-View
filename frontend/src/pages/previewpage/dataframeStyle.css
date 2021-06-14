@@ -13,11 +13,11 @@
 }
 
 .mystyle tr:nth-child(odd) {
-    background: #383838;
+    background: #212529;
     
 }
 .mystyle tr:nth-child(even) {
-    background: #454545;
+    background: #2c3034;
 }
 
 .mystyle tr:hover {

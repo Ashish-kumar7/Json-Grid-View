@@ -415,16 +415,44 @@ def GenPageHTML(df, Page, ROWS_PER_PAGE) :
     endRow = min(df.shape[0] , startRow + ROWS_PER_PAGE)
     return df.iloc[ startRow : endRow ][:].to_html(classes='mystyle')
 
+def Encode(obj) :
+    if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
+                    np.int16, np.int32, np.int64, np.uint8,
+                    np.uint16, np.uint32, np.uint64)):
+
+        return int(obj)
+
+    elif isinstance(obj, (np.float_, np.float16, np.float32, np.float64)):
+        return float(obj)
+
+    elif isinstance(obj, (np.complex_, np.complex64, np.complex128)):
+        return {'real': obj.real, 'imag': obj.imag}
+
+    elif isinstance(obj, (np.ndarray,)):
+        return obj.tolist()
+
+    elif isinstance(obj, (np.bool_)):
+        return bool(obj)
+
+    elif isinstance(obj, (np.void)): 
+        return None
+    
+    else :
+        return obj
 def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page) :
     print('in gen page data')
     if not selected_col in prevQueryCols :
         # Load data here
         print('load data for ', selected_col)
-        prevQueryCols[selected_col] = list(pd.unique(PreviewDF[selected_col])) 
+        prevQueryCols[selected_col] = list()
+        tmp = list(pd.unique(PreviewDF[selected_col])) 
+        print("tmp = ", tmp)
+        for obj in tmp :
+            prevQueryCols[selected_col].append( Encode(obj) )
         print(prevQueryCols)
 
     total_records= len(prevQueryCols[selected_col])
-    total_pages = np.ceil( total_records/rows_per_page)
+    total_pages = int(np.ceil( total_records/rows_per_page))
     if selected_page > total_pages :
         return []
     startIdx = (selected_page - 1) * rows_per_page
