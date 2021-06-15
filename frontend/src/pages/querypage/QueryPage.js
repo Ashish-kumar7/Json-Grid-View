@@ -61,7 +61,25 @@ const QueryPage = (props) => {
         setdata(newdata);
     }
 
+    // index to get col name 
+    // page change function for df preview
+    const onPageChanged = (data) => {
 
+      const { currentPage, totalPages, pageLimit } = data;
+      console.log(currentPage);
+      const offset = (currentPage - 1) * pageLimit;
+      const formData = new FormData();
+      formData.set("page_number", currentPage);
+      axios
+          .post("http://localhost:5000/api/page", formData)
+          .then((response) => {
+              console.log(response);
+              setTable(response.data.table);
+          })
+          .catch((err) => {
+              console.log(err);
+          });
+  };
 
     const [selectedIndex, setSelectedIndex] = useState(1);
     let colWithIdx = [];
