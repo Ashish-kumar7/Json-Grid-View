@@ -81,6 +81,23 @@ const QueryPage = (props) => {
           });
   };
 
+  //On fetchButtonClick
+  const onFetchButtonClick = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.set("query_text", data.setqueryText);
+    axios
+        .post("http://localhost:5000/api/query", formData)
+        .then((response) => {
+            console.log(response);
+            setTable(response.data.table);                
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+
     const [selectedIndex, setSelectedIndex] = useState(1);
     let colWithIdx = [];
 
