@@ -236,6 +236,7 @@ def returnDataFrame():
         print(page)
         html_string = utilities.GenPageHTML(df = PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
         response = jsonify(table=html_string,total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE) 
+
         return response
     except Exception as e:
         print(e)
@@ -261,6 +262,7 @@ def returnQueryData():
         for i in unique_data :
             print(i , type(i))
         response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=20, unique_data = unique_data) 
+        print(response)
         return response
     except Exception as e:
         print(e)

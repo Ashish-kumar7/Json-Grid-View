@@ -76,7 +76,8 @@ const PreviewPage = (props) => {
   const [uploadPercentage, setUploadPercentage] = useState(0);
   const [table, setTable] = useState(initialDataFrame.df);
   const [formDisplay, setFormDisplay] = useState(false);
-
+  const [uniqueRowsPerPage, setUniqueRowsPerPage] = useState(1);
+  const [uniqueTotalRecords , setUniqueTotalRecords] = useState(1);
 
   // function to download file
   const handleConversion = (val) => {
@@ -148,14 +149,14 @@ const PreviewPage = (props) => {
   //   );
   // }
   const [showValue, setShowValue] = useState(false);
-  const [values, setValues] = useState([]);
+  let [values, setValues] = useState([]);
   let initcheck2 ={};
   
   // create dictionary to store selected values for columns
   const dictIntermediate ={};
   for (var i = 0; i < initialDataFrame.cols.length; i++) {
     dictIntermediate[initialDataFrame.cols[i]] = new Set();
-    initcheck2[initialDataFrame.cols[i]]=new Array(values.length).fill(false);
+    initcheck2[initialDataFrame.cols[i]]=new Array(20).fill(false);
   }
   let [dict, setDict] = useState(dictIntermediate);
  
@@ -185,21 +186,64 @@ const PreviewPage = (props) => {
     const { currentPage, totalPages, pageLimit } = data;
     console.log(currentPage);
 
+    // const newcheck3 = check2;
+    // for(var j =0;j<check2[colWithIdx[selectedIndex]].length;j++){
+    //   newcheck3[colWithIdx[selectedIndex]][j]=false;
+    //  } 
+    // setCheck2(newcheck3);
+    // setState({});
+    let newval = [] ;
+    console.log(check2[colWithIdx[selectedIndex]]);   
+    console.log(dict[colWithIdx[selectedIndex]]);   
     const formData = new FormData();
     formData.set("col_name", colWithIdx[selectedIndex]);
     formData.set("page_number", currentPage);
     axios
-      .post("http://localhost:5000/api/uniqueValues", formData, { responseType: "application/json"})
+      .post("http://localhost:5000/api/uniqueValues", formData)
       .then((response) => {
         // receive  20 unique values
         
-         console.log(response.data)
-        setValues(response.data.unique_data);
+        //  console.log(response.data.unique_data);
+        newval = response.data.unique_data;
+        console.log("New val");
+         console.log(newval);
+        setValues(newval);
+        
+        // console.log(values);
+        const newcheck2 = check2;
+        for(var k =0;k<newval.length;k++){
+         
+          if(dict[colWithIdx[selectedIndex]].has(newval[k])){
+            console.log("jjjjjjjjjjjjjjjjjjjjjj");
+            console.log(newval[k]);
+            newcheck2[colWithIdx[selectedIndex]][k]=true;
+          }
+          else{
+            newcheck2[colWithIdx[selectedIndex]][k]=false;
+          }
+        } 
+        setCheck2(newcheck2);
+        // console.log(check2[colWithIdx[selectedIndex]]);
+      // console.log(dict[colWithIdx[selectedIndex]]);   
+          
+       
+        
+        
+        setUniqueTotalRecords(response.data.total_unique);
+        // console.log("unique total "  + uniqueTotalRecords );
+        // console.log("rowsPerPage " + uniqueRowsPerPage);
+        setUniqueRowsPerPage(response.data.rows_per_page);
+        
       })
+     
       .catch((err) => {
         console.log(err);
         
       });
+      
+       setState({});
+      
+     
   }
 
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -209,8 +253,8 @@ const PreviewPage = (props) => {
   
   
 
-  let initCheck =new Array(values.length).fill(false);
-  const [check,setCheck] = useState(initCheck);
+  
+  // const [check,setCheck] = useState(initCheck);
   const [check2,setCheck2] = useState(initcheck2);
 
   const handleListItemClick = (event, index) => {
@@ -223,13 +267,17 @@ const PreviewPage = (props) => {
     formData.set("col_name", colWithIdx[index]);
     formData.set("page_number", 1);
     axios
-      .post("http://localhost:5000/api/uniqueValues", formData,{ responseType: "application/json"})
+      .post("http://localhost:5000/api/uniqueValues", formData)
       .then((response) => {
         // receive first 20 unique values
         
        
        
         setValues(response.data.unique_data);
+        setUniqueTotalRecords(response.data.total_unique);
+        // console.log("unique total "  + uniqueTotalRecords );
+        // console.log("rowsPerPage " + uniqueRowsPerPage);
+        setUniqueRowsPerPage(response.data.rows_per_page);
         setShowValue(true);
       })
       .catch((err) => {
@@ -238,27 +286,7 @@ const PreviewPage = (props) => {
       });
   };
 
-  // create list to display all columns
-  let colList = [];
-
-  for (var i = 0; i < initialDataFrame.cols.length; i++) {
-    dictIntermediate[initialDataFrame.cols[i]] = new Set();
-    
-    let number = i;
-    colWithIdx[number] = initialDataFrame.cols[i];
-    colList.push(
-      <ListItem
-        button
-        selected={selectedIndex === number}
-        onClick={(event) => handleListItemClick(event, number)}
-      >
-        <ListItemText className="textList" primary={initialDataFrame.cols[i]} />
-      </ListItem>
-    );
-  }
-
-  // create list to display unique values of column
-  let valueList = [];
+  
  
   
   
@@ -267,39 +295,81 @@ const PreviewPage = (props) => {
 
 
   const handleValueToggle  = (event, num) =>{
+   
     const newcheck = check2;
      
-    console.log("selectedcol" + colWithIdx[selectedIndex]);
-    if(newcheck[colWithIdx[selectedIndex]][num]){
+
+    // if(newcheck[colWithIdx[selectedIndex]][num]){
+    //   newcheck[colWithIdx[selectedIndex]][num]=false;
+    //   const newdict =  dict;
+    //   newdict[colWithIdx[selectedIndex]].delete(values[num]);
+    //   setCheck2(newcheck);
+    //   setDict(newdict);
+     
+    // }
+    // else{
+    //   newcheck[colWithIdx[selectedIndex]][num]=true;
+    //   const newdict =  dict;
+    //   newdict[colWithIdx[selectedIndex]].add(values[num]);
+    //   setCheck2(newcheck);
+    //   setDict(newdict);
+      
+    // }
+
+    if(dict[colWithIdx[selectedIndex]].has(values[num]))
+    {
       newcheck[colWithIdx[selectedIndex]][num]=false;
       const newdict =  dict;
       newdict[colWithIdx[selectedIndex]].delete(values[num]);
+      setCheck2(newcheck);
       setDict(newdict);
     }
     else{
       newcheck[colWithIdx[selectedIndex]][num]=true;
       const newdict =  dict;
       newdict[colWithIdx[selectedIndex]].add(values[num]);
+      setCheck2(newcheck);
       setDict(newdict);
     }
     // console.log(initCheck)
-    setCheck2(newcheck);
+   
    
     setState({});
   };
 
+// create list to display all columns
+let colList = [];
 
+for (var i = 0; i < initialDataFrame.cols.length; i++) {
+  dictIntermediate[initialDataFrame.cols[i]] = new Set();
+  
+  let number = i;
+  colWithIdx[number] = initialDataFrame.cols[i];
+  colList.push(
+    <ListItem
+      button
+      selected={selectedIndex === number}
+      onClick={(event) => handleListItemClick(event, number)}
+    >
+      <ListItemText className="textList" primary={initialDataFrame.cols[i]} />
+    </ListItem>
+  );
+}
+
+// create list to display unique values of column
+let valueList = [];
   for (var i = 0; i < values.length; i++) {
     let number = i;
     
     valueList.push(
-      <ListItem key={values[number]} role={undefined}  dense button onClick={(event) => handleValueToggle(event, number)}>
+      <ListItem key={values[number]}   dense button onClick={(event) => handleValueToggle(event, number)}>
       <ListItemIcon>
         <Checkbox
           edge="start"
           checked={check2[colWithIdx[selectedIndex]][number]}
           tabIndex={-1}
           disableRipple
+          key={values[number]} 
         />
       </ListItemIcon>
       <ListItemText  primary={values[number]} />
@@ -381,8 +451,8 @@ const PreviewPage = (props) => {
                  </div>
                  <div className={classes.num}>
                <PaginationP
-                 totalRecords={40}
-                 pageLimit={4}
+                 totalRecords={uniqueTotalRecords}
+                 pageLimit={uniqueRowsPerPage}
                  pageNeighbours={1}
                  onPageChanged={onUniqueValuePageChanged}
                />
