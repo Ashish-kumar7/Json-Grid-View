@@ -452,6 +452,7 @@ let valueList = [];
                  </div>
                  <div className={classes.num}>
                <PaginationP
+                key = { uniqueTotalRecords }
                  totalRecords={uniqueTotalRecords}
                  pageLimit={uniqueRowsPerPage}
                  pageNeighbours={1}
