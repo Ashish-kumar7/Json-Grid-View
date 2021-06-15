@@ -1,4 +1,9 @@
-Install Hadoop 2.9.1 on Windows 10 platform.
+Install Hadoop 2.9.1 on Windows 10 platform. (Setting up a Single Node Hadoop Cluster)
+
+Prerequistes:
+
+JAVA: You need to install the Java 8 package on your system.
+HADOOP: You require Hadoop 2.9.1 package.
 
 1. Download thee hadoop 2.9.1 from the link provided below:
 Hadoop Download Link: https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
@@ -30,4 +35,30 @@ Just to validate the above setting, open new cmd and check the output.
     This should return "C:\Hadoop\hadoop-2.9.1".
 -- echo %HADOOP_BIN%
     This should return "C:\Hadoop\hadoop-2.9.1\bin".
+
+To configure the hadoop on Windows10 we have to edit below mention files in the extracted location.
+
+    1. hadoop-env.cmd
+    2. core-site.xml
+    3. hdfs-site.xml
+    4. mapred-site.xml
+
+6.Edit hadoop-env.cmd
+File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hadoop-env.cmd
+Need to add:-
+    set HADOOP_PREFIX=%HADOOP_HOME%
+    set HADOOP_CONF_DIR=%HADOOP_PREFIX%\etc\hadoop
+    set YARN_CONF_DIR=%HADOOP_CONF_DIR%
+    set PATH=%PATH%;%HADOOP_PREFIX%\bin
+
+7.Edit core-site.xml
+File Location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\core-site.xml 
+Need to add:-
+( content within <configuration> </configuration> tags.)
+ <configuration>
+   <property>
+     <name>fs.default.name</name>
+     <value>hdfs://0.0.0.0:19000</value>
+   </property>
+</configuration>
 
