@@ -149,6 +149,8 @@ const PreviewPage = (props) => {
   // }
   const [showValue, setShowValue] = useState(false);
   const [values, setValues] = useState([]);
+  const [uniqueRowsPerPage, setUniqueRowsPerPage] = useState(1);
+  const [uniqueRecords , setUniqueRecords] = useState(1);
   let initcheck2 ={};
   
   // create dictionary to store selected values for columns
@@ -195,6 +197,10 @@ const PreviewPage = (props) => {
         
          console.log(response.data)
         setValues(response.data.unique_data);
+        setUniqueRecords(response.data.total_unique);
+        console.log("unique total "  + uniqueRecords );
+        console.log("rowsPerPage " + uniqueRowsPerPage);
+        setUniqueRowsPerPage(response.data.rows_per_page);
       })
       .catch((err) => {
         console.log(err);
@@ -230,6 +236,10 @@ const PreviewPage = (props) => {
        
        
         setValues(response.data.unique_data);
+        setUniqueRecords(response.data.total_unique);
+        setUniqueRowsPerPage(response.data.rows_per_page);
+        console.log("unique total "  + uniqueRecords );
+        console.log("rowsPerPage " + uniqueRowsPerPage);
         setShowValue(true);
       })
       .catch((err) => {
@@ -381,8 +391,9 @@ const PreviewPage = (props) => {
                  </div>
                  <div className={classes.num}>
                <PaginationP
-                 totalRecords={40}
-                 pageLimit={4}
+                 key = { uniqueRecords }
+                 totalRecords={ uniqueRecords }
+                 pageLimit={  uniqueRowsPerPage }
                  pageNeighbours={1}
                  onPageChanged={onUniqueValuePageChanged}
                />
