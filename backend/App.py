@@ -38,7 +38,7 @@ SQL_TAB_NAME = 'table001'
 SHEET_NAME = 'Sheet1'
 
 # Generation constants
-JOINER_CHAR = '.'
+JOINER_CHAR = '_'
 JOIN_PAR_IN_COLS = True
 REPEAT_IN_COL = True
 ADD_INDEX_FOR_LIST = False
@@ -300,8 +300,10 @@ def convertFile():
             sql_engine = sqlalchemy.create_engine(
                 'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
             sqlite_connection = sql_engine.connect()
+
+            print("Conenction Made to SQL")
             DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
-            # print("\n\nTABLE\n")
+            print("\n\nTABLE\n")
             # print(engine.execute("SELECT * FROM " + tableName).fetchall())
             sqlite_connection.close()
             print("Time to gen db : ", time.time() - startTime)
@@ -319,6 +321,41 @@ def convertFile():
                 # subprocess.call(hdfs_cmd, shell=True)
 
             return send_file(SQL_DB_NAME + '.db')
+
+    except Exception as e:
+        print(e)
+        return jsonify({'message:', 'error'})
+
+
+@app.route('/api/query', methods=['POST'])
+@cross_origin()
+def fetchQueryData():
+    print("fetch")
+    print("\n\n\n\nForm Data in /api/convert\n" , request.form['query_text'])
+
+    try:
+        queryText = request.form['query_text']
+        startTime = time.time()
+        sql_engine = sqlalchemy.create_engine(
+            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+        sqlite_connection = sql_engine.connect()
+        # DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+        # print("\n\nTABLE\n")
+        # print(engine.execute("SELECT * FROM " + tableName).fetchall())
+
+        DF = pd.read_sql_query(queryText, sqlite_connection)
+        PreviewDF = DF.copy()
+
+        print(DF.head())
+        print(PreviewDF.head())
+
+        sqlite_connection.close()
+        print("Time to gen db : ", time.time() - startTime)
+        
+        page = 1
+        html_string = utilities.GenPageHTML(df = PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
+        response = jsonify(table=html_string,total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+        return response
 
     except Exception as e:
         print(e)
