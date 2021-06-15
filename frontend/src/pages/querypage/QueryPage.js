@@ -103,6 +103,47 @@ const QueryPage = (props) => {
 
     const [check2, setCheck2] = useState(initcheck2);
 
+    const handleListItemClick = (event, index) => {
+      console.log(colWithIdx[index]);
+      // index selected for column name
+      setSelectedIndex(index);
+      const formData = new FormData();
+      formData.set("col_name", colWithIdx[index]);
+      formData.set("page_number", 1);
+      axios
+          .post("http://localhost:5000/api/uniqueValues", formData)
+          .then((response) => {
+              // receive first 20 unique values
+              setValues(response.data.unique_data);
+              setUniqueTotalRecords(response.data.total_unique);
+              setUniqueRowsPerPage(response.data.rows_per_page);
+              setShowValue(true);
+          })
+          .catch((err) => {
+              console.log(err);
+          });
+  };
+
+  const handleValueToggle = (event, num) => {
+
+      const newcheck = check2;
+      if (dict[colWithIdx[selectedIndex]].has(values[num])) {
+          newcheck[colWithIdx[selectedIndex]][num] = false;
+          const newdict = dict;
+          newdict[colWithIdx[selectedIndex]].delete(values[num]);
+          setCheck2(newcheck);
+          setDict(newdict);
+      }
+      else {
+          newcheck[colWithIdx[selectedIndex]][num] = true;
+          const newdict = dict;
+          newdict[colWithIdx[selectedIndex]].add(values[num]);
+          setCheck2(newcheck);
+          setDict(newdict);
+      }
+      setState({});
+  };
+
     // create list to display all columns
     let colList = [];
 
