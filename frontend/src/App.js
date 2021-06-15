@@ -9,6 +9,7 @@ import FileUrl from './pages/fileurl/FileUrl'
 import JsonInput from './pages/jsoninput/JsonInput'
 import SelectedValues from './components/selectedvaluespreview/SelectedValues'
 import PreviewPage from './pages/previewpage/PreviewPage';
+import QueryPage from './pages/querypage/QueryPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/file-upload"><FileUpload /></Route>
         <Route path="/file-url"><FileUrl /></Route>
         <Route path="/json-input"><JsonInput /></Route>
+        <Route path="/query-page"><QueryPage /></Route>
     </div>
 
   );
