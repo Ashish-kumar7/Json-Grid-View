@@ -261,7 +261,7 @@ def returnQueryData():
         print("unique_data" , unique_data)
         for i in unique_data :
             print(i , type(i))
-        response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=20, unique_data = unique_data) 
+        response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=4, unique_data = unique_data) 
         print(response)
         return response
     except Exception as e:
