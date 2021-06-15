@@ -1,37 +1,28 @@
-import "./PreviewPage.css";
-import "./dataframeStyle.css";
-import { Container, Row, Col, Pagination, PageItem } from "react-bootstrap";
-import FileUrlLayout from "../../components/fileurllayout/FileUrlLayout";
-import Button from "../../components/button/Button";
-import IconBox from "../../components/iconbox/IconBox";
-import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { faDatabase } from "@fortawesome/free-solid-svg-icons";
-import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-// import { DataGrid } from '@material-ui/data-grid';
-// import { useDemoData } from '@material-ui/x-grid-data-generator';
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-// import Pagination from '@material-ui/lab/Pagination';
-import Navbar from "../../components/navbar/Navbar";
-import "../../components/scrollbar/ScrollBar.css";
-import { useHistory } from "react-router";
-import initialDataFrame from "../../global_variable";
-import { PaginationItem } from "@material-ui/lab";
-import PaginationP from "../../components/pagination/Pagination";
-import Switch from "@material-ui/core/Switch";
-import ListR from "react-list-select";
+import { faDatabase, faFileCsv, faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { makeStyles } from "@material-ui/core/styles";
+import axios from "axios";
+// import { DataGrid } from '@material-ui/data-grid';
+// import { useDemoData } from '@material-ui/x-grid-data-generator';
+import React, { useState } from "react";
+import { Col, Container, Row } from "react-bootstrap";
+import Button from "../../components/button/Button";
+import IconBox from "../../components/iconbox/IconBox";
+// import Pagination from '@material-ui/lab/Pagination';
+import Navbar from "../../components/navbar/Navbar";
+import PaginationP from "../../components/pagination/Pagination";
+import "../../components/scrollbar/ScrollBar.css";
 import SelectedValues from "../../components/selectedvaluespreview/SelectedValues";
+import initialDataFrame from "../../global_variable";
 import IOSSwitch from "../../material-styles";
-import Checkbox from "@material-ui/core/Checkbox";
+import "./dataframeStyle.css";
+import "./PreviewPage.css";
 
 var FileDownload = require("js-file-download");
 var parse = require("html-react-parser");
@@ -63,13 +54,13 @@ const useStyles = makeStyles((theme) => ({
 
 const PreviewPage = (props) => {
   const classes = useStyles();
-  let  [,setState]=useState();
+  let [, setState] = useState();
   console.log("preview pageeeeeee");
   // props containd top 20 rows and total pages
   // const location = useLocation();
   // console.log(location.state.state.df);
 
-  
+
   const [downloadContent, setDownloadContent] = useState("");
   const [fileExtension, setFileExtension] = useState("");
   const [showDownload, setShowDownload] = useState(false);
@@ -77,7 +68,7 @@ const PreviewPage = (props) => {
   const [table, setTable] = useState(initialDataFrame.df);
   const [formDisplay, setFormDisplay] = useState(false);
   const [uniqueRowsPerPage, setUniqueRowsPerPage] = useState(1);
-  const [uniqueTotalRecords , setUniqueTotalRecords] = useState(1);
+  const [uniqueTotalRecords, setUniqueTotalRecords] = useState(1);
 
   // function to download file
   const handleConversion = (val) => {
@@ -128,8 +119,6 @@ const PreviewPage = (props) => {
     }
   };
 
-
- 
   // let active = 2;
   // let items = [];
   // for (let number = 1; number <= 5; number++) {
@@ -150,22 +139,20 @@ const PreviewPage = (props) => {
   // }
   const [showValue, setShowValue] = useState(false);
   let [values, setValues] = useState([]);
-  let initcheck2 ={};
-  
+  let initcheck2 = {};
+
   // create dictionary to store selected values for columns
-  const dictIntermediate ={};
+  const dictIntermediate = {};
   for (var i = 0; i < initialDataFrame.cols.length; i++) {
     dictIntermediate[initialDataFrame.cols[i]] = new Set();
-    initcheck2[initialDataFrame.cols[i]]=new Array(20).fill(false);
+    initcheck2[initialDataFrame.cols[i]] = new Array(20).fill(false);
   }
   let [dict, setDict] = useState(dictIntermediate);
- 
-  // index to get col name 
-  
 
+  // index to get col name 
   // page change function for df preview
   const onPageChanged = (data) => {
-   
+
     const { currentPage, totalPages, pageLimit } = data;
     console.log(currentPage);
     const offset = (currentPage - 1) * pageLimit;
@@ -175,7 +162,7 @@ const PreviewPage = (props) => {
       .post("http://localhost:5000/api/page", formData)
       .then((response) => {
         console.log(response);
-         setTable(response.data.table);
+        setTable(response.data.table);
       })
       .catch((err) => {
         console.log(err);
@@ -192,9 +179,9 @@ const PreviewPage = (props) => {
     //  } 
     // setCheck2(newcheck3);
     // setState({});
-    let newval = [] ;
-    console.log(check2[colWithIdx[selectedIndex]]);   
-    console.log(dict[colWithIdx[selectedIndex]]);   
+    let newval = [];
+    console.log(check2[colWithIdx[selectedIndex]]);
+    console.log(dict[colWithIdx[selectedIndex]]);
     const formData = new FormData();
     formData.set("col_name", colWithIdx[selectedIndex]);
     formData.set("page_number", currentPage);
@@ -202,66 +189,57 @@ const PreviewPage = (props) => {
       .post("http://localhost:5000/api/uniqueValues", formData)
       .then((response) => {
         // receive  20 unique values
-        
+
         //  console.log(response.data.unique_data);
         newval = response.data.unique_data;
         console.log("New val");
-         console.log(newval);
+        console.log(newval);
         setValues(newval);
-        
+
         // console.log(values);
         const newcheck2 = check2;
-        for(var k =0;k<newval.length;k++){
-         
-          if(dict[colWithIdx[selectedIndex]].has(newval[k])){
+        for (var k = 0; k < newval.length; k++) {
+
+          if (dict[colWithIdx[selectedIndex]].has(newval[k])) {
             console.log("jjjjjjjjjjjjjjjjjjjjjj");
             console.log(newval[k]);
-            newcheck2[colWithIdx[selectedIndex]][k]=true;
+            newcheck2[colWithIdx[selectedIndex]][k] = true;
           }
-          else{
-            newcheck2[colWithIdx[selectedIndex]][k]=false;
+          else {
+            newcheck2[colWithIdx[selectedIndex]][k] = false;
           }
-        } 
+        }
         setCheck2(newcheck2);
         // console.log(check2[colWithIdx[selectedIndex]]);
-      // console.log(dict[colWithIdx[selectedIndex]]);   
-          
-       
-        
-        
+        // console.log(dict[colWithIdx[selectedIndex]]);   
+
         setUniqueTotalRecords(response.data.total_unique);
         // console.log("unique total "  + uniqueTotalRecords );
         // console.log("rowsPerPage " + uniqueRowsPerPage);
         setUniqueRowsPerPage(response.data.rows_per_page);
-        
+
       })
-     
+
       .catch((err) => {
         console.log(err);
-        
+
       });
-      
-       setState({});
-      
-     
+
+    setState({});
   }
 
   const [selectedIndex, setSelectedIndex] = useState(1);
   let colWithIdx = [];
 
   // const values = ['aditi', 'aditya','abhishek', 'ashish', 'neha', 'prakriti'];
-  
-  
-
-  
   // const [check,setCheck] = useState(initCheck);
-  const [check2,setCheck2] = useState(initcheck2);
+  const [check2, setCheck2] = useState(initcheck2);
 
   const handleListItemClick = (event, index) => {
     console.log(colWithIdx[index]);
     //  initCheck =new Array(values.length).fill(false);
     //  setCheck(initCheck);
-   // index selected for column name
+    // index selected for column name
     setSelectedIndex(index);
     const formData = new FormData();
     formData.set("col_name", colWithIdx[index]);
@@ -270,9 +248,7 @@ const PreviewPage = (props) => {
       .post("http://localhost:5000/api/uniqueValues", formData)
       .then((response) => {
         // receive first 20 unique values
-        
-       
-       
+
         setValues(response.data.unique_data);
         setUniqueTotalRecords(response.data.total_unique);
         // console.log("unique total "  + uniqueTotalRecords );
@@ -282,30 +258,21 @@ const PreviewPage = (props) => {
       })
       .catch((err) => {
         console.log(err);
-        
+
       });
   };
 
-  
- 
-  
-  
-
   //  setDict(dictIntermediate);
+  const handleValueToggle = (event, num) => {
 
-
-  const handleValueToggle  = (event, num) =>{
-   
     const newcheck = check2;
-     
-
     // if(newcheck[colWithIdx[selectedIndex]][num]){
     //   newcheck[colWithIdx[selectedIndex]][num]=false;
     //   const newdict =  dict;
     //   newdict[colWithIdx[selectedIndex]].delete(values[num]);
     //   setCheck2(newcheck);
     //   setDict(newdict);
-     
+
     // }
     // else{
     //   newcheck[colWithIdx[selectedIndex]][num]=true;
@@ -313,74 +280,68 @@ const PreviewPage = (props) => {
     //   newdict[colWithIdx[selectedIndex]].add(values[num]);
     //   setCheck2(newcheck);
     //   setDict(newdict);
-      
+
     // }
 
-    if(dict[colWithIdx[selectedIndex]].has(values[num]))
-    {
-      newcheck[colWithIdx[selectedIndex]][num]=false;
-      const newdict =  dict;
+    if (dict[colWithIdx[selectedIndex]].has(values[num])) {
+      newcheck[colWithIdx[selectedIndex]][num] = false;
+      const newdict = dict;
       newdict[colWithIdx[selectedIndex]].delete(values[num]);
       setCheck2(newcheck);
       setDict(newdict);
     }
-    else{
-      newcheck[colWithIdx[selectedIndex]][num]=true;
-      const newdict =  dict;
+    else {
+      newcheck[colWithIdx[selectedIndex]][num] = true;
+      const newdict = dict;
       newdict[colWithIdx[selectedIndex]].add(values[num]);
       setCheck2(newcheck);
       setDict(newdict);
     }
     // console.log(initCheck)
-   
-   
+
+
     setState({});
   };
 
-// create list to display all columns
-let colList = [];
+  // create list to display all columns
+  let colList = [];
 
-for (var i = 0; i < initialDataFrame.cols.length; i++) {
-  dictIntermediate[initialDataFrame.cols[i]] = new Set();
-  
-  let number = i;
-  colWithIdx[number] = initialDataFrame.cols[i];
-  colList.push(
-    <ListItem
-      button
-      selected={selectedIndex === number}
-      onClick={(event) => handleListItemClick(event, number)}
-    >
-      <ListItemText className="textList" primary={initialDataFrame.cols[i]} />
-    </ListItem>
-  );
-}
+  for (var i = 0; i < initialDataFrame.cols.length; i++) {
+    dictIntermediate[initialDataFrame.cols[i]] = new Set();
 
-// create list to display unique values of column
-let valueList = [];
+    let number = i;
+    colWithIdx[number] = initialDataFrame.cols[i];
+    colList.push(
+      <ListItem
+        button
+        selected={selectedIndex === number}
+        onClick={(event) => handleListItemClick(event, number)}
+      >
+        <ListItemText className="textList" primary={initialDataFrame.cols[i]} />
+      </ListItem>
+    );
+  }
+
+  // create list to display unique values of column
+  let valueList = [];
   for (var i = 0; i < values.length; i++) {
     let number = i;
-    
+
     valueList.push(
-      <ListItem key={values[number]}   dense button onClick={(event) => handleValueToggle(event, number)}>
-      <ListItemIcon>
-        <Checkbox
-          edge="start"
-          checked={check2[colWithIdx[selectedIndex]][number]}
-          tabIndex={-1}
-          disableRipple
-          key={values[number]} 
-        />
-      </ListItemIcon>
-      <ListItemText  primary={values[number]} />
-    </ListItem>
+      <ListItem key={values[number]} dense button onClick={(event) => handleValueToggle(event, number)}>
+        <ListItemIcon>
+          <Checkbox
+            edge="start"
+            checked={check2[colWithIdx[selectedIndex]][number]}
+            tabIndex={-1}
+            disableRipple
+            key={values[number]}
+          />
+        </ListItemIcon>
+        <ListItemText primary={values[number]} />
+      </ListItem>
     );
   };
-
- 
-
-
-  
 
   return (
     <>
@@ -396,7 +357,7 @@ let valueList = [];
         </div>
         <div className={classes.num}>
           <PaginationP
-            key = {initialDataFrame.records}
+            key={initialDataFrame.records}
             totalRecords={initialDataFrame.records}
             pageLimit={initialDataFrame.rows}
             pageNeighbours={1}
@@ -422,49 +383,56 @@ let valueList = [];
             }
           />
         </div>
+        <div>
+          <Button
+            title={"Go To QueryPage!"}
+            classId={"uploadButton"}
+            link={"/query-page"}
+          ></Button>
+        </div>
 
         {formDisplay ? (
           <>
             <SelectedValues dict={dict}></SelectedValues>
             <Row className="fullform">
- {/* list of column values in dataframe    */}
+              {/* list of column values in dataframe    */}
               <Col lg="4">
-              <h5>Select Column</h5> 
-              <div className="colList">
-              
-              <Divider />
-              <List component="nav" aria-label="secondary mailbox folder">
-                {colList}
-              </List>
-            </div>
+                <h5>Select Column</h5>
+                <div className="colList">
+
+                  <Divider />
+                  <List component="nav" aria-label="secondary mailbox folder">
+                    {colList}
+                  </List>
+                </div>
               </Col>
               <Col lg="4">
-                {showValue?(
+                {showValue ? (
                   <>
-                   <h5>Select Values</h5> 
-                   <div className="colList">
-                   
-                   <Divider />
-                   <List component="nav" aria-label="secondary mailbox folder">
-                     {valueList}
-                     
-                   </List>
-                 </div>
-                 <div className={classes.num}>
-               <PaginationP
-                key = { uniqueTotalRecords }
-                 totalRecords={uniqueTotalRecords}
-                 pageLimit={uniqueRowsPerPage}
-                 pageNeighbours={1}
-                 onPageChanged={onUniqueValuePageChanged}
-               />
-             </div>
-             </>
-                ):<></>}
-             
+                    <h5>Select Values</h5>
+                    <div className="colList">
+
+                      <Divider />
+                      <List component="nav" aria-label="secondary mailbox folder">
+                        {valueList}
+
+                      </List>
+                    </div>
+                    <div className={classes.num}>
+                      <PaginationP
+                        key={uniqueTotalRecords}
+                        totalRecords={uniqueTotalRecords}
+                        pageLimit={uniqueRowsPerPage}
+                        pageNeighbours={1}
+                        onPageChanged={onUniqueValuePageChanged}
+                      />
+                    </div>
+                  </>
+                ) : <></>}
+
               </Col>
             </Row>
-            
+
           </>
         ) : (
           <p></p>
