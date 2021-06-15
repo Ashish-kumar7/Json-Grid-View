@@ -396,6 +396,7 @@ let valueList = [];
         </div>
         <div className={classes.num}>
           <PaginationP
+            key = {initialDataFrame.records}
             totalRecords={initialDataFrame.records}
             pageLimit={initialDataFrame.rows}
             pageNeighbours={1}
