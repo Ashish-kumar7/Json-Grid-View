@@ -24,7 +24,6 @@ function App() {
         <Route path="/file-upload"><FileUpload /></Route>
         <Route path="/file-url"><FileUrl /></Route>
         <Route path="/json-input"><JsonInput /></Route>
-        <Route path="/query-page"><QueryPage /></Route>
     </div>
 
   );
