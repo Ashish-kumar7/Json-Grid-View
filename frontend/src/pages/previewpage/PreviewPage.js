@@ -70,7 +70,8 @@ const PreviewPage = (props) => {
   const [formDisplay, setFormDisplay] = useState(false);
   const [uniqueRowsPerPage, setUniqueRowsPerPage] = useState(1);
   const [uniqueTotalRecords, setUniqueTotalRecords] = useState(1);
-
+  const [resultTotalRecords, setResultTotalRecords]= useState(initialDataFrame.records);
+  const [resultRows, setResultRows]= useState(initialDataFrame.rows);
   const [showValue, setShowValue] = useState(false);
   // unique 20 values of a particular column
   let [values, setValues] = useState([]);
@@ -374,13 +375,14 @@ const PreviewPage = (props) => {
 
   const submithandler = () => {
     const formData = new FormData();
-
+    console.log(dict);
     formData.set("dict", dict);
     // axios
     //     .post("http://localhost:5000/api/queryForm", formData)
     //     .then((response) => {
     //       // receive data frame
-
+              //  setResultRows(response.data.rows_per_page);
+              //  setResultTotalRecords(response.data.)
     //     })
     //     .catch((err) => {
     //       console.log(err);
