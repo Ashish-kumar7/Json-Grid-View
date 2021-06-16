@@ -306,15 +306,15 @@ def searchValueInCol():
         s_search_val = request.form['search_val']
 
         
-
+        # Load Data here
         if not s_selected_col in prevQueryCols :
-            prevQueryCols[s_selected_col] = list(pd.unique(PreviewDF[s_selected_col]))
+            prevQueryCols[s_selected_col] = list(pd.unique(DF[s_selected_col]))
         
-        s_res_set = set([ val for val in prevQueryCols[s_selected_col] if val.startswith(s_search_val)])
+        s_res_set = set([ val for val in prevQueryCols[s_selected_col] if str(val).startswith(s_search_val)])
         print("result set" , s_res_set)
 
         SEARCH_TOTAL_RECORDS = len(s_res_set)
-        return jsonify(unique_data = list(s_res_set) , total_unique= SEARCH_TOTAL_RECORDS,rows_per_page = SEARCH_ROWS_PER_PAGE)
+        return jsonify(unique_data = list(s_res_set) , total_unique= SEARCH_TOTAL_RECORDS, rows_per_page = SEARCH_ROWS_PER_PAGE)
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
@@ -325,13 +325,21 @@ def searchValueInCol():
 def convertFile():
     print("convert")
     print("\n\n\n\nForm Data in /api/convert\n" , request.form)
+    useDF = ''
     try:
         extension = request.form['content_type']
+        data_type = int(request.form['data_type'])
+    
         print(extension)
         # Generate CSV
         if extension == "csv":
             startTime = time.time()
-            DF.to_csv(CSV_FILENAME + '.csv')
+            
+            if data_type == 1 : 
+                DF.to_csv(CSV_FILENAME + '.csv')
+            else :
+                PreviewDF.to_csv(CSV_FILENAME + '.csv')
+            
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen csv : ", time.time() - startTime)
             return send_file(CSV_FILENAME + '.csv')
@@ -339,7 +347,12 @@ def convertFile():
         # Generate XLSX
         if extension == "excel":
             startTime = time.time()
-            DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+
+            if data_type == 1 : 
+                DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+            else :
+                PreviewDF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen xlsx : ", time.time() - startTime)
             return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
@@ -353,7 +366,12 @@ def convertFile():
             sqlite_connection = sql_engine.connect()
 
             print("Conenction Made to SQL")
-            DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+
+            if data_type == 1 : 
+                DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+            else :
+                PreviewDF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+
             print("\n\nTABLE\n")
             # print(engine.execute("SELECT * FROM " + tableName).fetchall())
             sqlite_connection.close()
@@ -363,8 +381,13 @@ def convertFile():
             print("Total time taken : ", startTime - initTime)
             socketio.emit('progress', 80, broadcast=True)
             if HADOOP_INSTALLED :
-                DF.to_csv( 'test.csv')
-                hadoopstorage.saveFile(DF)
+                if data_type == 1 : 
+                    DF.to_csv( 'test.csv')
+                    hadoopstorage.saveFile(DF)
+                else :
+                    PreviewDF.to_csv( 'test.csv')
+                    hadoopstorage.saveFile(PreviewDF)
+                
                 # code to convert csv file and saving it to hdfs
                 # df = pd.read_csv('generatedCsvFile.csv')
                 # df.to_parquet("/test_parquet", compression="GZIP")

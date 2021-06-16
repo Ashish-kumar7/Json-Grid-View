@@ -124,11 +124,15 @@
      }
 
      .previewpage .formtoggle {
-       margin-left: 38%;
-       margin-right: 38%;
+       margin-left: 15%;
+       /* margin-right: 38%; */
        margin-top: 1% ;
        margin-bottom: 5%;
        color: orange;
+     }
+
+     .queryPageButton {
+      margin-left: 65%;
      }
 
      .previewpage .formswitch {
@@ -144,3 +148,30 @@
        color: white;
        
      }
+
+
+     .rowC{display:flex; flex-direction:row;}
+
+     .sqlQueryPage {
+       margin-left: 15%;
+       /* margin-right: 38%; */
+       margin-top: 1% ;
+       margin-bottom: 5%;
+       color: orange;
+     }
+
+     .selectedDict h5 {
+      text-align: center;
+      color: white;
+      
+    }
+
+    .chooseDataType h6{
+      color : white;
+      padding-left: 20px;
+    }
+
+    .chooseDataType label{
+      color : white;
+      padding-left: 20px;
+    }

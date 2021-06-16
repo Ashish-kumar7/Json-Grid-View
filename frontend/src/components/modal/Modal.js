@@ -13,7 +13,7 @@ import initialDataFrame from "../../global_variable";
 
 const CustomizeModal = (props) => {
   const [tableType, setTableType] = useState(1);
-  const [joinChar, setJoinChar] = useState(".");
+  const [joinChar, setJoinChar] = useState("_");
   const [parentCol, setParentCol] = useState(true);
   // const [missingVal, setMissingVal] = useState("null");
   const [sheetName, setSheetName] = useState("Sheet1");
@@ -182,9 +182,10 @@ const CustomizeModal = (props) => {
               <h6>Join Column name with character</h6>
               <select aria-label="Default select example" >
                 <option>Open this select menu</option>
-                <option value="." selected>.</option>
+                <option value="_" selected>_</option>
+                <option value=".">.</option>
                 <option value="-">-</option>
-                <option value="_">_</option>
+                
               </select>
             </Row>
             <Row className="entry2" onChange={nullhandler}>

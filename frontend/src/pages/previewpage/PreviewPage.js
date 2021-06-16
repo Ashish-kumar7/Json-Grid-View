@@ -1,6 +1,6 @@
 import "./PreviewPage.css";
 import "./dataframeStyle.css";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col, InputGroup, Form } from "react-bootstrap";
 import Button from "../../components/button/Button";
 import IconBox from "../../components/iconbox/IconBox";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
@@ -75,6 +75,10 @@ const PreviewPage = (props) => {
   );
   const [resultRows, setResultRows] = useState(initialDataFrame.rows);
   const [showValue, setShowValue] = useState(false);
+  const [dataType, setDataType] = useState(1);
+
+
+
   // unique 20 values of a particular column
   let [values, setValues] = useState([]);
 
@@ -103,10 +107,17 @@ const PreviewPage = (props) => {
 
   // create dictionary to store selected values for columns
 
+  const dataTypeHandler = (e) =>{
+    console.log("data type : " + e.target.value);
+    setDataType(e.target.value);
+  }
+
+
   // function to download file
   const handleConversion = (val) => {
     const formData = new FormData();
     formData.set("content_type", val);
+    formData.set("data_type" , dataType);
     if (val == "excel") {
       setFileExtension("output.xlsx");
     } else if (val == "csv") {
@@ -444,39 +455,43 @@ const PreviewPage = (props) => {
             onPageChanged={onPageChanged}
           />
         </div>
-        <div className="formtoggle">
-          <h5>Toggle the switch to perform query on data</h5>
-          {/* <Switch className="formswitch"
-            checked={formDisplay}
-            onChange={switchhandler}
-            name="checkedA"
-            inputProps={{ "aria-label": "secondary checkbox" }}
-          /> */}
-          <FormControlLabel
-            className="formswitch"
-            control={
-              <IOSSwitch
-                checked={formDisplay}
-                onChange={switchhandler}
-                name="checkedB"
-              />
-            }
-          />
+        <div className='rowC'>
+          <div className="formtoggle">
+            <h5>Toggle to perform queries using UI</h5>
+            {/* <Switch className="formswitch"
+              checked={formDisplay}
+              onChange={switchhandler}
+              name="checkedA"
+              inputProps={{ "aria-label": "secondary checkbox" }}
+            /> */}
+            <FormControlLabel
+              className="formswitch"
+              control={
+                <IOSSwitch
+                  checked={formDisplay}
+                  onChange={switchhandler}
+                  name="checkedB"
+                />
+              }
+            />
+          </div>
+          <div className="sqlQueryPage">
+            <h5>Click to perform SQL Queries on table</h5>
+            <Button
+              title={"Go To QueryPage!"}
+              classId={"uploadButton"}
+              link={"/query-page"}
+            ></Button>
+          </div>
         </div>
-        <div>
-          <Button
-            title={"Go To QueryPage!"}
-            classId={"uploadButton"}
-            link={"/query-page"}
-          ></Button>
-        </div>
+        
 
         {formDisplay ? (
           <>
             <Row className="fullform">
               {/* list of column values in dataframe    */}
               <Col lg="4">
-                <h5>Select Column</h5>
+                <h5>Select to Load Unique Values</h5>
                 <div className="colList">
                   <Divider />
                   <List component="nav" aria-label="secondary mailbox folder">
@@ -487,7 +502,7 @@ const PreviewPage = (props) => {
               <Col lg="4">
                 {showValue ? (
                   <>
-                    <h5>Select Values</h5>
+                    <h5>Select Values to query</h5>
                     <div className="colList">
                       <Divider />
                       <List
@@ -513,10 +528,10 @@ const PreviewPage = (props) => {
               </Col>
               <Col lg="4">
                 <Row onChange={searchvaluehandler}>
-                  <Form.Label>Sheet name</Form.Label>
+                  <Form.Label><h5>Perform StartsWith search</h5></Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Search value for selected column"
+                    placeholder="Enter text to perform StarsWith search"
                   />
                   <button onClick={searchhandler} type="submit">
                     Search
@@ -535,12 +550,46 @@ const PreviewPage = (props) => {
                 </Row>
               </Col>
             </Row>
+
+            
+            
             <button onClick={submithandler}>Query</button>
-            <SelectedValues dict={dict}></SelectedValues>
+            <div className="selectedDict">
+              <h5>Column Names and selected values</h5>
+              <SelectedValues dict={dict}></SelectedValues>
+            </div>
           </>
         ) : (
           <p></p>
         )}
+
+        <Row className="chooseDataType" >
+              <h6>Select Table Type: </h6>
+              <Col>
+                <InputGroup>
+                  <InputGroup.Radio 
+                    onChange={dataTypeHandler}
+                    name="dataType"
+                    value="1"
+                    aria-label="Radio button for following text input"
+                    defaultChecked
+                  />
+                  <label>Download Normal Data</label>
+                </InputGroup>
+              </Col>
+              <Col>
+                <InputGroup>
+                  <InputGroup.Radio
+                    onChange={dataTypeHandler}
+                    name="dataType"
+                    value="2"
+                    aria-label="Radio button for following text input"
+                  />
+                  <label>Download Preview Data</label>
+                </InputGroup>
+              </Col>
+
+            </Row>
 
         <Container>
           <h3>SELECT A CATEGORY {props.totalPages}</h3>
