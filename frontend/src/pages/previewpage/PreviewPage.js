@@ -1,6 +1,6 @@
 import "./PreviewPage.css";
 import "./dataframeStyle.css";
-import { Container, Row, Col, Form } from "react-bootstrap";
+import { Container, Row, Col, InputGroup, Form } from "react-bootstrap";
 import Button from "../../components/button/Button";
 import IconBox from "../../components/iconbox/IconBox";
 import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
@@ -75,6 +75,10 @@ const PreviewPage = (props) => {
   );
   const [resultRows, setResultRows] = useState(initialDataFrame.rows);
   const [showValue, setShowValue] = useState(false);
+  const [dataType, setDataType] = useState(1);
+
+
+
   // unique 20 values of a particular column
   let [values, setValues] = useState([]);
 
@@ -103,10 +107,17 @@ const PreviewPage = (props) => {
 
   // create dictionary to store selected values for columns
 
+  const dataTypeHandler = (e) =>{
+    console.log("data type : " + e.target.value);
+    setDataType(e.target.value);
+  }
+
+
   // function to download file
   const handleConversion = (val) => {
     const formData = new FormData();
     formData.set("content_type", val);
+    formData.set("data_type" , dataType);
     if (val == "excel") {
       setFileExtension("output.xlsx");
     } else if (val == "csv") {
@@ -551,6 +562,34 @@ const PreviewPage = (props) => {
         ) : (
           <p></p>
         )}
+
+        <Row className="chooseDataType" >
+              <h6>Select Table Type: </h6>
+              <Col>
+                <InputGroup>
+                  <InputGroup.Radio 
+                    onChange={dataTypeHandler}
+                    name="dataType"
+                    value="1"
+                    aria-label="Radio button for following text input"
+                    defaultChecked
+                  />
+                  <label>Download Normal Data</label>
+                </InputGroup>
+              </Col>
+              <Col>
+                <InputGroup>
+                  <InputGroup.Radio
+                    onChange={dataTypeHandler}
+                    name="dataType"
+                    value="2"
+                    aria-label="Radio button for following text input"
+                  />
+                  <label>Download Preview Data</label>
+                </InputGroup>
+              </Col>
+
+            </Row>
 
         <Container>
           <h3>SELECT A CATEGORY {props.totalPages}</h3>
