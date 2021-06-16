@@ -24,6 +24,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import SelectedValues from "../../components/selectedvaluespreview/SelectedValues";
 import initialDataFrame from "../../global_variable";
 import IOSSwitch from "../../material-styles";
+import Checkbox from "@material-ui/core/Checkbox";
 import "./dataframeStyle.css";
 import "./PreviewPage.css";
 
