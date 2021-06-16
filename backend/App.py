@@ -448,7 +448,7 @@ def fetchQueryData():
 
     except Exception as e:
         print(e)
-        return jsonify({'message:', 'error'})
+        return jsonify(message="Error in query: " + str(e))
 
 @app.route('/api/check-table', methods=['POST'])
 @cross_origin()
