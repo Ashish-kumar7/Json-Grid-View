@@ -70,9 +70,14 @@ const PreviewPage = (props) => {
   const [formDisplay, setFormDisplay] = useState(false);
   const [uniqueRowsPerPage, setUniqueRowsPerPage] = useState(1);
   const [uniqueTotalRecords, setUniqueTotalRecords] = useState(1);
+<<<<<<< HEAD
   const [resultTotalRecords, setResultTotalRecords] = useState(initialDataFrame.records);
   const [resultRows, setResultRows] = useState(initialDataFrame.rows);
   
+=======
+  const [resultTotalRecords, setResultTotalRecords]= useState(initialDataFrame.records);
+  const [resultRows, setResultRows]= useState(initialDataFrame.rows);
+>>>>>>> b4b90d7b65e14b735dd488493ecb33623965ca65
   const [showValue, setShowValue] = useState(false);
   // unique 20 values of a particular column
   let [values, setValues] = useState([]);
@@ -400,6 +405,8 @@ const PreviewPage = (props) => {
           // receive data frame
           console.log("Response after query using dict");
           console.log(response);
+          setResultRows(response.data.rows_per_page);
+          setResultTotalRecords(response.data.total_records);
           setTable(response.data.table);
           setResultTotalRecords(response.data.total_records);
           setResultRows(response.data.rows_per_page);
@@ -424,9 +431,15 @@ const PreviewPage = (props) => {
         </div>
         <div className={classes.num}>
           <PaginationP
+<<<<<<< HEAD
             key={ resultTotalRecords }
             totalRecords={ resultTotalRecords }
             pageLimit={ resultRows }
+=======
+            key={resultTotalRecords}
+            totalRecords={resultTotalRecords}
+            pageLimit={resultRows}
+>>>>>>> b4b90d7b65e14b735dd488493ecb33623965ca65
             pageNeighbours={1}
             onPageChanged={onPageChanged}
           />
