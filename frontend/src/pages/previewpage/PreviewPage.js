@@ -480,7 +480,7 @@ const PreviewPage = (props) => {
             <Row className="fullform">
               {/* list of column values in dataframe    */}
               <Col lg="4">
-                <h5>Select Column</h5>
+                <h5>Select Column to load Unique Values</h5>
                 <div className="colList">
                   <Divider />
                   <List component="nav" aria-label="secondary mailbox folder">
@@ -491,7 +491,7 @@ const PreviewPage = (props) => {
               <Col lg="4">
                 {showValue ? (
                   <>
-                    <h5>Select Values</h5>
+                    <h5>Select Values to query</h5>
                     <div className="colList">
                       <Divider />
                       <List
@@ -517,10 +517,10 @@ const PreviewPage = (props) => {
               </Col>
               <Col lg="4">
                 <Row onChange={searchvaluehandler}>
-                  <Form.Label>Sheet name</Form.Label>
+                  <Form.Label><h5>Perform StartsWith search</h5></Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Search value for selected column"
+                    placeholder="Enter text to perform StarsWith search"
                   />
                   <button onClick={searchhandler} type="submit">
                     Search
@@ -539,6 +539,9 @@ const PreviewPage = (props) => {
                 </Row>
               </Col>
             </Row>
+
+            
+            
             <button onClick={submithandler}>Query</button>
             <SelectedValues dict={dict}></SelectedValues>
           </>
