@@ -211,6 +211,8 @@ const PreviewPage = (props) => {
   const handleListItemClick = (event, index) => {
     console.log(colWithIdx[index]);
     setSelectedIndex(index);
+    setSearchValues([]);
+    setShowSearchValue(false);
     const formData = new FormData();
     formData.set("col_name", colWithIdx[index]);
     formData.set("page_number", 1);
