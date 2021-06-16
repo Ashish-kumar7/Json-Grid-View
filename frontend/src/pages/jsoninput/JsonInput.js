@@ -47,6 +47,7 @@ const JsonInput = () => {
 
   const changeHandler = (e) => {
     setInputJson(e.target.value);
+    console.log(typeof JSON.parse(e.target.value));
   };
 
   const hideModal = () => {
@@ -132,7 +133,7 @@ const JsonInput = () => {
       <Navbar></Navbar>
       <Container>
         <Row>
-          <Col lg="6">
+          <Col lg="12">
             <Editor process={true} onChange={changeHandler} click={() => handleCustomize()} ></Editor>
             <Modal
               show={open}
@@ -141,9 +142,7 @@ const JsonInput = () => {
             ></Modal>
             <RingLoader color={color} loading={loading} css={override} size={150} />
           </Col>
-          <Col lg="6">
           
-          </Col>
         </Row>
       </Container>
 

@@ -12,7 +12,7 @@ const Navbar = () => {
                         <Link to="/file-upload"><button id="b2" class="btn btn-lg " >Upload</button></Link>
                         <Link to="/file-url"><button id="b3" class="btn btn-lg " >URL</button></Link>
                         <button id="b4" class="btn btn-lg " >Query</button>
-                        <button id="b5" class="btn btn-lg ">Search</button>
+                        <Link to="/jsonchecker"><button id="b5" class="btn btn-lg ">JSON Checker</button></Link>
                         <button id="b6" class="btn btn-lg btn-primary">Search</button>
                     </form>
                 </div>

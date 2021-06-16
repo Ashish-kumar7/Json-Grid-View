@@ -8,7 +8,7 @@ import Button from '../../components/button/Button'
 import Modal from "../../components/modal/Modal";
 import { css } from "@emotion/react";
 import RingLoader from "react-spinners/RingLoader";
-import global_var from '../../global_variable';
+
 
 // const socket = io("http://localhost:5000/");
 const override = css`
