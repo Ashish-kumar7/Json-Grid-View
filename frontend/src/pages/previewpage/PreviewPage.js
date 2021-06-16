@@ -543,7 +543,10 @@ const PreviewPage = (props) => {
             
             
             <button onClick={submithandler}>Query</button>
-            <SelectedValues dict={dict}></SelectedValues>
+            <div className="selectedDict">
+              <h5>Column Names and selected values</h5>
+              <SelectedValues dict={dict}></SelectedValues>
+            </div>
           </>
         ) : (
           <p></p>

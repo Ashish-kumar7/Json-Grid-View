@@ -159,3 +159,9 @@
        margin-bottom: 5%;
        color: orange;
      }
+
+     .selectedDict h5 {
+      text-align: center;
+      color: white;
+      
+    }
