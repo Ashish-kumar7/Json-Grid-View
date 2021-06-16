@@ -1,7 +1,3 @@
-import Checkbox from "@material-ui/core/Checkbox";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import React, { useState } from "react";
@@ -11,8 +7,8 @@ import PaginationP from "../../components/pagination/Pagination";
 import "../../components/scrollbar/ScrollBar.css";
 import initialDataFrame from "../../global_variable";
 import "../previewpage/dataframeStyle.css";
-import "./QueryPage.css";
 import "../previewpage/PreviewPage.css";
+import "./QueryPage.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
