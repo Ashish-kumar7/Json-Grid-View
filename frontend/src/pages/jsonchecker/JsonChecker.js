@@ -54,7 +54,7 @@ const JsonChecker = () => {
     <div className="jsonchecker">
         
       <Navbar></Navbar>
-      <h2>Edit Your JSON & Save and Download it into a new file</h2>
+      <h2>Correct Your JSON & Save and Download it into a new file</h2>
       <div className="checker">
       <JSONInput
       

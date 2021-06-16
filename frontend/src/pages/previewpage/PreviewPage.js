@@ -23,7 +23,8 @@ import ListItemText from "@material-ui/core/ListItemText";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import SelectedValues from "../../components/selectedvaluespreview/SelectedValues";
 import initialDataFrame from "../../global_variable";
-import IOSSwitch from "../../material-styles";
+import IOSSwitch from "../../material-styles/IOSwitch";
+import GreenCheckbox from "../../material-styles/GreenCheckBox";
 import Checkbox from "@material-ui/core/Checkbox";
 import "./dataframeStyle.css";
 import "./PreviewPage.css";
@@ -182,16 +183,7 @@ const PreviewPage = (props) => {
   const onUniqueValuePageChanged = (data) => {
     const { currentPage, totalPages, pageLimit } = data;
     console.log(currentPage);
-
-    // const newcheck3 = check2;
-    // for(var j =0;j<check2[colWithIdx[selectedIndex]].length;j++){
-    //   newcheck3[colWithIdx[selectedIndex]][j]=false;
-    //  }
-    // setCheck2(newcheck3);
-    // setState({});
     let newval = [];
-    // console.log(check2[colWithIdx[selectedIndex]]);
-    // console.log(dict[colWithIdx[selectedIndex]]);
     const formData = new FormData();
     formData.set("col_name", colWithIdx[selectedIndex]);
     formData.set("page_number", currentPage);
@@ -205,24 +197,7 @@ const PreviewPage = (props) => {
         console.log("New val");
         console.log(newval);
         setValues(newval);
-        // console.log(values);
-        // const newcheck2 = check2;
-        // for (var k = 0; k < newval.length; k++) {
-        //   if (dict[colWithIdx[selectedIndex]].has(newval[k])) {
-        //     console.log("jjjjjjjjjjjjjjjjjjjjjj");
-        //     console.log(newval[k]);
-        //     newcheck2[colWithIdx[selectedIndex]][k] = true;
-        //   } else {
-        //     newcheck2[colWithIdx[selectedIndex]][k] = false;
-        //   }
-        // }
-        // setCheck2(newcheck2);
-        // console.log(check2[colWithIdx[selectedIndex]]);
-        // console.log(dict[colWithIdx[selectedIndex]]);
-
         setUniqueTotalRecords(response.data.total_unique);
-        // console.log("unique total "  + uniqueTotalRecords );
-        // console.log("rowsPerPage " + uniqueRowsPerPage);
         setUniqueRowsPerPage(response.data.rows_per_page);
 
         console.log("values");
@@ -238,9 +213,6 @@ const PreviewPage = (props) => {
 
   const handleListItemClick = (event, index) => {
     console.log(colWithIdx[index]);
-    //  initCheck =new Array(values.length).fill(false);
-    //  setCheck(initCheck);
-    // index selected for column name
     setSelectedIndex(index);
     const formData = new FormData();
     formData.set("col_name", colWithIdx[index]);
@@ -344,6 +316,7 @@ const PreviewPage = (props) => {
     colWithIdx[number] = initialDataFrame.cols[i];
     colList.push(
       <ListItem
+      
         button
         selected={selectedIndex === number}
         onClick={(event) => handleListItemClick(event, number)}
@@ -366,7 +339,8 @@ const PreviewPage = (props) => {
         onClick={(event) => handleValueToggle(event, number)}
       >
         <ListItemIcon>
-          <Checkbox
+          <GreenCheckbox
+            
             edge="start"
             checked={dict[colWithIdx[selectedIndex]].has(values[number])}
             tabIndex={-1}
@@ -374,7 +348,7 @@ const PreviewPage = (props) => {
             key={values[number]}
           />
         </ListItemIcon>
-        <ListItemText primary={values[number]} />
+        <ListItemText className="textList" primary={values[number]} />
       </ListItem>
     );
   }
@@ -386,7 +360,8 @@ const PreviewPage = (props) => {
     searchList.push(
       <ListItem key={searchValues[number]} dense button onClick={(event)=> handleSearchValueToggle(event,number)}>
         <ListItemIcon>
-          <Checkbox
+          <GreenCheckbox
+            
             edge="start"
             checked={dict[colWithIdx[selectedIndex]].has(searchValues[number])}
             tabIndex={-1}
@@ -503,7 +478,8 @@ const PreviewPage = (props) => {
                 {showValue ? (
                   <>
                     <h5>Select Values to query</h5>
-                    <div className="colList">
+                    <Row>
+                    <div className="valList">
                       <Divider />
                       <List
                         component="nav"
@@ -512,6 +488,8 @@ const PreviewPage = (props) => {
                         {valueList}
                       </List>
                     </div>
+                    </Row>
+                    <Row>
                     <div className={classes.num}>
                       <PaginationP
                         key={uniqueTotalRecords}
@@ -521,6 +499,7 @@ const PreviewPage = (props) => {
                         onPageChanged={onUniqueValuePageChanged}
                       />
                     </div>
+                    </Row>
                   </>
                 ) : (
                   <></>
@@ -538,7 +517,7 @@ const PreviewPage = (props) => {
                   </button>
                 </Row>
                 <Row>
-                <div className="colList">
+                <div className="searchList">
                       <Divider />
                       <List
                         component="nav"

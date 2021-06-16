@@ -111,16 +111,46 @@
      }
 
      .colList {
-       background-color: white;
-       width: 50%;
-       
+       background-color: #2196f3;
+       width: 80%;
+       color: white;
        margin-top: 5%;
-       max-height: 300px;
+       margin-left: 5%;
+       margin-right: 5%;
+       max-height: 500px;
        overflow: auto;
+       border-radius: 40px;
      }
 
+
+     .valList {
+      background-color: #dc004e;
+      width: 80%;
+      margin-right: 5%;
+      margin-top: 5%;
+      margin-left: 5%;
+      max-height: 500px;
+      overflow: auto;
+      border-radius: 30px;
+     }
+
+     .searchList {
+       background-color:#ffeb3b;
+       width: 80%;
+      margin-right: 5%;
+      margin-top: 5%;
+      margin-left: 5%;
+      max-height: 400px;
+      overflow: auto;
+      border-radius: 30px;
+     }
+
+     
+
      .textList {
-       color: black;
+       color: white;
+       text-transform: capitalize;
+       
      }
 
      .previewpage .formtoggle {
