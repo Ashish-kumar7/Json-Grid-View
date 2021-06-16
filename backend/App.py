@@ -306,9 +306,9 @@ def searchValueInCol():
         s_search_val = request.form['search_val']
 
         
-
+        # Load Data here
         if not s_selected_col in prevQueryCols :
-            prevQueryCols[s_selected_col] = list(pd.unique(PreviewDF[s_selected_col]))
+            prevQueryCols[s_selected_col] = list(pd.unique(DF[s_selected_col]))
         
         s_res_set = set([ val for val in prevQueryCols[s_selected_col] if str(val).startswith(s_search_val)])
         print("result set" , s_res_set)

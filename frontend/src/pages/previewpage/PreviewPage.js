@@ -480,7 +480,7 @@ const PreviewPage = (props) => {
             <Row className="fullform">
               {/* list of column values in dataframe    */}
               <Col lg="4">
-                <h5>Select Column to load Unique Values</h5>
+                <h5>Select to Load Unique Values</h5>
                 <div className="colList">
                   <Divider />
                   <List component="nav" aria-label="secondary mailbox folder">
