@@ -11,11 +11,14 @@ import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { faDatabase } from "@fortawesome/free-solid-svg-icons";
 import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import { useHistory } from "react-router";
 import io from "socket.io-client";
 import axios from 'axios'
 import Modal from "../../components/modal/Modal";
 import { css } from "@emotion/react";
 import RingLoader from "react-spinners/RingLoader";
+import global_var from "../../global_variable";
+
 // const socket = io("http://localhost:5000/");
 
 const override = css`
@@ -25,6 +28,7 @@ const override = css`
 `;
 
 const JsonInput = () => {
+  let history = useHistory();
   const [inputJson, setInputJson] = useState();
 
   let [loading, setLoading] = useState(false);
@@ -98,7 +102,9 @@ const JsonInput = () => {
         console.log("json loaded and checked");
         setLoading(false);
         if (res.data.message.startsWith("Error")) {
-          alert(res.data.message);
+           alert(res.data.message);
+          // global_var.json = inputJson;
+          // history.push('/jsonchecker');
         }
         else {
           showModal();
@@ -107,14 +113,19 @@ const JsonInput = () => {
       .catch((err) => {
         // display alert for wrong json
         setLoading(false);
-
+        // global_var.json = inputJson;
+        //   history.push('/jsonchecker');
         console.log(err);
         validJSON = false;
+        
+       
         setTimeout(() => {
           alert("Invalid JSON Input !!");
         }, 1000);
       });
   };
+
+
 
   return (
     <div className="jsonInput">
@@ -123,14 +134,15 @@ const JsonInput = () => {
         <Row>
           <Col lg="6">
             <Editor process={true} onChange={changeHandler} click={() => handleCustomize()} ></Editor>
-          </Col>
-          <Col lg="6">
             <Modal
               show={open}
               openFunc={showModal}
               closeFunc={hideModal}
             ></Modal>
             <RingLoader color={color} loading={loading} css={override} size={150} />
+          </Col>
+          <Col lg="6">
+          
           </Col>
         </Row>
       </Container>
