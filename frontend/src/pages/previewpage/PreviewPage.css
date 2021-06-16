@@ -61,6 +61,16 @@
     border-radius: 40px;
     box-shadow: 5px 10px rgba(255,255,255,0.15);
    }
+   .previewpage .nav-item .switchQueryButton {
+    
+    background-color: #aa00ff;
+    margin: 20px 10px 20px 10px;
+    width: 20vh;
+    margin-left: 40%;
+    padding: 10px;
+    border-radius: 40px;
+    box-shadow: 5px 10px rgba(255,255,255,0.15);
+   }
 .previewpage  .nav-link {
         text-align: center;
         color: rgb(255, 255, 255);
@@ -99,6 +109,21 @@
       box-shadow: 5px 10px rgba(255,255,255,0.15);
      }
 
+     .previewpage .nav-item .querySubmitButton {
+      background-color: #64dd17;
+      align-self: center;
+      
+
+      
+      margin: 80px 10px 20px 10px;
+      width: 30vh;
+      margin-left: 44%;
+      
+      padding: 10px;
+      border-radius: 40px;
+      box-shadow: 5px 10px rgba(255,255,255,0.15);
+     }
+
      .previewpage .progressbar {
        margin: 5vh 30vh 0vh 30vh;
      }
@@ -112,10 +137,10 @@
 
      .colList {
        background-color: #2196f3;
-       width: 80%;
+       width: 75%;
        color: white;
        margin-top: 5%;
-       margin-left: 5%;
+       margin-left: 10%;
        margin-right: 5%;
        max-height: 500px;
        overflow: auto;
@@ -125,10 +150,10 @@
 
      .valList {
       background-color: #dc004e;
-      width: 80%;
+      width: 75%;
       margin-right: 5%;
       margin-top: 5%;
-      margin-left: 5%;
+      margin-left: 10%;
       max-height: 500px;
       overflow: auto;
       border-radius: 30px;
@@ -136,13 +161,20 @@
 
      .searchList {
        background-color:#ffeb3b;
-       width: 80%;
+       width: 75%;
       margin-right: 5%;
       margin-top: 5%;
-      margin-left: 5%;
+      margin-left: 10%;
       max-height: 400px;
       overflow: auto;
       border-radius: 30px;
+     }
+
+     .searchbar {
+      margin-right: 5%;
+      margin-top: 2%;
+      margin-left: 10%;
+      width:75%;
      }
 
      
@@ -154,16 +186,30 @@
      }
 
      .previewpage .formtoggle {
-       margin-left: 15%;
-       /* margin-right: 38%; */
-       margin-top: 1% ;
+       margin-left: 30%;
+       margin-right: 30%;
+       margin-top: 2% ;
        margin-bottom: 5%;
        color: orange;
+       text-align: center;
+       letter-spacing: 1px;
      }
+     .sqlQueryPage {
+      margin-left: 30%;
+      margin-right: 30%;
+      margin-top: 2% ;
+      margin-bottom: 5%;
+      color: rgb(255,217,0);
+      text-align: center;
+      
+    }
+    .sqlQueryPage h5 {
+      letter-spacing: 1px;
+    }
 
-     .queryPageButton {
+     /* .queryPageButton {
       margin-left: 65%;
-     }
+     } */
 
      .previewpage .formswitch {
        margin-left: 40%;
@@ -176,24 +222,23 @@
 
      .fullform h5 {
        color: white;
-       
+       text-align: center;
+       /* letter-spacing: 1px; */
      }
 
+  .selectedDict {
+    margin-top: 4%;
+  }
+    
 
-     .rowC{display:flex; flex-direction:row;}
+    
 
-     .sqlQueryPage {
-       margin-left: 15%;
-       /* margin-right: 38%; */
-       margin-top: 1% ;
-       margin-bottom: 5%;
-       color: orange;
-     }
-
-     .selectedDict h5 {
+     .selectedDict h4 {
       text-align: center;
       color: white;
-      
+      margin-bottom: 3%;
+      letter-spacing: 1px;
+      text-transform: capitalize;
     }
 
     .chooseDataType h6{
@@ -204,4 +249,9 @@
     .chooseDataType label{
       color : white;
       padding-left: 20px;
+    }
+
+    .chooseDataType {
+      margin-top: 4%;
+      margin-bottom: 4%;
     }

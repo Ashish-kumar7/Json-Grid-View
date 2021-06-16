@@ -1,5 +1,6 @@
 import { faDatabase, faFileCsv, faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import Checkbox from "@material-ui/core/Checkbox";
+import "./dataframeStyle.css";
+import "./PreviewPage.css";
 import Divider from "@material-ui/core/Divider";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
@@ -17,15 +18,10 @@ import Navbar from "../../components/navbar/Navbar";
 import PaginationP from "../../components/pagination/Pagination";
 import SelectedValues from "../../components/selectedvaluespreview/SelectedValues";
 import initialDataFrame from "../../global_variable";
-<<<<<<< HEAD
 import IOSSwitch from "../../material-styles/IOSwitch";
 import GreenCheckbox from "../../material-styles/GreenCheckBox";
 import Checkbox from "@material-ui/core/Checkbox";
-=======
-import IOSSwitch from "../../material-styles";
->>>>>>> 60f4301ef56cff5a9b451f45042ec8c4f63ca053
-import "./dataframeStyle.css";
-import "./PreviewPage.css";
+
 
 var FileDownload = require("js-file-download");
 var parse = require("html-react-parser");
@@ -52,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "36%",
     marginRight: "30%",
     padding: "2%",
+  },
+  numval: {
+    padding:"4%",
+    marginLeft:"10%",
   },
 }));
 
@@ -298,6 +298,7 @@ const PreviewPage = (props) => {
         // console.log("rowsPerPage " + uniqueRowsPerPage);
         // setUniqueRowsPerPage(response.data.rows_per_page);
         // setShowValue(true);
+        setShowSearchValue(true);
       })
       .catch((err) => {
         console.log(err);
@@ -428,9 +429,9 @@ const PreviewPage = (props) => {
             onPageChanged={onPageChanged}
           />
         </div>
-        <div className='rowC'>
+        
           <div className="formtoggle">
-            <h5>Toggle to perform queries using UI</h5>
+            <h4>Toggle the Switch to perform queries on Preview Data</h4>
             {/* <Switch className="formswitch"
               checked={formDisplay}
               onChange={switchhandler}
@@ -448,24 +449,25 @@ const PreviewPage = (props) => {
               }
             />
           </div>
-          <div className="sqlQueryPage">
-            <h5>Click to perform SQL Queries on table</h5>
-            <Button
-              title={"Go To QueryPage!"}
-              classId={"uploadButton"}
-              link={"/query-page"}
-            ></Button>
-          </div>
-        </div>
+         
+     
         
 
         {formDisplay ? (
           <>
-            <Row className="fullform">
+           <div className="sqlQueryPage">
+            <h5>Click to perform SQL Queries on table</h5>
+            <Button
+              title={"Go To QueryPage!"}
+              classId={"switchQueryButton"}
+              link={"/query-page"}
+            ></Button>
+          </div>
+            <Row className="fullform  ">
               {/* list of column values in dataframe    */}
               <Col lg="4">
-                <h5>Select to Load Unique Values</h5>
-                <div className="colList">
+                <h5>Select Column Name to get Values</h5>
+                <div className="colList  ">
                   <Divider />
                   <List component="nav" aria-label="secondary mailbox folder">
                     {colList}
@@ -475,9 +477,9 @@ const PreviewPage = (props) => {
               <Col lg="4">
                 {showValue ? (
                   <>
-                    <h5>Select Values to query</h5>
+                    <h5>Select Values for Selected Column</h5>
                     <Row>
-                    <div className="valList">
+                    <div className="valList scrollbar scrollbar-secondary">
                       <Divider />
                       <List
                         component="nav"
@@ -488,7 +490,7 @@ const PreviewPage = (props) => {
                     </div>
                     </Row>
                     <Row>
-                    <div className={classes.num}>
+                    <div className={classes.numval}>
                       <PaginationP
                         key={uniqueTotalRecords}
                         totalRecords={uniqueTotalRecords}
@@ -504,43 +506,44 @@ const PreviewPage = (props) => {
                 )}
               </Col>
               <Col lg="4">
-                <Row onChange={searchvaluehandler}>
-                  <Form.Label><h5>Perform StartsWith search</h5></Form.Label>
+                <Row onChange={searchvaluehandler}  >
+                  <Form.Label><h5>Perform StartsWith search for Selected Column</h5></Form.Label>
                   <Form.Control
+                  className="searchbar form-control me-2"
                     type="text"
                     placeholder="Enter text to perform StarsWith search"
                   />
-                  <button onClick={searchhandler} type="submit">
+                  <button className="searchbar btn btn-lg btn-info" onClick={searchhandler} type="submit">
                     Search
                   </button>
                 </Row>
                 <Row>
-                <div className="searchList">
-                      <Divider />
-                      <List
-                        component="nav"
-                        aria-label="secondary mailbox folder"
-                      >
-                        {searchList}
-                      </List>
-                    </div>
+                  {showSearchValue?(
+                     <div className="searchList scrollbar scrollbar-success">
+                     <Divider />
+                     <List
+                       component="nav"
+                       aria-label="secondary mailbox folder"
+                     >
+                       {searchList}
+                     </List>
+                   </div>
+                  ):<></>}
+               
                 </Row>
               </Col>
             </Row>
 
             
             
-            <button onClick={submithandler}>Query</button>
+            
             <div className="selectedDict">
-              <h5>Column Names and selected values</h5>
+              <h4>Column Names and selected values</h4>
               <SelectedValues dict={dict}></SelectedValues>
             </div>
-          </>
-        ) : (
-          <p></p>
-        )}
-
-        <Row className="chooseDataType" >
+            <Button clickFunc={submithandler} title={"Query"} classId={"querySubmitButton"}></Button>
+            {/* <button onClick={submithandler}>Query</button> */}
+            <Row className="chooseDataType" >
               <h6>Select Table Type: </h6>
               <Col>
                 <InputGroup>
@@ -567,6 +570,12 @@ const PreviewPage = (props) => {
               </Col>
 
             </Row>
+          </>
+        ) : (
+          <p></p>
+        )}
+
+       
 
         <Container>
           <h3>SELECT A CATEGORY {props.totalPages}</h3>
