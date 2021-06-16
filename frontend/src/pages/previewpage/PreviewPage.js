@@ -70,7 +70,9 @@ const PreviewPage = (props) => {
   const [formDisplay, setFormDisplay] = useState(false);
   const [uniqueRowsPerPage, setUniqueRowsPerPage] = useState(1);
   const [uniqueTotalRecords, setUniqueTotalRecords] = useState(1);
-
+  const [resultTotalRecords, setResultTotalRecords] = useState(initialDataFrame.records);
+  const [resultRows, setResultRows] = useState(initialDataFrame.rows);
+  
   const [showValue, setShowValue] = useState(false);
   // unique 20 values of a particular column
   let [values, setValues] = useState([]);
@@ -347,29 +349,33 @@ const PreviewPage = (props) => {
 
 
   const searchvaluehandler = (e) => {
+    // console.log(e.target.value);
     setSearchval(e.target.value);
+    // console.log("value = " + searchval);
   };
 
   const searchhandler = () => {
     const formData = new FormData();
     formData.set("col_name", colWithIdx[selectedIndex]);
     formData.set("search_val", searchval);
-    // axios
-    //   .post("http://localhost:5000/api/searchValues", formData)
-    //   .then((response) => {
-    //     // set  search values
+    console.log("value = " + searchval);
+    axios
+      .post("http://localhost:5000/api/searchValues", formData)
+      .then((response) => {
+        // set  search values
+        console.log("search results arrived!!");
+        console.log(response);
+        setSearchval(response.data.unique_data);
+        setUniqueTotalRecords(response.data.total_unique);
+        // console.log("unique total "  + uniqueTotalRecords );
+        // console.log("rowsPerPage " + uniqueRowsPerPage);
+        setUniqueRowsPerPage(response.data.rows_per_page);
+        setShowValue(true);
+      })
+      .catch((err) => {
+        console.log(err);
 
-    //     setSearchval(response.data.unique_data);
-    //     setUniqueTotalRecords(response.data.total_unique);
-    //     // console.log("unique total "  + uniqueTotalRecords );
-    //     // console.log("rowsPerPage " + uniqueRowsPerPage);
-    //     setUniqueRowsPerPage(response.data.rows_per_page);
-    //     setShowValue(true);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-
-    //   });
+      });
   };
 
   const submithandler = () => {
@@ -395,6 +401,8 @@ const PreviewPage = (props) => {
           console.log("Response after query using dict");
           console.log(response);
           setTable(response.data.table);
+          setResultTotalRecords(response.data.total_records);
+          setResultRows(response.data.rows_per_page);
         })
         .catch((err) => {
           console.log(err);
@@ -416,9 +424,9 @@ const PreviewPage = (props) => {
         </div>
         <div className={classes.num}>
           <PaginationP
-            key={initialDataFrame.records}
-            totalRecords={initialDataFrame.records}
-            pageLimit={initialDataFrame.rows}
+            key={ resultTotalRecords }
+            totalRecords={ resultTotalRecords }
+            pageLimit={ resultRows }
             pageNeighbours={1}
             onPageChanged={onPageChanged}
           />
