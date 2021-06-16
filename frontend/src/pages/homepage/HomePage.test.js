@@ -92,10 +92,10 @@ it('able to find the count of <h1> element', () => {
 
 // Find the <Footer> element
 it('able to find the <Footer> element', () => {
-    expect(shallowWrapper.find('Footer').exists()).toEqual(true);
+    expect(shallowWrapper.find('Footer').exists()).toEqual(false);
 });
 
 //Find the count of <Footer> element
 it('able to find the count of <Footer> element', () => {
-    expect(shallowWrapper.find('Footer').length).toBe(1);
+    expect(shallowWrapper.find('Footer').length).toBe(0);
 });

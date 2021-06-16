@@ -13,10 +13,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 // import Pagination from '@material-ui/lab/Pagination';
 import Navbar from "../../components/navbar/Navbar";
-import "../../components/scrollbar/ScrollBar.css";
-import { useHistory } from "react-router";
-import initialDataFrame from "../../global_variable";
-import { PaginationItem } from "@material-ui/lab";
 import PaginationP from "../../components/pagination/Pagination";
 import Switch from "@material-ui/core/Switch";
 import Divider from "@material-ui/core/Divider";
@@ -26,8 +22,10 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import SelectedValues from "../../components/selectedvaluespreview/SelectedValues";
+import initialDataFrame from "../../global_variable";
 import IOSSwitch from "../../material-styles";
-import Checkbox from "@material-ui/core/Checkbox";
+import "./dataframeStyle.css";
+import "./PreviewPage.css";
 
 var FileDownload = require("js-file-download");
 var parse = require("html-react-parser");
@@ -156,6 +154,7 @@ const PreviewPage = (props) => {
 
   // index to get col name
 
+  // index to get col name 
   // page change function for df preview
   const onPageChanged = (data) => {
     const { currentPage, totalPages, pageLimit } = data;
@@ -230,7 +229,6 @@ const PreviewPage = (props) => {
 
     setState({});
   };
-
 
 
   const handleListItemClick = (event, index) => {
@@ -428,6 +426,13 @@ const PreviewPage = (props) => {
               />
             }
           />
+        </div>
+        <div>
+          <Button
+            title={"Go To QueryPage!"}
+            classId={"uploadButton"}
+            link={"/query-page"}
+          ></Button>
         </div>
 
         {formDisplay ? (

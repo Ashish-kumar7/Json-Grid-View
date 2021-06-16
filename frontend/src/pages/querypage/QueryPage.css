@@ -43,12 +43,13 @@
 .query input {
     border: 1px solid #eeeeee;
     width: 100%;
-    padding: 12px;
-    margin: 0 16px 0 0;
+    padding: 14px;
+    margin: 0 18px 0 0;
     flex-grow: 1;
-    border-radius: 50px;
+    border-radius: 10px;
 }
 
 .query button {
-    font-size: 14px;
+    font-size: 20px;
+    border-radius: 10px;
 }

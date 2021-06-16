@@ -15,11 +15,6 @@ it('should return a <div>', () => {
     expect(shallowWrapper.type()).toEqual('div');
 });
 
-// // Find the text of <p> element
-// it('able to find the text of <p> element ', () => {
-//     expect(shallowWrapper.find('p').text()).toEqual('Copyright © 2021.');
-// })
-
 // Find the <Navbar> element
 it('able to find the <Navbar> element', () => {
     expect(shallowWrapper.find('Navbar').exists()).toEqual(true);
