@@ -1,10 +1,9 @@
-import "./JsonChecker.css";
-import Navbar from "../../components/navbar/Navbar";
+import { useState } from "react";
 import JSONInput from "react-json-editor-ajrm";
 import locale from "react-json-editor-ajrm/locale/en";
 import Button from "../../components/button/Button";
-import { useState } from "react";
-import { fontSize } from "@material-ui/system";
+import Navbar from "../../components/navbar/Navbar";
+import "./JsonChecker.css";
 var FileDownload = require("js-file-download");
 
 const JsonChecker = () => {

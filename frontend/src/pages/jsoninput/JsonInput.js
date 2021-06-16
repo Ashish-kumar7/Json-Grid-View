@@ -1,23 +1,14 @@
-import FileUrlLayout from "../../components/fileurllayout/FileUrlLayout";
+import { css } from "@emotion/react";
+import axios from 'axios';
+import { useState } from "react";
+import { Col, Container, Row } from 'react-bootstrap';
+import { useHistory } from "react-router";
+import RingLoader from "react-spinners/RingLoader";
+import Editor from "../../components/editor/Editor";
+import Footer from "../../components/footer/Footer";
+import Modal from "../../components/modal/Modal";
 import Navbar from "../../components/navbar/Navbar";
 import "./JsonInput.css";
-import Footer from "../../components/footer/Footer";
-import Editor from "../../components/editor/Editor";
-import { Container, Row, Col } from 'react-bootstrap'
-import Button from '../../components/button/Button'
-import IconBox from "../../components/iconbox/IconBox";
-import { ProgressBar } from "react-bootstrap";
-import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { faDatabase } from "@fortawesome/free-solid-svg-icons";
-import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
-import { useHistory } from "react-router";
-import io from "socket.io-client";
-import axios from 'axios'
-import Modal from "../../components/modal/Modal";
-import { css } from "@emotion/react";
-import RingLoader from "react-spinners/RingLoader";
-import global_var from "../../global_variable";
 
 // const socket = io("http://localhost:5000/");
 

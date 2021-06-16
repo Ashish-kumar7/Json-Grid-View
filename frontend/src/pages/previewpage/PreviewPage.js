@@ -1,31 +1,29 @@
-import "./PreviewPage.css";
-import "./dataframeStyle.css";
-import { Container, Row, Col, InputGroup, Form } from "react-bootstrap";
-import Button from "../../components/button/Button";
-import IconBox from "../../components/iconbox/IconBox";
-import { faFileExcel } from "@fortawesome/free-solid-svg-icons";
-import { faDatabase } from "@fortawesome/free-solid-svg-icons";
-import { faFileCsv } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-// import Pagination from '@material-ui/lab/Pagination';
-import Navbar from "../../components/navbar/Navbar";
-import PaginationP from "../../components/pagination/Pagination";
-import Switch from "@material-ui/core/Switch";
+import { faDatabase, faFileCsv, faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { makeStyles } from "@material-ui/core/styles";
+import axios from "axios";
+import React, { useState } from "react";
+import { Col, Container, Form, InputGroup, Row } from "react-bootstrap";
+import Button from "../../components/button/Button";
+import IconBox from "../../components/iconbox/IconBox";
+// import Pagination from '@material-ui/lab/Pagination';
+import Navbar from "../../components/navbar/Navbar";
+import PaginationP from "../../components/pagination/Pagination";
 import SelectedValues from "../../components/selectedvaluespreview/SelectedValues";
 import initialDataFrame from "../../global_variable";
+<<<<<<< HEAD
 import IOSSwitch from "../../material-styles/IOSwitch";
 import GreenCheckbox from "../../material-styles/GreenCheckBox";
 import Checkbox from "@material-ui/core/Checkbox";
+=======
+import IOSSwitch from "../../material-styles";
+>>>>>>> 60f4301ef56cff5a9b451f45042ec8c4f63ca053
 import "./dataframeStyle.css";
 import "./PreviewPage.css";
 
