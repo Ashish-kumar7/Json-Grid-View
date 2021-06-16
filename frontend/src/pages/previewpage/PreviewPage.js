@@ -444,32 +444,36 @@ const PreviewPage = (props) => {
             onPageChanged={onPageChanged}
           />
         </div>
-        <div className="formtoggle">
-          <h5>Toggle the switch to perform query on data</h5>
-          {/* <Switch className="formswitch"
-            checked={formDisplay}
-            onChange={switchhandler}
-            name="checkedA"
-            inputProps={{ "aria-label": "secondary checkbox" }}
-          /> */}
-          <FormControlLabel
-            className="formswitch"
-            control={
-              <IOSSwitch
-                checked={formDisplay}
-                onChange={switchhandler}
-                name="checkedB"
-              />
-            }
-          />
+        <div className='rowC'>
+          <div className="formtoggle">
+            <h5>Toggle to perform queries using UI</h5>
+            {/* <Switch className="formswitch"
+              checked={formDisplay}
+              onChange={switchhandler}
+              name="checkedA"
+              inputProps={{ "aria-label": "secondary checkbox" }}
+            /> */}
+            <FormControlLabel
+              className="formswitch"
+              control={
+                <IOSSwitch
+                  checked={formDisplay}
+                  onChange={switchhandler}
+                  name="checkedB"
+                />
+              }
+            />
+          </div>
+          <div className="sqlQueryPage">
+            <h5>Click to perform SQL Queries on table</h5>
+            <Button
+              title={"Go To QueryPage!"}
+              classId={"uploadButton"}
+              link={"/query-page"}
+            ></Button>
+          </div>
         </div>
-        <div>
-          <Button
-            title={"Go To QueryPage!"}
-            classId={"uploadButton"}
-            link={"/query-page"}
-          ></Button>
-        </div>
+        
 
         {formDisplay ? (
           <>
