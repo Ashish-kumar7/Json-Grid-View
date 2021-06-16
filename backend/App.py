@@ -257,12 +257,34 @@ def returnQueryData():
         q_selected_column = request.form['col_name']
         q_selected_page = int(request.form['page_number']) if 'page_number' in request.form else 1
         # q_rows_per_page = int(request.form['rows_per_page'])
-        unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=DF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=4)
+        unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=PreviewDF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=4)
         print("unique_data" , unique_data)
         for i in unique_data :
             print(i , type(i))
         response = jsonify(total_unique=len(prevQueryCols[q_selected_column]) , rows_per_page=4, unique_data = unique_data) 
         print(response)
+        return response
+    except Exception as e:
+        print(e)
+        return jsonify({'message:', 'error'})
+
+
+@app.route('/api/queryForm', methods=['POST'])
+@cross_origin()
+def queryUsingDict():
+    global prevQueryCols
+    global PreviewDF
+   
+    print('page queryForm')
+    print()
+    print('queryDict \n\n\n\n\n' , json.loads(request.form['dict']))
+    try:
+        queryDict = json.loads(request.form['dict'])
+        PreviewDF = utilities.queryUsingDict(df = DF, queryDict = queryDict)
+
+        html_string = utilities.GenPageHTML(df = PreviewDF, Page= 1, ROWS_PER_PAGE=ROWS_PER_PAGE)
+        response = jsonify(table=html_string,total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE) 
+
         return response
     except Exception as e:
         print(e)

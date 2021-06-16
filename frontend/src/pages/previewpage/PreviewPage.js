@@ -375,19 +375,34 @@ const PreviewPage = (props) => {
 
   const submithandler = () => {
     const formData = new FormData();
-    console.log(dict);
-    formData.set("dict", dict);
-    // axios
-    //     .post("http://localhost:5000/api/queryForm", formData)
-    //     .then((response) => {
-    //       // receive data frame
-              //  setResultRows(response.data.rows_per_page);
-              //  setResultTotalRecords(response.data.)
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
 
-    //     });
+    console.log("sending ");
+    console.log(dict);
+    var queryDict = {};
+    for(var key in dict) {
+      if( dict[key].size > 0) {
+          queryDict[key] = Array.from(dict[key]);
+      }
+    }
+    console.log("gen query dict");
+    console.log(queryDict);
+
+    console.log(JSON.stringify(queryDict));
+    formData.set("dict", JSON.stringify(queryDict));
+    axios
+        .post("http://localhost:5000/api/queryForm", formData)
+        .then((response) => {
+          // receive data frame
+          console.log("Response after query using dict");
+          console.log(response);
+          setResultRows(response.data.rows_per_page);
+          setResultTotalRecords(response.data.total_records);
+          setTable(response.data.table);
+        })
+        .catch((err) => {
+          console.log(err);
+
+        });
   };
 
   return (
@@ -404,9 +419,9 @@ const PreviewPage = (props) => {
         </div>
         <div className={classes.num}>
           <PaginationP
-            key={initialDataFrame.records}
-            totalRecords={initialDataFrame.records}
-            pageLimit={initialDataFrame.rows}
+            key={resultTotalRecords}
+            totalRecords={resultTotalRecords}
+            pageLimit={resultRows}
             pageNeighbours={1}
             onPageChanged={onPageChanged}
           />
