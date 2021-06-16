@@ -9,11 +9,8 @@ import FileUrl from './pages/fileurl/FileUrl'
 import JsonInput from './pages/jsoninput/JsonInput'
 import SelectedValues from './components/selectedvaluespreview/SelectedValues'
 import PreviewPage from './pages/previewpage/PreviewPage';
-<<<<<<< HEAD
 import JsonChecker from './pages/jsonchecker/JsonChecker';
-=======
 import QueryPage from './pages/querypage/QueryPage';
->>>>>>> 9daf4e61bebcec0d09d8134f78fc17a6fe1e408c
 
 function App() {
   return (
