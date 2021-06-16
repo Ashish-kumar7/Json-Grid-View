@@ -257,7 +257,7 @@ def returnQueryData():
         q_selected_column = request.form['col_name']
         q_selected_page = int(request.form['page_number']) if 'page_number' in request.form else 1
         # q_rows_per_page = int(request.form['rows_per_page'])
-        unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=DF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=4)
+        unique_data = utilities.GenPageData(prevQueryCols = prevQueryCols, PreviewDF=PreviewDF, selected_col = q_selected_column, selected_page=q_selected_page, rows_per_page=4)
         print("unique_data" , unique_data)
         for i in unique_data :
             print(i , type(i))
@@ -273,6 +273,7 @@ def returnQueryData():
 @cross_origin()
 def queryUsingDict():
     global prevQueryCols
+    global PreviewDF
    
     print('page queryForm')
     print()

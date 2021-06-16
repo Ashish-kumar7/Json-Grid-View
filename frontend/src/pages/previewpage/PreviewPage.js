@@ -375,15 +375,26 @@ const PreviewPage = (props) => {
   const submithandler = () => {
     const formData = new FormData();
 
-    formData.set("dict", JSON.stringify(dict));
     console.log("sending ");
     console.log(dict);
+    var queryDict = {};
+    for(var key in dict) {
+      if( dict[key].size > 0) {
+          queryDict[key] = Array.from(dict[key]);
+      }
+    }
+    console.log("gen query dict");
+    console.log(queryDict);
+
+    console.log(JSON.stringify(queryDict));
+    formData.set("dict", JSON.stringify(queryDict));
     axios
         .post("http://localhost:5000/api/queryForm", formData)
         .then((response) => {
           // receive data frame
           console.log("Response after query using dict");
           console.log(response);
+          setTable(response.data.table);
         })
         .catch((err) => {
           console.log(err);
