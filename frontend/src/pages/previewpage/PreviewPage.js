@@ -70,12 +70,14 @@ const PreviewPage = (props) => {
   const [formDisplay, setFormDisplay] = useState(false);
   const [uniqueRowsPerPage, setUniqueRowsPerPage] = useState(1);
   const [uniqueTotalRecords, setUniqueTotalRecords] = useState(1);
-  const [resultTotalRecords, setResultTotalRecords]= useState(initialDataFrame.records);
-  const [resultRows, setResultRows]= useState(initialDataFrame.rows);
+  const [resultTotalRecords, setResultTotalRecords] = useState(
+    initialDataFrame.records
+  );
+  const [resultRows, setResultRows] = useState(initialDataFrame.rows);
   const [showValue, setShowValue] = useState(false);
   // unique 20 values of a particular column
   let [values, setValues] = useState([]);
-  
+
   // boolean array corresponding to unique values to maintain checkbox display
   // let initcheck2 = {};
   // dictionary to store column name and selected values
@@ -93,16 +95,13 @@ const PreviewPage = (props) => {
   let colWithIdx = [];
 
   // const [check,setCheck] = useState(initCheck);
-  
+
   // variables for search bar
   const [searchValues, setSearchValues] = useState([]);
   const [searchval, setSearchval] = useState("");
-  const [showSearchValue , setShowSearchValue] = useState(false);
+  const [showSearchValue, setShowSearchValue] = useState(false);
 
-    // create dictionary to store selected values for columns
- 
- 
-  
+  // create dictionary to store selected values for columns
 
   // function to download file
   const handleConversion = (val) => {
@@ -139,8 +138,6 @@ const PreviewPage = (props) => {
     FileDownload(downloadContent, fileExtension);
   };
 
- 
-
   // toggle switch for showing form
   const switchhandler = () => {
     if (formDisplay) {
@@ -150,13 +147,9 @@ const PreviewPage = (props) => {
     }
   };
 
-
-
- 
-
   // index to get col name
 
-  // index to get col name 
+  // index to get col name
   // page change function for df preview
   const onPageChanged = (data) => {
     const { currentPage, totalPages, pageLimit } = data;
@@ -220,7 +213,7 @@ const PreviewPage = (props) => {
         // console.log("unique total "  + uniqueTotalRecords );
         // console.log("rowsPerPage " + uniqueRowsPerPage);
         setUniqueRowsPerPage(response.data.rows_per_page);
-        
+
         console.log("values");
         console.log(values);
       })
@@ -231,7 +224,6 @@ const PreviewPage = (props) => {
 
     setState({});
   };
-
 
   const handleListItemClick = (event, index) => {
     console.log(colWithIdx[index]);
@@ -281,6 +273,57 @@ const PreviewPage = (props) => {
     setState({});
   };
 
+  const handleSearchValueToggle = (event, num) => {
+    // const newcheck = check2;
+    if (dict[colWithIdx[selectedIndex]].has(searchValues[num])) {
+      // newcheck[colWithIdx[selectedIndex]][num] = false;
+      const newdict = dict;
+      newdict[colWithIdx[selectedIndex]].delete(searchValues[num]);
+      // setCheck2(newcheck);
+      setDict(newdict);
+    } else {
+      // newcheck[colWithIdx[selectedIndex]][num] = true;
+      const newdict = dict;
+      newdict[colWithIdx[selectedIndex]].add(searchValues[num]);
+      // setCheck2(newcheck);
+      setDict(newdict);
+    }
+    // console.log(initCheck)
+
+    setState({});
+  };
+
+  const searchvaluehandler = (e) => {
+    // console.log(e.target.value);
+    setSearchval(e.target.value);
+    // console.log("value = " + searchval);
+  };
+
+  const searchhandler = () => {
+    const formData = new FormData();
+    formData.set("col_name", colWithIdx[selectedIndex]);
+    formData.set("search_val", searchval);
+    console.log("value = " + searchval);
+    axios
+      .post("http://localhost:5000/api/searchValues", formData)
+      .then((response) => {
+        // set  search values
+        console.log("search results arrived!!");
+        console.log(response);
+        setSearchValues(response.data.unique_data);
+        console.log("ddddddddddddddd" +searchValues);
+        // setUniqueTotalRecords(response.data.total_unique);
+        // console.log("unique total "  + uniqueTotalRecords );
+        // console.log("rowsPerPage " + uniqueRowsPerPage);
+        // setUniqueRowsPerPage(response.data.rows_per_page);
+        // setShowValue(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      
+  };
+
   // create list to display all columns
   let colList = [];
 
@@ -325,13 +368,12 @@ const PreviewPage = (props) => {
     );
   }
 
- 
   let searchList = [];
   for (var q = 0; q < searchValues.length; q++) {
     let number = q;
 
     searchList.push(
-      <ListItem key={searchValues[number]} dense button>
+      <ListItem key={searchValues[number]} dense button onClick={(event)=> handleSearchValueToggle(event,number)}>
         <ListItemIcon>
           <Checkbox
             edge="start"
@@ -346,36 +388,7 @@ const PreviewPage = (props) => {
     );
   }
 
-
-  const searchvaluehandler = (e) => {
-    // console.log(e.target.value);
-    setSearchval(e.target.value);
-    // console.log("value = " + searchval);
-  };
-
-  const searchhandler = () => {
-    const formData = new FormData();
-    formData.set("col_name", colWithIdx[selectedIndex]);
-    formData.set("search_val", searchval);
-    console.log("value = " + searchval);
-    axios
-      .post("http://localhost:5000/api/searchValues", formData)
-      .then((response) => {
-        // set  search values
-        console.log("search results arrived!!");
-        console.log(response);
-        setSearchval(response.data.unique_data);
-        setUniqueTotalRecords(response.data.total_unique);
-        // console.log("unique total "  + uniqueTotalRecords );
-        // console.log("rowsPerPage " + uniqueRowsPerPage);
-        setUniqueRowsPerPage(response.data.rows_per_page);
-        setShowValue(true);
-      })
-      .catch((err) => {
-        console.log(err);
-
-      });
-  };
+ 
 
   const submithandler = () => {
     const formData = new FormData();
@@ -383,9 +396,9 @@ const PreviewPage = (props) => {
     console.log("sending ");
     console.log(dict);
     var queryDict = {};
-    for(var key in dict) {
-      if( dict[key].size > 0) {
-          queryDict[key] = Array.from(dict[key]);
+    for (var key in dict) {
+      if (dict[key].size > 0) {
+        queryDict[key] = Array.from(dict[key]);
       }
     }
     console.log("gen query dict");
@@ -394,21 +407,20 @@ const PreviewPage = (props) => {
     console.log(JSON.stringify(queryDict));
     formData.set("dict", JSON.stringify(queryDict));
     axios
-        .post("http://localhost:5000/api/queryForm", formData)
-        .then((response) => {
-          // receive data frame
-          console.log("Response after query using dict");
-          console.log(response);
-          setResultRows(response.data.rows_per_page);
-          setResultTotalRecords(response.data.total_records);
-          setTable(response.data.table);
-          setResultTotalRecords(response.data.total_records);
-          setResultRows(response.data.rows_per_page);
-        })
-        .catch((err) => {
-          console.log(err);
-
-        });
+      .post("http://localhost:5000/api/queryForm", formData)
+      .then((response) => {
+        // receive data frame
+        console.log("Response after query using dict");
+        console.log(response);
+        setResultRows(response.data.rows_per_page);
+        setResultTotalRecords(response.data.total_records);
+        setTable(response.data.table);
+        setResultTotalRecords(response.data.total_records);
+        setResultRows(response.data.rows_per_page);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -425,9 +437,9 @@ const PreviewPage = (props) => {
         </div>
         <div className={classes.num}>
           <PaginationP
-            key={ resultTotalRecords }
-            totalRecords={ resultTotalRecords }
-            pageLimit={ resultRows }
+            key={resultTotalRecords}
+            totalRecords={resultTotalRecords}
+            pageLimit={resultRows}
             pageNeighbours={1}
             onPageChanged={onPageChanged}
           />
@@ -461,7 +473,6 @@ const PreviewPage = (props) => {
 
         {formDisplay ? (
           <>
-            
             <Row className="fullform">
               {/* list of column values in dataframe    */}
               <Col lg="4">
@@ -510,6 +521,17 @@ const PreviewPage = (props) => {
                   <button onClick={searchhandler} type="submit">
                     Search
                   </button>
+                </Row>
+                <Row>
+                <div className="colList">
+                      <Divider />
+                      <List
+                        component="nav"
+                        aria-label="secondary mailbox folder"
+                      >
+                        {searchList}
+                      </List>
+                    </div>
                 </Row>
               </Col>
             </Row>
