@@ -375,17 +375,20 @@ const PreviewPage = (props) => {
   const submithandler = () => {
     const formData = new FormData();
 
-    formData.set("dict", dict);
-    // axios
-    //     .post("http://localhost:5000/api/queryForm", formData)
-    //     .then((response) => {
-    //       // receive data frame
+    formData.set("dict", JSON.stringify(dict));
+    console.log("sending ");
+    console.log(dict);
+    axios
+        .post("http://localhost:5000/api/queryForm", formData)
+        .then((response) => {
+          // receive data frame
+          console.log("Response after query using dict");
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
 
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-
-    //     });
+        });
   };
 
   return (

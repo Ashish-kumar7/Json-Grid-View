@@ -269,6 +269,27 @@ def returnQueryData():
         return jsonify({'message:', 'error'})
 
 
+@app.route('/api/queryForm', methods=['POST'])
+@cross_origin()
+def queryUsingDict():
+    global prevQueryCols
+   
+    print('page queryForm')
+    print()
+    print('queryDict \n\n\n\n\n' , json.loads(request.form['dict']))
+    try:
+        queryDict = json.loads(request.form['dict'])
+        PreviewDF = utilities.queryUsingDict(df = DF, queryDict = queryDict)
+
+        html_string = utilities.GenPageHTML(df = PreviewDF, Page= 1, ROWS_PER_PAGE=ROWS_PER_PAGE)
+        response = jsonify(table=html_string,total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE) 
+
+        return response
+    except Exception as e:
+        print(e)
+        return jsonify({'message:', 'error'})
+
+
 @app.route('/api/convert', methods=['POST'])
 @cross_origin()
 def convertFile():
