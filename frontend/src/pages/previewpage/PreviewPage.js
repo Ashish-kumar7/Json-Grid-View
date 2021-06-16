@@ -22,7 +22,6 @@ import IOSSwitch from "../../material-styles/IOSwitch";
 import GreenCheckbox from "../../material-styles/GreenCheckBox";
 import Checkbox from "@material-ui/core/Checkbox";
 
-
 var FileDownload = require("js-file-download");
 var parse = require("html-react-parser");
 

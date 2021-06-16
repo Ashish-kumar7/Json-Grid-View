@@ -13,7 +13,7 @@ const Navbar = () => {
                         <Link to="/file-url"><button id="b3" class="btn btn-lg " >URL</button></Link>
                         <button id="b4" class="btn btn-lg " >Query</button>
                         <Link to="/jsonchecker"><button id="b5" class="btn btn-lg ">JSON Checker</button></Link>
-                        <Link to="/query-page"><button id="b6" class="btn btn-lg btn-primary">SQL _Queries</button></Link>
+                        {/* <Link to="/query-page"><button id="b6" class="btn btn-lg btn-primary">SQL _Queries</button></Link> */}
                     </form>
                 </div>
             </nav>

@@ -13,6 +13,7 @@ from numpy import ceil
 from numpy.core.fromnumeric import reshape
 import utilities
 import numpy as np
+import os
 
 if HADOOP_INSTALLED:
     import hadoopstorage
@@ -103,6 +104,11 @@ app.json_encoder = NumpyEncoder
 def uploadFile():
     global jsonData 
 
+    # Delete Prev Files if exist
+    utilities.DeleteIfExists(SQL_DB_NAME + '.db')
+    utilities.DeleteIfExists(CSV_FILENAME + '.csv')
+    utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
+    
     print("\n\n\n\nForm Data in /api/upload\n" , request.form)
     try:
         print("form  : ", request.form)

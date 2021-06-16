@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from collections import OrderedDict
 import time
+import os
 
 # Global Constants
 __reqCols = set()
@@ -467,3 +468,10 @@ def queryUsingDict(df , queryDict) :
     return df
 
 
+
+def DeleteIfExists(FileName) :
+    if os.path.exists(FileName):
+        os.remove(FileName)
+        print('deleted ' , FileName)
+    else :
+        print(FileName , 'not found')
