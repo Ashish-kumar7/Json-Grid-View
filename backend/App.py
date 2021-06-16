@@ -105,9 +105,9 @@ def uploadFile():
     global jsonData 
 
     # Delete Prev Files if exist
-    utilities.DeleteIfExists(SQL_DB_NAME + '.db')
-    utilities.DeleteIfExists(CSV_FILENAME + '.csv')
-    utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
+    # utilities.DeleteIfExists(SQL_DB_NAME + '.db')
+    # utilities.DeleteIfExists(CSV_FILENAME + '.csv')
+    # utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
     
     print("\n\n\n\nForm Data in /api/upload\n" , request.form)
     try:
@@ -218,6 +218,22 @@ def processFile():
         print("Time to create DF from Dict in order: ", time.time() - startTime)
 
         PreviewDF = DF.copy()
+
+        startTime = time.time()
+        sql_engine = sqlalchemy.create_engine(
+            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+        sqlite_connection = sql_engine.connect()
+
+        print("Conenction Made to SQL")
+        DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+
+        print("\n\nData Saved in TABLE!! \n")
+        # print(engine.execute("SELECT * FROM " + tableName).fetchall())
+        sqlite_connection.close()
+        print("Time to gen db : ", time.time() - startTime)
+
+        startTime = time.time()
+        print("Total time taken : ", startTime - initTime)
 
         html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
@@ -366,25 +382,25 @@ def convertFile():
         # Generate SQL Database, Table
         if extension == "hive":
             
-            startTime = time.time()
-            sql_engine = sqlalchemy.create_engine(
-                'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
-            sqlite_connection = sql_engine.connect()
+            # startTime = time.time()
+            # sql_engine = sqlalchemy.create_engine(
+            #     'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            # sqlite_connection = sql_engine.connect()
 
-            print("Conenction Made to SQL")
+            # print("Conenction Made to SQL")
 
-            if data_type == 1 : 
-                DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
-            else :
-                PreviewDF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+            # if data_type == 1 : 
+            #     DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+            # else :
+            #     PreviewDF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
 
-            print("\n\nTABLE\n")
-            # print(engine.execute("SELECT * FROM " + tableName).fetchall())
-            sqlite_connection.close()
-            print("Time to gen db : ", time.time() - startTime)
+            # print("\n\nTABLE\n")
+            # # print(engine.execute("SELECT * FROM " + tableName).fetchall())
+            # sqlite_connection.close()
+            # print("Time to gen db : ", time.time() - startTime)
 
-            startTime = time.time()
-            print("Total time taken : ", startTime - initTime)
+            # startTime = time.time()
+            # print("Total time taken : ", startTime - initTime)
             socketio.emit('progress', 80, broadcast=True)
             if HADOOP_INSTALLED :
                 if data_type == 1 : 
@@ -441,6 +457,34 @@ def fetchQueryData():
         print(e)
         return jsonify({'message:', 'error'})
 
+@app.route('/api/check-table', methods=['POST'])
+@cross_origin()
+def saveData():
+    print("checkTable")
+    print("\n\n\n\nForm Data in /api/check-table\n" , request.form)
+    try:    
+        tableNameInput = request.form['tableName']
+        startTime = time.time()
+        sql_engine = sqlalchemy.create_engine(
+            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+        sqlite_connection = sql_engine.connect()
+        print("Conenction Made to SQL")
+
+        tableExists = sql_engine.dialect.has_table(sqlite_connection, tableNameInput)
+        print("Exists.........")
+        print(tableExists)
+        sqlite_connection.close()
+
+        if(tableExists):
+            return jsonify(message="Error: Table " + tableNameInput + " already exists. Please select another table name!")
+        else:
+            return jsonify(message = "New Table!")
+        
+    except Exception as e:
+        print("SQLError: ")
+        print(e)
+        response = jsonify(message="Error: " + str(e))
+        return response
 
 if __name__ == "__main__":
     socketio.run(app,debug=True)
