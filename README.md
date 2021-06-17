@@ -9,12 +9,12 @@ This project fetches the JSON in different ways and parses it into tabular form 
 4. hadoop
 
 # how to run 
-1.Download Zip file 
-2.cd frontend 
-3.npm install 
-4.npm start
-5.Open another terminal -> cd backend
-6.pip install Flask 
+1. Download Zip file 
+2. cd frontend 
+3. npm install 
+4. npm start
+5. Open another terminal -> cd backend
+6. pip install Flask 
 7.
 
 You're ready to go!!!
