@@ -13,7 +13,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 
 <details>
-  <summary>Installation</summary>
+  	<summary>Installation</summary>
 	
   		Download Zip file and Extract it
 	
@@ -239,5 +239,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 - via JSON in text box
 - via JSON file upload
 
+![Screenshot](Screenshots/homepage.png)
+	
 
 ![Finished App](UI.gif)
