@@ -3,9 +3,7 @@
 This project fetches the JSON in different ways and parses it into tabular form and saves it into HDFS.
 
 <details>
-  <summary>
-  **Requirements to run the project**
-  </summary>
+  <summary>Requirements to run the project</summary>
   
   > 1. node
   > 2. python
@@ -14,8 +12,8 @@ This project fetches the JSON in different ways and parses it into tabular form 
 </details>
 
 
-
-## Installation
+<details>
+  <summary>Installation Instructions</summary>
 
 > 1. Download Zip file and Extract it
 
@@ -172,6 +170,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
   Reference :- https://hadoop.apache.org/
 
+  </details>
 ## How to Run 
 
 **Run Backend**
