@@ -2,11 +2,16 @@
 
 This project fetches the JSON in different ways and parses it into tabular form and saves it into HDFS.
 
-## Requirements to run the project
-> 1. node
-> 2. python
-> 3. java(Optional)
-> 4. hadoop(Optional)
+<details>
+  <summary>## Requirements to run the project</summary>
+  
+  > 1. node
+  > 2. python
+  > 3. java(Optional)
+  > 4. hadoop(Optional)
+</details>
+
+
 
 ## Installation
 
