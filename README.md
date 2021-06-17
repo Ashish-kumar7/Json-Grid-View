@@ -320,4 +320,4 @@ SQL table
 ![Screenshot](Screenshots/sqlData.png)
 	
 
-![Finished App](UI.gif)
+<!-- ![Finished App](UI.gif) -->
