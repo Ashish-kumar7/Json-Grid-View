@@ -26,9 +26,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 > 5. pip install -r requirements.txt
   
 **Install Node**
-	
-Step 1: Download Node.js Installer
-	
+  Step 1: Download Node.js Installer
     In a web browser, navigate to https://nodejs.org/en/download/. 
     Click the Windows Installer button to download the latest default version. The Node.js installer includes the NPM package manager.
 
@@ -204,23 +202,25 @@ Step 3: Verify Installation
   Reference :- https://hadoop.apache.org/
   </details>
   </details>
-## How to Run 
+	
+<details>
+	<summary>How to Run</summary>
 
-**Run Backend**
-> 1. Open a new cmd window
-> 2. cd *path to Json-Grid-View folder*
-> 3. cd backend
-> 4. python App.py
-  
-**Run Frontend**
-> 5. Open a new cmd window
-> 6. cd *path to Json-Grid-View folder*
-> 7. cd frontend
-> 8. npm install
-> 9. npm start
+	**Run Backend**
+	> 1. Open a new cmd window
+	> 2. cd *path to Json-Grid-View folder*
+	> 3. cd backend
+	> 4. python App.py
 
-Json-Grid-View should automatically open in your browser, if it doesn't enter http://localhost:3000/ in your browser!!!
+	**Run Frontend**
+	> 5. Open a new cmd window
+	> 6. cd *path to Json-Grid-View folder*
+	> 7. cd frontend
+	> 8. npm install
+	> 9. npm start
 
+	Json-Grid-View should automatically open in your browser, if it doesn't enter http://localhost:3000/ in your browser!!!
+</details>
 # Features
 
 **There are three different ways to parse the JSON**
