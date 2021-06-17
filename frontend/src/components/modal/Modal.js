@@ -6,6 +6,9 @@ import artboard from "../../assets/table.png";
 import initialDF from '../../global_variable';
 import Button from "../button/Button";
 import "./Modal.css";
+import { ProgressBar } from "react-bootstrap";
+import io from 'socket.io-client'
+const socket = io("http://localhost:5000/");
 
 const CustomizeModal = (props) => {
   const [tableType, setTableType] = useState(1);
@@ -15,12 +18,22 @@ const CustomizeModal = (props) => {
   const [sheetName, setSheetName] = useState("Sheet1");
   const [nullName, setNullName] = useState("null");
   const [tableName, setTablename] = useState("table001");
-
+ 
+  const [uploadPercentage,setUploadPercentage] = useState(0);
 
   const [totalRecords, setTotalRecords] = useState(1);
   const [rows, setRows] = useState(1);
   const [dataframe, setDataframe] = useState("");
   let history = useHistory();
+
+ // for getting updates regarding progress
+  socket.on("progress", (val) => {
+    setUploadPercentage(val);
+    console.log(val);
+  });
+
+
+
   // on clicking any process button
   const handleSubmission = () => {
 
@@ -53,10 +66,15 @@ const CustomizeModal = (props) => {
               initialDF.rows = res.data.rows_per_page;
               initialDF.records = res.data.total_records;
               initialDF.cols = res.data.columns;
+              setUploadPercentage(100);
+                    setTimeout(() => {
+                      setUploadPercentage(0);
+                    }, 1000);
               console.log(initialDF.cols.length);
               history.push("/preview");
             })
             .catch((err) => {
+              setUploadPercentage(0);
               console.log(err);
               alert("Oops it breaks " + err);
             });
@@ -240,7 +258,17 @@ const CustomizeModal = (props) => {
               </Card>
             </Col>
           </Row>
-
+            {uploadPercentage > 0 && (
+        <div className="progressbar">
+          <ProgressBar
+            now={uploadPercentage}
+            striped={true}
+            animated
+            label={`${uploadPercentage}%`}
+            variant="success"
+          />
+        </div> 
+        )}
           <Button
             title={"Process"}
             classId={"downloadButton"}

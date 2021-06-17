@@ -146,6 +146,7 @@ def processFile():
     print("\n\n\n\nForm Data in /api/process\n" , request.form)
     try:
         # Assign global variables based on received
+        socketio.emit('progress', 10, broadcast=True)
         global DF
         global PreviewDF
 
@@ -177,7 +178,7 @@ def processFile():
             GEN_CROSS_TABLE = False
 
         startTime = time.time()
-        
+        socketio.emit('progress', 20, broadcast=True)
         global tableSchema, columnListOrd
         columnList, tableSchema, columnListOrd, tableSchemaOrd, columnListOrdNoPar = utilities.GenTableSchema(
             jsonData, JOINER_CHAR=JOINER_CHAR,  ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
@@ -185,26 +186,28 @@ def processFile():
         
         print("\n\n\n\nNoParCols",columnListOrdNoPar)
         print("Time to gen schema : ", time.time() - startTime)
-        
+        socketio.emit('progress', 30, broadcast=True)
         # Generated columnList and schemaTree
         # print("columns : ", columnList)
         print("schema Tree: ", tableSchema)
         # print("ord cols :" , columnListOrd)
         # print("schema Tree Ord: ", tableSchemaOrd)
 
-
+        
         DataDict = {}
         startTime = time.time()
-        socketio.emit('progress', 50, broadcast=True)
+        socketio.emit('progress', 40, broadcast=True)
         # utilities.WriteDict(DataDict, 0, '', jsonData)
         utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
                             INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX, GEN_CROSS_TABLE = GEN_CROSS_TABLE)
         # print(DataDict)
-        print("Time to create DataDict: ", time.time() - startTime)
         socketio.emit('progress', 60, broadcast=True)
+        print(60)
+        print("Time to create DataDict: ", time.time() - startTime)
+        
 
         startTime = time.time()
-        socketio.emit('progress', 70, broadcast=True)
+        
         # DF = pd.DataFrame.from_dict(DataDict, "index")
         # print("Time to create DF from Dict: ", time.time() - startTime)
         columnsOrder = columnListOrd
@@ -216,7 +219,8 @@ def processFile():
             DF.columns = columnListOrdNoPar
             
         print("Time to create DF from Dict in order: ", time.time() - startTime)
-
+        socketio.emit('progress', 80, broadcast=True)
+        print(80)
         PreviewDF = DF.copy()
 
         startTime = time.time()
@@ -234,10 +238,12 @@ def processFile():
 
         startTime = time.time()
         print("Total time taken : ", startTime - initTime)
-
+        socketio.emit('progress', 90, broadcast=True)
         html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
         response = jsonify(table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=columnListOrd) 
+        
+       
         print(response)
         return response
     
