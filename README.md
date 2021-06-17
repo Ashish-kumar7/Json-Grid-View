@@ -234,12 +234,16 @@ This project fetches the JSON in different ways and parses it into tabular form 
 </details>
 # Features
 
+
+
+## Homepage
+![Screenshot](Screenshots/homepage.png)
+
 **There are three different ways to parse the JSON**
 - via URL
 - via JSON in text box
 - via JSON file upload
-
-![Screenshot](Screenshots/homepage.png)
+![Screenshot](Screenshots/uploadJson.png)	
 	
 
 ![Finished App](UI.gif)
