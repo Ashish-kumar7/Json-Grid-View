@@ -238,7 +238,7 @@ def processFile():
 
         startTime = time.time()
         print("Total time taken : ", startTime - initTime)
-        socketio.emit('progress', 90, broadcast=True)
+        socketio.emit('progress', 0, broadcast=True)
         html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
         response = jsonify(table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=columnListOrd) 
@@ -357,7 +357,7 @@ def convertFile():
     try:
         extension = request.form['content_type']
         data_type = int(request.form['data_type'])
-    
+        socketio.emit('progress', 40, broadcast=True)
         print(extension)
         # Generate CSV
         if extension == "csv":
@@ -421,7 +421,7 @@ def convertFile():
                 # df.to_parquet("/test_parquet", compression="GZIP")
                 # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
                 # subprocess.call(hdfs_cmd, shell=True)
-
+            socketio.emit('progress', 80, broadcast=True)
             return send_file(SQL_DB_NAME + '.db')
 
     except Exception as e:

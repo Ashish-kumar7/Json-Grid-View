@@ -62,3 +62,7 @@
 .customize img {
    height: 20vh;
 }
+
+.customize .progressbar {
+    margin: 5vh 30vh 0vh 30vh;
+  }
