@@ -15,7 +15,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 4. npm start
 5. Open another terminal -> cd backend
 6. pip install Flask 
-7.
+7. pip install -r requirements.txt 
 8. python App.py
 
 You're ready to go!!!
