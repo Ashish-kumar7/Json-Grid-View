@@ -281,5 +281,13 @@ Click Query to generate preview after performing query
   <img src="Screenshots/uiQueryResults.png" width="49%" /> 
 </p>
 	
+Perform Queries using SQL
+- Click 'Go to query page' button to perform sql queries
+- Enter Sql and click fetch
+
+<p float="left">
+  <img src="Screenshots/sqlQueryPage.png" width="49%" />
+  <img src="Screenshots/sqlQueryResult.png" width="49%" /> 
+</p>
 
 ![Finished App](UI.gif)
