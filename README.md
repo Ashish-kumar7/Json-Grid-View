@@ -240,14 +240,22 @@ This project fetches the JSON in different ways and parses it into tabular form 
 ![Screenshot](Screenshots/homepage.png)
 
 **There are three different ways to parse the JSON**
+
+![Screenshot](Screenshots/uploadJson.png)
+	
 - via URL
 - via JSON in text box
 - via JSON file upload
-![Screenshot](Screenshots/uploadJson.png)
+	
 <p float="left">
   <img src="Screenshots/uploadJsonFile.png" width="32%" />
   <img src="Screenshots/jsonUrl.png" width="32%" /> 
   <img src="Screenshots/jsonEditor.png" width="32%" />
 </p>
 
+User can customize the table using the CustomizeTable Page
+
+![Screenshot](Screenshots/customizeTable.png)
+	
+	
 ![Finished App](UI.gif)
