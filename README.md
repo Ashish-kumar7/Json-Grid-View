@@ -290,4 +290,26 @@ Perform Queries using SQL
   <img src="Screenshots/sqlQueryResult.png" width="49%" /> 
 </p>
 
+Validate and Download corrected json
+- Click 'Json Checker' in the nav-bar
+
+![Screenshot](Screenshots/jsonValidator.png)
+
+Download Options
+- User can download data as it is, or download data generated after querying.
+Formats
+- Download Xlsx file
+- Download Csv file
+- Save to Hadoop and Download Sql Db file
+	
+
+![Screenshot](Screenshots/downloadOptions.png)
+	
+Example download : Download without query, download after query
+
+<p float="left">
+  <img src="Screenshots/fullDataXlsx.png" width="49%" />
+  <img src="Screenshots/queryDataXlsx.png" width="49%" /> 
+</p>
+	
 ![Finished App](UI.gif)
