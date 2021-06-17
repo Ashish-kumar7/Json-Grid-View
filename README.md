@@ -26,7 +26,9 @@ This project fetches the JSON in different ways and parses it into tabular form 
 > 5. pip install -r requirements.txt
   
 **Install Node**
-  Step 1: Download Node.js Installer
+	
+Step 1: Download Node.js Installer
+	
     In a web browser, navigate to https://nodejs.org/en/download/. 
     Click the Windows Installer button to download the latest default version. The Node.js installer includes the NPM package manager.
 
