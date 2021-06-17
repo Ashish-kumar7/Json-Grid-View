@@ -39,6 +39,146 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 Json-Grid-View should automatically open in your browser, if it doesn't enter http://localhost:3000/ in your browser!!!
 
+##Install Hadoop 2.9.1 on Windows 10 platform. (Setting up a Single Node Hadoop Cluster)
+
+Prerequistes:
+JAVA: You need to install the Java 8 package on your system.
+HADOOP: You require Hadoop 2.9.1 package.
+
+Step 1. Download the hadoop 2.9.1 from the link provided below:
+Hadoop Download Link: https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
+
+Step 2. Create a folder path as below and copy the downloaded msi into this folder.
+Path: ‘C:/Hadoop/hadoop-2.9.1’
+
+Step 3.Then download the windows compatible binaries from the git hub repo.
+Link:- https://github.com/ParixitOdedara/Hadoop
+
+Step 4.Extract the zip and copy all the files present under bin folder to C:\Hadoop\hadoop-2.9.1\bin.
+Replace the existing files as well.
+Go to C:/Hadoop/hadoop-2.9.1 and create a folder ‘data’. 
+Inside the ‘data’ folder create two folders ‘datanode’ and ‘namenode’.
+
+Step 5.Now Setting up the Environment Variables for your Machine.
+To set these variables, go to My Computer or This PC. 
+Right click --> Properties --> Advanced System settings --> Environment variables.
+Click New to create a new environment variables.
+
+Environment variables to be set:
+
+HADOOP_HOME=”C:\Hadoop\hadoop-2.9.1″
+HADOOP_BIN=”C:\Hadoop\hadoop-2.9.1\bin”
+JAVA_HOME=<JDK installation location>”
+
+Just to validate the above setting, open new cmd and check the output.
+-- echo %HADOOP_HOME%
+    This should return "C:\Hadoop\hadoop-2.9.1".
+-- echo %HADOOP_BIN%
+    This should return "C:\Hadoop\hadoop-2.9.1\bin".
+
+To configure the hadoop on Windows10 we have to edit below mention files in the extracted location.
+
+    1. hadoop-env.cmd
+    2. core-site.xml
+    3. hdfs-site.xml
+    4. mapred-site.xml
+
+Step 6.Edit hadoop-env.cmd
+File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hadoop-env.cmd
+Need to add:-
+    set HADOOP_PREFIX=%HADOOP_HOME%
+    set HADOOP_CONF_DIR=%HADOOP_PREFIX%\etc\hadoop
+    set YARN_CONF_DIR=%HADOOP_CONF_DIR%
+    set PATH=%PATH%;%HADOOP_PREFIX%\bin
+
+Step 7.Edit core-site.xml
+File Location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\core-site.xml 
+Need to add:-
+( content within <configuration> </configuration> tags.)
+ <configuration>
+   <property>
+     <name>fs.default.name</name>
+     <value>hdfs://0.0.0.0:19000</value>
+   </property>
+</configuration>
+
+Step 8.Edit hdfs-site.xml 
+File Location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hdfs-site.xml.
+Need to add:- 
+    (below content within <configuration> </configuration> tags.)
+ <configuration>
+   <property>
+      <name>dfs.replication</name>
+      <value>1</value>
+   </property>
+   <property>
+      <name>dfs.namenode.name.dir</name>
+      <value>C:\Hadoop\hadoop-2.9.1\data\namenode</value>
+   </property>
+   <property>
+      <name>dfs.datanode.data.dir</name>
+      <value>C:\Hadoop\hadoop-2.9.1\data\datanode</value>
+   </property>
+</configuration>
+
+Step 9.Edit mapred-site.xml
+File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\mapred-site.xml
+Need to add:- 
+    (below content within <configuration> </configuration> tags. 
+    If you don’t see mapred-site.xml then open mapred-site.xml.template file 
+    and rename it to mapred-site.xml )
+ <configuration>
+   <property>
+      <name>mapreduce.job.user.name</name>
+      <value>%USERNAME%</value>
+   </property>
+   <property>
+      <name>mapreduce.framework.name</name>
+      <value>yarn</value>
+   </property>
+   <property>
+      <name>yarn.apps.stagingDir</name>
+      <value>/user/%USERNAME%/staging</value>
+   </property>
+   <property>
+      <name>mapreduce.jobtracker.address</name>
+      <value>local</value>
+   </property>
+</configuration>
+
+Step 10.Additional Configuration:- 
+
+Check if:
+    C:\Hadoop\hadoop-2.9.1\etc\hadoop\slaves file is present, 
+    if that file not available create the file called slave and insert localhost.
+
+Note:
+    One most common issue one can get is illegal character Exception.
+    This occurs when someone has a space in the name of their PC.
+    In this we need to open the hadoop-env.cmd and do the following changes.
+
+    File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hadoop-env.cmd
+    set HADOOP_IDENT_STRING="The name of your PC without Spacebar"
+ 
+Step 11.Node formatting
+To format the node, open the cmd and execute the below command:
+    --hadoop namenode -format
+
+Step 12.To enable the hadoop open the CMD as Administrator and type below command. 
+    -- start-all.cmd
+    It will open 4 new windows cmd terminals for 4 daemon processes, namely :
+    --namenode
+    --datanode
+    --nodemanager
+    --resourcemanager
+
+-- To access Resource Manager go to http://localhost:8088 from your web browser.
+-- To access Node Manager go to http://localhost:8042 from your web browser.
+-- To access Name Node go to  http://localhost:50070 from your web browser.
+-- To access Data Node go to http://localhost:50075 from your web browser.
+
+
+Reference :- https://hadoop.apache.org/
 # Features
 # There are three different ways to parse the JSON
 - via URL
