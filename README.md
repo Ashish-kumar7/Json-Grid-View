@@ -264,4 +264,10 @@ Preview of the table generated
   <img src="Screenshots/tablePreviewPage2.png" width="49%" /> 
 </p>
 
+Perform Queries using UI
+<p float="left">
+  <img src="Screenshots/uiQuery.png" width="49%" />
+  <img src="Screenshots/uiQuerySelected.png" width="49%" /> 
+</p>
+	
 ![Finished App](UI.gif)
