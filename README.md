@@ -309,14 +309,14 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 ![Screenshot](Screenshots/downloadOptions.png)
 	
-Example download : Download without query, download after query
+### Example download : Download without query, download after query
 
 <p float="left">
   <img src="Screenshots/fullDataXlsx.png" width="49%" />
   <img src="Screenshots/queryDataXlsx.png" width="49%" /> 
 </p>
 	
-SQL table
+### SQL table
 	
 ![Screenshot](Screenshots/sqlData.png)
 	
