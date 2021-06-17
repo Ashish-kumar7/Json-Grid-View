@@ -12,29 +12,34 @@ This project fetches the JSON in different ways and parses it into tabular form 
 </details>
 
 
-
 <details>
   <summary>Installation</summary>
-  
-  
-	> 1. Download Zip file and Extract it
-
-	** Install python libraries** 
-	> 2. Open new cmd window
-	> 3. cd *path to extracted Json-Grid-View folder*
-	> 5. cd backend 
-	> 5. pip install -r requirements.txt
 	
-	<details>
-		<summary>Install Node</summary>
-		
-			  Step 1: Download Node.js Installer
-			    In a web browser, navigate to https://nodejs.org/en/download/. 
-			    Click the Windows Installer button to download the latest default version. The Node.js installer includes the NPM package manager.
+  		Download Zip file and Extract it
+	
+<details>
+	<summary>Install Python Libraries</summary>
 
-			  Step 2: Install Node.js and NPM from Browser
+		 1. Open new cmd window
+
+		 2. cd *path to extracted Json-Grid-View folder*
+
+		 3. cd backend 
+
+		 4. pip install -r requirements.txt
+
+</details>
+	
+<details>
+	<summary>Install Node</summary>
+
+		  Step 1: Download Node.js Installer
+		    In a web browser, navigate to https://nodejs.org/en/download/. 
+		    Click the Windows Installer button to download the latest default version. The Node.js installer includes the NPM package manager.
+
+		  Step 2: Install Node.js and NPM from Browser
 			  1. Once the installer finishes downloading, launch it. 
-			     Open the downloads link in your browser and click the file. Or, browse to the location where you have saved the file and double-click it to launch.
+			     Open the downloads link in your browser and click the file. Or, browse to the location where you have saved the file and double-click it to 					launch.
 
 			  2. The system will ask if you want to run the software – click Run.
 
@@ -42,25 +47,25 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 			  4. On the next screen, review the license agreement. Click Next if you agree to the terms and install the software.
 
-			  5. The installer will prompt you for the installation location. Leave the default location, unless you have a specific need to install it somewhere 					else – then click Next.
+			  5. The installer will prompt you for the installation location. Leave the default location, unless you have a specific need to install it 						somewhere else – then click Next.
 
-			  6. The wizard will let you select components to include or remove from the installation. Again, unless you have a specific need, accept the defaults by 				clicking Next.
+			  6. The wizard will let you select components to include or remove from the installation. Again, unless you have a specific need, accept the 						defaults by clicking Next.
 
 			  7. Finally, click the Install button to run the installer. When it finishes, click Finish.
 
-			Step 3: Verify Installation
-			  Open a command prompt (or PowerShell), and enter the following:
+		Step 3: Verify Installation
+		  Open a command prompt (or PowerShell), and enter the following:
 
-				node -v
-				The system should display the Node.js version installed on your system. 
+			node -v
+			The system should display the Node.js version installed on your system. 
 
-				npm -v
-				The system should display the npm version installed on your system.
-	</details>
+			npm -v
+			The system should display the npm version installed on your system.
+</details>
 	
 	
-	<details>
-		  <summary>Install Hadoop and Java</summary>
+<details>
+	  <summary>Install Hadoop and Java</summary>
 		  Install Hadoop 2.9.1 on Windows 10 platform. (Setting up a Single Node Hadoop Cluster)
 
 		  Prerequistes:
@@ -204,10 +209,10 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 
 		  Reference :- https://hadoop.apache.org/
-	  </details>
+</details>
 		
 		
-  </details>
+</details>
 	
 <details>
 	<summary>How to Run</summary>
