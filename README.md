@@ -245,9 +245,9 @@ This project fetches the JSON in different ways and parses it into tabular form 
 - via JSON file upload
 ![Screenshot](Screenshots/uploadJson.png)
 <p float="left">
-  <img src="Screenshots/uploadJsonFile.png" width="100" />
-  <img src="Screenshots/jsonUrl.png" width="100" /> 
-  <img src="Screenshots/jsonEditor.png" width="100" />
+  <img src="Screenshots/uploadJsonFile.png" width="32%" />
+  <img src="Screenshots/jsonUrl.png" width="32%" /> 
+  <img src="Screenshots/jsonEditor.png" width="32%" />
 </p>
 
 ![Finished App](UI.gif)
