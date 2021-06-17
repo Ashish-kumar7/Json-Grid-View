@@ -24,7 +24,8 @@ This project fetches the JSON in different ways and parses it into tabular form 
 > 3. cd *path to extracted Json-Grid-View folder*
 > 5. cd backend 
 > 5. pip install -r requirements.txt
-  
+	
+<details>  
 **Install Node**
   Step 1: Download Node.js Installer
     In a web browser, navigate to https://nodejs.org/en/download/. 
@@ -54,7 +55,7 @@ Step 3: Verify Installation
 
 	npm -v
 	The system should display the npm version installed on your system.
-
+</details>
 <details>
   <summary>Install Hadoop and Java</summary>
   Install Hadoop 2.9.1 on Windows 10 platform. (Setting up a Single Node Hadoop Cluster)
