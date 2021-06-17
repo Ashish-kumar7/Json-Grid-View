@@ -296,7 +296,9 @@ Validate and Download corrected json
 ![Screenshot](Screenshots/jsonValidator.png)
 
 Download Options
-- User can download data as it is, or download data generated after querying.
+- User can download 
+	- Normal Data, data as it is
+	- Preview Data, data generated after querying.
 Formats
 - Download Xlsx file
 - Download Csv file
@@ -312,4 +314,9 @@ Example download : Download without query, download after query
   <img src="Screenshots/queryDataXlsx.png" width="49%" /> 
 </p>
 	
+SQL table
+	
+![Screenshot](Screenshots/sqlData.png)
+	
+
 ![Finished App](UI.gif)
