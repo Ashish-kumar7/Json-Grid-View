@@ -4,6 +4,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 <details>
   <summary>
+    
   # Requirements to run the project
   </summary>
   
