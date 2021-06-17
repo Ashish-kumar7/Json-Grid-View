@@ -273,5 +273,13 @@ Perform Queries using UI
   <img src="Screenshots/uiQuery.png" width="49%" />
   <img src="Screenshots/uiQuerySelected.png" width="49%" /> 
 </p>
+
+Click Query to generate preview after performing query
 	
+<p float="left">
+  <img src="Screenshots/clickUiQuery.png" width="49%" />
+  <img src="Screenshots/uiQueryResults.png" width="49%" /> 
+</p>
+	
+
 ![Finished App](UI.gif)
