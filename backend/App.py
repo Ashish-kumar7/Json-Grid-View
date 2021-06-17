@@ -442,7 +442,34 @@ def fetchQueryData():
         return jsonify({'message:', 'error'})
 
 
+@app.route('/api/check-table', methods=['POST'])
+@cross_origin()
+def saveData():
+    print("checkTable")
+    print("\n\n\n\nForm Data in /api/check-table\n" , request.form)
+    try:    
+        tableNameInput = request.form['tableName']
+        startTime = time.time()
+        sql_engine = sqlalchemy.create_engine(
+            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+        sqlite_connection = sql_engine.connect()
+        print("Conenction Made to SQL")
 
+        tableExists = sql_engine.dialect.has_table(sqlite_connection, tableNameInput)
+        print("Exists.........")
+        print(tableExists)
+        sqlite_connection.close()
+
+        if(tableExists):
+            return jsonify(message="Error: Table " + tableNameInput + " already exists. Please select another table name!")
+        else:
+            return jsonify(message = "New Table!")
+        
+    except Exception as e:
+        print("SQLError: ")
+        print(e)
+        response = jsonify(message="Error: " + str(e))
+        return response
 
 
 if __name__ == "__main__":

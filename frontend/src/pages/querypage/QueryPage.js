@@ -27,7 +27,10 @@ const QueryPage = (props) => {
   const classes = useStyles();
 
   console.log("Query Page");
-
+  const [resultTotalRecords, setResultTotalRecords] = useState(
+    initialDataFrame.records
+  );
+  const [resultRows, setResultRows] = useState(initialDataFrame.rows);
   const [table, setTable] = useState(initialDataFrame.df);
 
   const queryText = "";
@@ -77,6 +80,8 @@ const QueryPage = (props) => {
           alert(response.data.message);
         } else {
           setTable(response.data.table);
+          setResultTotalRecords(response.data.total_records);
+        setResultRows(response.data.rows_per_page);
         }
       })
       .catch((err) => {
@@ -95,9 +100,9 @@ const QueryPage = (props) => {
         </div>
         <div className={classes.num}>
           <PaginationP
-            key={initialDataFrame.records}
-            totalRecords={initialDataFrame.records}
-            pageLimit={initialDataFrame.rows}
+            key={resultTotalRecords}
+            totalRecords={resultTotalRecords}
+            pageLimit={resultRows}
             pageNeighbours={1}
             onPageChanged={onPageChanged}
           />
