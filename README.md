@@ -27,7 +27,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
   
 **Install Node**
 
-  + <details>
+<details>
   <summary>Install Hadoop and Java</summary>
   Install Hadoop 2.9.1 on Windows 10 platform. (Setting up a Single Node Hadoop Cluster)
 
