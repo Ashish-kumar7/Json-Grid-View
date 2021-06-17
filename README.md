@@ -13,8 +13,10 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 
 
-## Installation
-
+<details>
+  <summary>Installation</summary>
+  
+  
 > 1. Download Zip file and Extract it
 
 **Install python libraries**
@@ -171,7 +173,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
   Reference :- https://hadoop.apache.org/
   </details>
-
+  </details>
 ## How to Run 
 
 **Run Backend**
