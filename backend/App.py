@@ -486,8 +486,5 @@ def saveData():
         response = jsonify(message="Error: " + str(e))
         return response
 
-
-
-
 if __name__ == "__main__":
     socketio.run(app,debug=True)
