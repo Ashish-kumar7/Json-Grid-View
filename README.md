@@ -256,6 +256,11 @@ This project fetches the JSON in different ways and parses it into tabular form 
 User can customize the table using the CustomizeTable Page
 
 ![Screenshot](Screenshots/customizeTable.png)
-	
-	
+
+Preview of the table generated 
+<p float="left">
+  <img src="Screenshots/tablePreviewPage1.png" width="49%" />
+  <img src="Screenshots/tablePreviewPage2.png" width="49%" /> 
+</p>
+
 ![Finished App](UI.gif)
