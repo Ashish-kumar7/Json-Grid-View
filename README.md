@@ -299,6 +299,7 @@ Download Options
 - User can download 
 	- Normal Data, data as it is
 	- Preview Data, data generated after querying.
+	
 Formats
 - Download Xlsx file
 - Download Csv file
