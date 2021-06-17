@@ -232,13 +232,13 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 	Json-Grid-View should automatically open in your browser, if it doesn't enter http://localhost:3000/ in your browser!!!
 </details>
+
 # Features
 
-
-
-## Homepage
+### Homepage
 ![Screenshot](Screenshots/homepage.png)
 
+### Upload Json
 **There are three different ways to parse the JSON**
 
 ![Screenshot](Screenshots/uploadJson.png)
@@ -253,7 +253,8 @@ This project fetches the JSON in different ways and parses it into tabular form 
   <img src="Screenshots/jsonEditor.png" width="32%" />
 </p>
 
-User can customize the table using the CustomizeTable Page
+### Customize Table
+**User can customize the table using the CustomizeTable Page**
 
 ![Screenshot](Screenshots/customizeTable.png)
 
