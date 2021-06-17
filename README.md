@@ -265,6 +265,10 @@ Preview of the table generated
 </p>
 
 Perform Queries using UI
+- Select columns to load unique values of selected column
+- Select from unique values (implemented paging)
+- Enter text in SearchBox to perform a StartsWith search on selected column
+
 <p float="left">
   <img src="Screenshots/uiQuery.png" width="49%" />
   <img src="Screenshots/uiQuerySelected.png" width="49%" /> 
