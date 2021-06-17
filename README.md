@@ -243,7 +243,11 @@ This project fetches the JSON in different ways and parses it into tabular form 
 - via URL
 - via JSON in text box
 - via JSON file upload
-![Screenshot](Screenshots/uploadJson.png)	
-	
+![Screenshot](Screenshots/uploadJson.png)
+<p float="left">
+  <img src="Screenshots/uploadJsonFile.png" width="100" />
+  <img src="Screenshots/jsonUrl" width="100" /> 
+  <img src="Screenshots/jsonEditor" width="100" />
+</p>
 
 ![Finished App](UI.gif)
