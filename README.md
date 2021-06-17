@@ -19,7 +19,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
   
 	> 1. Download Zip file and Extract it
 
-	## Install python libraries
+	** Install python libraries** 
 	> 2. Open new cmd window
 	> 3. cd *path to extracted Json-Grid-View folder*
 	> 5. cd backend 
