@@ -14,7 +14,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 ## Install python libraries
 2. Open new cmd window
-3. cd <path to extracted Json-Grid-View folder>>
+3. cd *path to extracted Json-Grid-View folder*
 5. cd backend 
 5. pip install -r requirements.txt
   
@@ -24,15 +24,15 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 # How to Run 
 
-## Run Backend
+## **Run Backend**
 1. Open a new cmd window
-2. cd <path to Json-Grid-View folder>
+2. cd *path to Json-Grid-View folder*
 3. cd backend
 4. python App.py
   
-## Run Frontend
+## **Run Frontend**
 5. Open a new cmd window
-6. cd <path to Json-Grid-View folder>
+6. cd *path to Json-Grid-View folder*
 7. cd frontend
 8. npm install
 9. npm start
