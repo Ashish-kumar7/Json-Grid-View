@@ -258,6 +258,7 @@ User can customize the table using the CustomizeTable Page
 ![Screenshot](Screenshots/customizeTable.png)
 
 Preview of the table generated 
+- implemented paging for large files
 <p float="left">
   <img src="Screenshots/tablePreviewPage1.png" width="49%" />
   <img src="Screenshots/tablePreviewPage2.png" width="49%" /> 
