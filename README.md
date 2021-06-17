@@ -3,7 +3,7 @@
 This project fetches the JSON in different ways and parses it into tabular form and saves it into HDFS.
 
 <details>
-  ## <summary>Requirements to run the project</summary>
+  <summary><h1>Requirements to run the project</h1></summary>
   
   > 1. node
   > 2. python
