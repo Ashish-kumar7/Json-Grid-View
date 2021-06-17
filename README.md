@@ -8,28 +8,28 @@ This project fetches the JSON in different ways and parses it into tabular form 
 3. java(Optional)
 4. hadoop(Optional)
 
-## Installation
+# Installation
 
 1. Download Zip file and Extract it
 
-# Install python libraries
+## Install python libraries
 2. Open new cmd window
 3. cd <path to extracted Json-Grid-View/backend folder>
 4. pip install -r requirements.txt
   
-# Install Node
+## Install Node
 
-# Install Hadoop and Java
+## Install Hadoop and Java
 
-### How to Run 
+# How to Run 
 
-# Run Backend
+## Run Backend
 1. Open a new cmd window
 2. cd <path to Json-Grid-View folder>
 3. cd backend
 4. python App.py
   
-# Run Frontend
+## Run Frontend
 5. Open a new cmd window
 6. cd <path to Json-Grid-View folder>
 7. cd frontend
@@ -38,8 +38,8 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 Json-Grid-View should automatically open in your browser, if it doesn't enter http://localhost:3000/ in your browser!!!
 
-## Features
-## There are three different ways to parse the JSON
+# Features
+# There are three different ways to parse the JSON
 - via URL
 - via JSON in text box
 - via JSON file upload
