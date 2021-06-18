@@ -45,6 +45,7 @@ const CustomizeModal = (props) => {
         if (response.data && response.data.message && response.data.message.startsWith("Error")) {
           alert(response.data.message);
         } else {
+          setUploadPercentage(5);
           const formData = new FormData();
           formData.set('table_type', tableType);
           formData.set('join_char', joinChar);
@@ -66,10 +67,11 @@ const CustomizeModal = (props) => {
               initialDF.rows = res.data.rows_per_page;
               initialDF.records = res.data.total_records;
               initialDF.cols = res.data.columns;
+              initialDF.progress = 0;
               setUploadPercentage(100);
-                    setTimeout(() => {
+                   
                       setUploadPercentage(0);
-                    }, 1000);
+                 
               console.log(initialDF.cols.length);
               history.push("/preview");
             })
