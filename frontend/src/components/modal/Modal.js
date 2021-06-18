@@ -18,15 +18,15 @@ const CustomizeModal = (props) => {
   const [sheetName, setSheetName] = useState("Sheet1");
   const [nullName, setNullName] = useState("null");
   const [tableName, setTablename] = useState("table001");
- 
-  const [uploadPercentage,setUploadPercentage] = useState(0);
+
+  const [uploadPercentage, setUploadPercentage] = useState(0);
 
   const [totalRecords, setTotalRecords] = useState(1);
   const [rows, setRows] = useState(1);
   const [dataframe, setDataframe] = useState("");
   let history = useHistory();
 
- // for getting updates regarding progress
+  // for getting updates regarding progress
   socket.on("progress", (val) => {
     setUploadPercentage(val);
     console.log(val);
@@ -37,53 +37,53 @@ const CustomizeModal = (props) => {
   // on clicking any process button
   const handleSubmission = () => {
 
-    const formDataSave = new FormData();
-    formDataSave.set('tableName', tableName);
+    // const formDataSave = new FormData();
+    // formDataSave.set('tableName', tableName);
+    // axios
+    //   .post("http://localhost:5000/api/check-table", formDataSave)
+    //   .then((response) => {
+    //     if (response.data && response.data.message && response.data.message.startsWith("Error")) {
+    //       alert(response.data.message);
+    //     } else {
+    const formData = new FormData();
+    formData.set('table_type', tableType);
+    formData.set('join_char', joinChar);
+    formData.set('parentCol', parentCol);
+    formData.set('sheetName', sheetName);
+    formData.set('tableName', tableName);
+    formData.set('nullName', nullName);
+    // process with options , data frame received
     axios
-      .post("http://localhost:5000/api/check-table", formDataSave)
-      .then((response) => {
-        if (response.data && response.data.message && response.data.message.startsWith("Error")) {
-          alert(response.data.message);
-        } else {
-          const formData = new FormData();
-          formData.set('table_type', tableType);
-          formData.set('join_char', joinChar);
-          formData.set('parentCol', parentCol);
-          formData.set('sheetName', sheetName);
-          formData.set('tableName', tableName);
-          formData.set('nullName', nullName);
-          // process with options , data frame received
-          axios
-            .post("http://localhost:5000/api/process", formData)
-            .then((res) => {
-              setDataframe(res);
-              // console.log(typeof res.data.table);
-              console.log("model pageeee");
-              // console.log(dataframe);
-              // response contains top 20 rows and total pages input
-              props.closeFunc();
-              initialDF.df = res.data.table;
-              initialDF.rows = res.data.rows_per_page;
-              initialDF.records = res.data.total_records;
-              initialDF.cols = res.data.columns;
-              setUploadPercentage(100);
-                    setTimeout(() => {
-                      setUploadPercentage(0);
-                    }, 1000);
-              console.log(initialDF.cols.length);
-              history.push("/preview");
-            })
-            .catch((err) => {
-              setUploadPercentage(0);
-              console.log(err);
-              alert("Oops it breaks " + err);
-            });
-        }
+      .post("http://localhost:5000/api/process", formData)
+      .then((res) => {
+        setDataframe(res);
+        // console.log(typeof res.data.table);
+        console.log("model pageeee");
+        // console.log(dataframe);
+        // response contains top 20 rows and total pages input
+        props.closeFunc();
+        initialDF.df = res.data.table;
+        initialDF.rows = res.data.rows_per_page;
+        initialDF.records = res.data.total_records;
+        initialDF.cols = res.data.columns;
+        setUploadPercentage(100);
+        setTimeout(() => {
+          setUploadPercentage(0);
+        }, 1000);
+        console.log(initialDF.cols.length);
+        history.push("/preview");
       })
       .catch((err) => {
+        setUploadPercentage(0);
         console.log(err);
-        alert("Oops table-checker breaks " + err);
+        alert("Oops it breaks " + err);
       });
+    //   }
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    //   alert("Oops table-checker breaks " + err);
+    // });
   };
 
   const tablehandler = (e) => {
@@ -258,17 +258,17 @@ const CustomizeModal = (props) => {
               </Card>
             </Col>
           </Row>
-            {uploadPercentage > 0 && (
-        <div className="progressbar">
-          <ProgressBar
-            now={uploadPercentage}
-            striped={true}
-            animated
-            label={`${uploadPercentage}%`}
-            variant="success"
-          />
-        </div> 
-        )}
+          {uploadPercentage > 0 && (
+            <div className="progressbar">
+              <ProgressBar
+                now={uploadPercentage}
+                striped={true}
+                animated
+                label={`${uploadPercentage}%`}
+                variant="success"
+              />
+            </div>
+          )}
           <Button
             title={"Process"}
             classId={"downloadButton"}
