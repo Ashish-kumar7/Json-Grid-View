@@ -9,20 +9,15 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { Dropdown } from "semantic-ui-react";
+import DataGrid from 'react-data-grid';
 
-import ReactDataGrid from "react-data-grid";
 
-const columns = [
-  { key: 'id', name: 'ID', editable: true },
-  { key: 'title', name: 'Title', editable: true },
-  { key: 'complete', name: 'Complete', editable: true },
-];
 
-const rows = [
-  { id: 0, title: 'Task 1', complete: 20 },
-  { id: 1, title: 'Task 2', complete: 40 },
-  { id: 2, title: 'Task 3', complete: 60 },
-];
+
+
+const columns = initialDataFrame.dfcol;
+
+const rows = initialDataFrame.dfrow;
 
 
 // style
@@ -48,7 +43,7 @@ const NewPreviewPage = () => {
   console.log("new preview page");
   const classes = useStyles();
 
-  const [table, setTable] = useState(initialDataFrame.df);
+  // const [table, setTable] = useState(initialDataFrame.df);
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
   );
@@ -67,7 +62,7 @@ const NewPreviewPage = () => {
       .post("http://localhost:5000/api/page", formData)
       .then((response) => {
         console.log(response);
-        setTable(response.data.table);
+        // setTable(response.data.table);
       })
       .catch((err) => {
         console.log(err);
@@ -83,7 +78,7 @@ const NewPreviewPage = () => {
     colWithIdx[number] = initialDataFrame.cols[i];
     colList.push(
       <th>
-        <Dropdown>
+        
           <ListItem
             button
             selected={selectedIndex === number}
@@ -94,31 +89,11 @@ const NewPreviewPage = () => {
               primary={initialDataFrame.cols[i]}
             />
           </ListItem>
-        </Dropdown>
+        
       </th>
     );
   }
 
-  const options = [
-    { key: "angular", text: "Angular", value: "angular" },
-    { key: "css", text: "CSS", value: "css" },
-    { key: "design", text: "Graphic Design", value: "design" },
-    { key: "ember", text: "Ember", value: "ember" },
-    { key: "html", text: "HTML", value: "html" },
-    { key: "ia", text: "Information Architecture", value: "ia" },
-    { key: "javascript", text: "Javascript", value: "javascript" },
-    { key: "mech", text: "Mechanical Engineering", value: "mech" },
-    { key: "meteor", text: "Meteor", value: "meteor" },
-    { key: "node", text: "NodeJS", value: "node" },
-    { key: "plumbing", text: "Plumbing", value: "plumbing" },
-    { key: "python", text: "Python", value: "python" },
-    { key: "rails", text: "Rails", value: "rails" },
-    { key: "react", text: "React", value: "react" },
-    { key: "repair", text: "Kitchen Repair", value: "repair" },
-    { key: "ruby", text: "Ruby", value: "ruby" },
-    { key: "ui", text: "UI Design", value: "ui" },
-    { key: "ux", text: "User Experience", value: "ux" },
-  ];
 
   return (
     <div className="newpreview">
@@ -140,10 +115,10 @@ const NewPreviewPage = () => {
                 </thead>
               </table>
             </div>
-            <div
+            {/* <div
               className="insidetable"
               dangerouslySetInnerHTML={{ __html: table }}
-            />
+            /> */}
           </div>
           <div className={classes.num}>
             <PaginationP
@@ -156,13 +131,22 @@ const NewPreviewPage = () => {
           </div>
         </Pane>
         <Pane className="right" maxSize="35%">
-          <ReactDataGrid
-            columns={columns}
-            rows = {rows}
-            // minHeight={150}
-          />
-
-         
+        {/* <Dropdown fluid multiple selection text="File">
+    <Dropdown.Menu className="dropdown">
+      <Dropdown.Item text="New" />
+      <Dropdown.Item text="Open..." description="ctrl + o" />
+      <Dropdown.Item text="Save as..." description="ctrl + s" />
+      <Dropdown.Item text="Rename" description="ctrl + r" />
+      <Dropdown.Item text="Make a copy" />
+      <Dropdown.Item icon="folder" text="Move to folder" />
+      <Dropdown.Item icon="trash" text="Move to trash" />
+      <Dropdown.Divider />
+      <Dropdown.Item text="Download As..." />
+      <Dropdown.Item text="Publish To Web" />
+      <Dropdown.Item text="E-mail Collaborators" />
+    </Dropdown.Menu>
+  </Dropdown> */}
+  <DataGrid columns={initialDataFrame.dfcol} rows={initialDataFrame.dfrow} />
         </Pane>
       </SplitPane>
     </div>

@@ -62,7 +62,8 @@ const CustomizeModal = (props) => {
         // console.log(dataframe);
         // response contains top 20 rows and total pages input
         props.closeFunc();
-        initialDF.df = res.data.table;
+        initialDF.dfrow = res.data.tableRows;
+        initialDF.dfcol = res.data.tableCols;
         initialDF.rows = res.data.rows_per_page;
         initialDF.records = res.data.total_records;
         initialDF.cols = res.data.columns;
