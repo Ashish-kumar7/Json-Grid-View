@@ -9,16 +9,36 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { Dropdown } from "semantic-ui-react";
-import DataGrid from 'react-data-grid';
+import ReactDataGrid from 'react-data-grid';
+import { Toolbar, Data, Filters } from "react-data-grid-addons";
 
 
 
 
+// const columns = initialDataFrame.dfcol;
 
-const columns = initialDataFrame.dfcol;
+// const rows = initialDataFrame.dfrow;
 
-const rows = initialDataFrame.dfrow;
+const defaultColumnProperties = {
+  filterable: true,
+  width: 120
+};
 
+const selectors = Data.Selectors;
+
+const handleFilterChange = filter => filters => {
+  const newFilters = { ...filters };
+  if (filter.filterTerm) {
+    newFilters[filter.column.key] = filter;
+  } else {
+    delete newFilters[filter.column.key];
+  }
+  return newFilters;
+};
+
+function getRows(rows, filters) {
+  return selectors.getRows({ rows, filters });
+}
 
 // style
 const useStyles = makeStyles((theme) => ({
@@ -41,8 +61,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 const NewPreviewPage = () => {
   console.log("new preview page");
+  console.log(initialDataFrame.dfrow);
   const classes = useStyles();
-
+  const [filters, setFilters] = useState({});
+  const filteredRows = getRows(initialDataFrame.dfrow, filters);
   // const [table, setTable] = useState(initialDataFrame.df);
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
@@ -119,6 +141,12 @@ const NewPreviewPage = () => {
               className="insidetable"
               dangerouslySetInnerHTML={{ __html: table }}
             /> */}
+             <ReactDataGrid columns={initialDataFrame.dfcol.map(c => ({ ...c, ...defaultColumnProperties }))} rowGetter={i => filteredRows[i]}
+      rowsCount={filteredRows.length}
+      minHeight={500}
+      toolbar={<Toolbar enableFilter={true} />}
+      onAddFilter={filter => setFilters(handleFilterChange(filter))}
+      onClearFilters={() => setFilters({})} />
           </div>
           <div className={classes.num}>
             <PaginationP
@@ -146,7 +174,7 @@ const NewPreviewPage = () => {
       <Dropdown.Item text="E-mail Collaborators" />
     </Dropdown.Menu>
   </Dropdown> */}
-  <DataGrid columns={initialDataFrame.dfcol} rows={initialDataFrame.dfrow} />
+ 
         </Pane>
       </SplitPane>
     </div>

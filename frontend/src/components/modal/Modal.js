@@ -67,6 +67,7 @@ const CustomizeModal = (props) => {
         initialDF.rows = res.data.rows_per_page;
         initialDF.records = res.data.total_records;
         initialDF.cols = res.data.columns;
+        console.log(res.data.tableRows);
         setUploadPercentage(100);
         setTimeout(() => {
           setUploadPercentage(0);
