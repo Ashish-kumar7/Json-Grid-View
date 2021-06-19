@@ -104,11 +104,15 @@ app.json_encoder = NumpyEncoder
 def uploadFile():
     global jsonData 
 
-    # Delete Prev Files if exist
-    # utilities.DeleteIfExists(SQL_DB_NAME + '.db')
-    # utilities.DeleteIfExists(CSV_FILENAME + '.csv')
-    # utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
+    # Delete the existing files
+    utilities.DeleteIfExists(SQL_DB_NAME + '.db')
+    utilities.DeleteIfExists(CSV_FILENAME + '.csv')
+    utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
     
+    # Added delay of 5 seconds to avoid conflict between deleting old files and writing new files
+    time.sleep(5)
+    
+    print("All files deleted !!!")
     print("\n\n\n\nForm Data in /api/upload\n" , request.form)
     try:
         print("form  : ", request.form)
@@ -461,36 +465,37 @@ def fetchQueryData():
 
     except Exception as e:
         print(e)
-        return jsonify({'message:', 'error'})
+        return jsonify(message="Error: " + str(e))
 
-@app.route('/api/check-table', methods=['POST'])
-@cross_origin()
-def saveData():
-    print("checkTable")
-    print("\n\n\n\nForm Data in /api/check-table\n" , request.form)
-    try:    
-        tableNameInput = request.form['tableName']
-        startTime = time.time()
-        sql_engine = sqlalchemy.create_engine(
-            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
-        sqlite_connection = sql_engine.connect()
-        print("Conenction Made to SQL")
+# API to check if the table already existed in the db.Would be useful while storing all the tables without deleting.
+# @app.route('/api/check-table', methods=['POST'])
+# @cross_origin()
+# def saveData():
+#     print("checkTable")
+#     print("\n\n\n\nForm Data in /api/check-table\n" , request.form)
+#     try:    
+#         tableNameInput = request.form['tableName']
+#         startTime = time.time()
+#         sql_engine = sqlalchemy.create_engine(
+#             'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+#         sqlite_connection = sql_engine.connect()
+#         print("Conenction Made to SQL")
 
-        tableExists = sql_engine.dialect.has_table(sqlite_connection, tableNameInput)
-        print("Exists.........")
-        print(tableExists)
-        sqlite_connection.close()
+#         tableExists = sql_engine.dialect.has_table(sqlite_connection, tableNameInput)
+#         print("Exists.........")
+#         print(tableExists)
+#         sqlite_connection.close()
 
-        if(tableExists):
-            return jsonify(message="Error: Table " + tableNameInput + " already exists. Please select another table name!")
-        else:
-            return jsonify(message = "New Table!")
+#         if(tableExists):
+#             return jsonify(message="Error: Table " + tableNameInput + " already exists. Please select another table name!")
+#         else:
+#             return jsonify(message = "New Table!")
         
-    except Exception as e:
-        print("SQLError: ")
-        print(e)
-        response = jsonify(message="Error: " + str(e))
-        return response
+#     except Exception as e:
+#         print("SQLError: ")
+#         print(e)
+#         response = jsonify(message="Error: " + str(e))
+#         return response
 
 if __name__ == "__main__":
     socketio.run(app,debug=True)
