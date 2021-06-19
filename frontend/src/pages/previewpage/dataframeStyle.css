@@ -6,11 +6,22 @@
     border-collapse: collapse; 
     border: 1px solid silver;
     text-align: center;
+    
 }
 
-.mystyle td, th {
-    padding: 5px;
+.mystyle thead {
+    font-size: 12pt;
 }
+
+.mystyle  th, td {
+    padding: 5px 10px;
+   
+   text-align: center;
+    
+}
+
+
+
 
 .mystyle tr:nth-child(odd) {
     background: #212529;
