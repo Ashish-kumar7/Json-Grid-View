@@ -251,14 +251,18 @@ def processFile():
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
         # table = PreviewDF.iloc[startRow : endRow][:].to_dict()
 
-        tableCols = [
-            {'key': 'id', 'name': 'ID'},
-            {'key': 'title', 'name': 'Title'},
-            {'key': 'count', 'name': 'Count'}]
-        tableRows = [{'id': 0, 'title': 'row1', 'count': 20},
-                     {'id': 1, 'title': 'row1', 'count': 40},
-                     {'id': 2, 'title': 'row1', 'count': 60}]
+        # tableCols = [
+        #     {'key': 'id', 'name': 'ID'},
+        #     {'key': 'title', 'name': 'Title'},
+        #     {'key': 'count', 'name': 'Count'}]
+        tableCols = []
+        for c in columnListOrd :
+            tableCols.append({'key' : c , 'name' : c})
 
+        # tableRows = [{'id': 0, 'title': 'row1', 'count': 20},
+        #              {'id': 1, 'title': 'row1', 'count': 40},
+        #              {'id': 2, 'title': 'row1', 'count': 60}]
+        tableRows = DataDict
         response = jsonify(tableRows=tableRows, tableCols=tableCols,
                            total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=columnListOrd)
 
