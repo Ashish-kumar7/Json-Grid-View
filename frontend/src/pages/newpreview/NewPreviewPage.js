@@ -122,21 +122,6 @@ const NewPreviewPage = () => {
       <SplitPane split="vertical" defaultSize="65%">
         <Pane className="left" minSize="65%">
           <div className="dataframeview">
-            <div className="table-header">
-              <table border="1" className="mystylehead">
-                <thead>
-                  <tr style={{ "text-align": "right" }}>
-                    <th>
-                      <ListItem
-
-                      // onClick={(event) => handleListItemClick(event, number)}
-                      ></ListItem>
-                    </th>
-                    {colList}
-                  </tr>
-                </thead>
-              </table>
-            </div>
             {/* <div
               className="insidetable"
               dangerouslySetInnerHTML={{ __html: table }}
