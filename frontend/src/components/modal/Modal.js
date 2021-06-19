@@ -71,7 +71,7 @@ const CustomizeModal = (props) => {
           setUploadPercentage(0);
         }, 1000);
         console.log(initialDF.cols.length);
-        history.push("/preview");
+        history.push("/newpreview");
       })
       .catch((err) => {
         setUploadPercentage(0);
