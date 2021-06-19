@@ -9,6 +9,17 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { Dropdown } from "semantic-ui-react";
+import DataGrid from 'react-data-grid';
+
+const columns = [
+  { key: 'id', name: 'ID' },
+  { key: 'title', name: 'Title' }
+];
+
+const rows = [
+  { id: 0, title: 'Example' },
+  { id: 1, title: 'Demo' }
+];
 
 // style
 const useStyles = makeStyles((theme) => ({
@@ -142,7 +153,7 @@ const NewPreviewPage = () => {
           </div>
         </Pane>
         <Pane className="right" maxSize="35%">
-        <Dropdown fluid multiple selection text="File">
+        {/* <Dropdown fluid multiple selection text="File">
     <Dropdown.Menu className="dropdown">
       <Dropdown.Item text="New" />
       <Dropdown.Item text="Open..." description="ctrl + o" />
@@ -156,7 +167,8 @@ const NewPreviewPage = () => {
       <Dropdown.Item text="Publish To Web" />
       <Dropdown.Item text="E-mail Collaborators" />
     </Dropdown.Menu>
-  </Dropdown>
+  </Dropdown> */}
+  <DataGrid columns={columns} rows={rows} />
         </Pane>
       </SplitPane>
      
