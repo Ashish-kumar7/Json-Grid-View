@@ -120,30 +120,12 @@ const NewPreviewPage = () => {
   return (
     <div className="newpreview">
       <SplitPane split="vertical" defaultSize="65%">
-        <Pane className="left" minSize="65%">
+        <Pane className="left" defaultSize="65%">
           <div className="dataframeview">
-            <div className="table-header">
-              <table border="1" className="mystylehead">
-                <thead>
-                  <tr style={{ "text-align": "right" }}>
-                    <th>
-                      <ListItem
-
-                      // onClick={(event) => handleListItemClick(event, number)}
-                      ></ListItem>
-                    </th>
-                    {colList}
-                  </tr>
-                </thead>
-              </table>
-            </div>
-            {/* <div
-              className="insidetable"
-              dangerouslySetInnerHTML={{ __html: table }}
-            /> */}
+           
              <ReactDataGrid columns={initialDataFrame.dfcol.map(c => ({ ...c, ...defaultColumnProperties }))} rowGetter={i => filteredRows[i]}
       rowsCount={filteredRows.length}
-      minHeight={500}
+      minHeight={650}
       toolbar={<Toolbar enableFilter={true} />}
       onAddFilter={filter => setFilters(handleFilterChange(filter))}
       onClearFilters={() => setFilters({})} />
@@ -158,23 +140,9 @@ const NewPreviewPage = () => {
             />
           </div>
         </Pane>
-        <Pane className="right" maxSize="35%">
-        {/* <Dropdown fluid multiple selection text="File">
-    <Dropdown.Menu className="dropdown">
-      <Dropdown.Item text="New" />
-      <Dropdown.Item text="Open..." description="ctrl + o" />
-      <Dropdown.Item text="Save as..." description="ctrl + s" />
-      <Dropdown.Item text="Rename" description="ctrl + r" />
-      <Dropdown.Item text="Make a copy" />
-      <Dropdown.Item icon="folder" text="Move to folder" />
-      <Dropdown.Item icon="trash" text="Move to trash" />
-      <Dropdown.Divider />
-      <Dropdown.Item text="Download As..." />
-      <Dropdown.Item text="Publish To Web" />
-      <Dropdown.Item text="E-mail Collaborators" />
-    </Dropdown.Menu>
-  </Dropdown> */}
- 
+        <Pane className="right" defaultSize="35%">
+      
+  
         </Pane>
       </SplitPane>
     </div>
