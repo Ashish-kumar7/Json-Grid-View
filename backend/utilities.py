@@ -475,3 +475,9 @@ def DeleteIfExists(FileName) :
         print('deleted ' , FileName)
     else :
         print(FileName , 'not found')
+
+def GenReactDataGridRows(tableRows, df , ROWS_PER_PAGE, SELECTED_PAGE):
+    startRow = (SELECTED_PAGE - 1) * ROWS_PER_PAGE
+    endRow = min(df.shape[0] , startRow + ROWS_PER_PAGE)
+    for idx in  range(startRow , endRow) :
+        tableRows.append(df.iloc[ idx ][:].to_dict())
