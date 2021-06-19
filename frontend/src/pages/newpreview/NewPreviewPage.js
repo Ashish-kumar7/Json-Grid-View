@@ -87,7 +87,6 @@ const NewPreviewPage = () => {
       .post("http://localhost:5000/api/page", formData)
       .then((response) => {
         console.log(response);
-        // setResultTotalRecords(response.data.total_records);
         console.log("result total records " + resultTotalRecords);
         // initialDataFrame.dfrow = response.data.tableRows;
         // initialDataFrame.dfcol = response.data.tableCols;
@@ -157,17 +156,9 @@ const NewPreviewPage = () => {
             />
           </div>
         </Pane>
-        <Pane className="right" maxSize="35%">
 
-        <div className={classes.num}>
-            <PaginationP
-              key={resultTotalRecords}
-              totalRecords={resultTotalRecords}
-              pageLimit={resultRows}
-              pageNeighbours={1}
-              onPageChanged={onPageChanged}
-            />
-          </div>
+
+        <Pane className="right" maxSize="35%">
         </Pane>
       </SplitPane>
     </div>
