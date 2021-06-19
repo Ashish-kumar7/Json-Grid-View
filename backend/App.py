@@ -1,6 +1,7 @@
 from flask_socketio import *
 import subprocess
 import time
+from pandas.core.base import SelectionMixin
 import sqlalchemy
 import pandas as pd
 import os
@@ -248,19 +249,12 @@ def processFile():
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
         # table = PreviewDF.iloc[startRow : endRow][:].to_dict()
 
-        # tableCols = [
-        #     {'key': 'id', 'name': 'ID'},
-        #     {'key': 'title', 'name': 'Title'},
-        #     {'key': 'count', 'name': 'Count'}]
         tableCols = []
         for c in columnListOrd :
             tableCols.append({'key' : c , 'name' : c})
-
-        # tableRows = [{'id': 0, 'title': 'row1', 'count': 20},
-        #              {'id': 1, 'title': 'row1', 'count': 40},
-        #              {'id': 2, 'title': 'row1', 'count': 60}]
+        
         tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, 1)
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
         print(tableRows)
 
         response = jsonify(tableRows=tableRows, tableCols=tableCols,
@@ -284,10 +278,19 @@ def returnDataFrame():
         page = int(request.form['page_number'])
         print(type(page))
         print(page)
-        html_string = utilities.GenPageHTML(
-            df=PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
+        # html_string = utilities.GenPageHTML(
+        #     df=PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
+
+        tableCols = []
+        for c in columnListOrd :
+            tableCols.append({'key' : c , 'name' : c})
+
+        tableRows = []
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = page)
+        print(tableRows)
+
         response = jsonify(
-            table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+            tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
 
         return response
     except Exception as e:
@@ -335,10 +338,19 @@ def queryUsingDict():
         queryDict = json.loads(request.form['dict'])
         PreviewDF = utilities.queryUsingDict(df=DF, queryDict=queryDict)
 
-        html_string = utilities.GenPageHTML(
-            df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
+        # html_string = utilities.GenPageHTML(
+        #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
+
+        tableCols = []
+        for c in columnListOrd :
+            tableCols.append({'key' : c , 'name' : c})
+
+        tableRows = []
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+        
+
         response = jsonify(
-            table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+            tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
 
         return response
     except Exception as e:
