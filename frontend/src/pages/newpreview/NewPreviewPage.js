@@ -72,7 +72,7 @@ const NewPreviewPage = () => {
   // const [table, setTable] = useState(initialDataFrame.df);
  
     console.log(resultTotalRecords);
-  const [resultRows, setResultRows] = useState(gridRows);
+  const [resultRows, setResultRows] = useState(initialDataFrame.rows);
   let colWithIdx = [];
   const [selectedIndex, setSelectedIndex] = useState(1);
 
