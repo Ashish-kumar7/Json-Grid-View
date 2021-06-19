@@ -9,11 +9,8 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { Dropdown } from "semantic-ui-react";
-import ReactDataGrid from 'react-data-grid';
+import ReactDataGrid from "react-data-grid";
 import { Toolbar, Data, Filters } from "react-data-grid-addons";
-
-
-
 
 // const columns = initialDataFrame.dfcol;
 
@@ -21,12 +18,12 @@ import { Toolbar, Data, Filters } from "react-data-grid-addons";
 
 const defaultColumnProperties = {
   filterable: true,
-  width: 120
+  width: 120,
 };
 
 const selectors = Data.Selectors;
 
-const handleFilterChange = filter => filters => {
+const handleFilterChange = (filter) => (filters) => {
   const newFilters = { ...filters };
   if (filter.filterTerm) {
     newFilters[filter.column.key] = filter;
@@ -62,14 +59,20 @@ const useStyles = makeStyles((theme) => ({
 const NewPreviewPage = () => {
   console.log("new preview page");
   console.log(initialDataFrame.dfrow);
-  const classes = useStyles();
-  const [filters, setFilters] = useState({});
-  const filteredRows = getRows(initialDataFrame.dfrow, filters);
-  // const [table, setTable] = useState(initialDataFrame.df);
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
   );
-  const [resultRows, setResultRows] = useState(initialDataFrame.rows);
+  const [selectedPage, setSelectedPage] = useState(1);
+  const [gridRows, setGridRows] = useState(initialDataFrame.dfrow);
+  const [gridCols, setGridCols] = useState(initialDataFrame.dfcol);
+
+  const classes = useStyles();
+  const [filters, setFilters] = useState({});
+  const filteredRows = getRows(gridRows, filters);
+  // const [table, setTable] = useState(initialDataFrame.df);
+ 
+    console.log(resultTotalRecords);
+  const [resultRows, setResultRows] = useState(gridRows);
   let colWithIdx = [];
   const [selectedIndex, setSelectedIndex] = useState(1);
 
@@ -84,6 +87,13 @@ const NewPreviewPage = () => {
       .post("http://localhost:5000/api/page", formData)
       .then((response) => {
         console.log(response);
+        // setResultTotalRecords(response.data.total_records);
+        console.log("result total records " + resultTotalRecords);
+        // initialDataFrame.dfrow = response.data.tableRows;
+        // initialDataFrame.dfcol = response.data.tableCols;
+
+        setGridCols(response.data.tableCols);
+        setGridRows(response.data.tableRows);
         // setTable(response.data.table);
       })
       .catch((err) => {
@@ -100,22 +110,19 @@ const NewPreviewPage = () => {
     colWithIdx[number] = initialDataFrame.cols[i];
     colList.push(
       <th>
-        
-          <ListItem
-            button
-            selected={selectedIndex === number}
-            // onClick={(event) => handleListItemClick(event, number)}
-          >
-            <ListItemText
-              className="textList"
-              primary={initialDataFrame.cols[i]}
-            />
-          </ListItem>
-        
+        <ListItem
+          button
+          selected={selectedIndex === number}
+          // onClick={(event) => handleListItemClick(event, number)}
+        >
+          <ListItemText
+            className="textList"
+            primary={initialDataFrame.cols[i]}
+          />
+        </ListItem>
       </th>
     );
   }
-
 
   return (
     <div className="newpreview">
@@ -126,12 +133,19 @@ const NewPreviewPage = () => {
               className="insidetable"
               dangerouslySetInnerHTML={{ __html: table }}
             /> */}
-             <ReactDataGrid columns={initialDataFrame.dfcol.map(c => ({ ...c, ...defaultColumnProperties }))} rowGetter={i => filteredRows[i]}
-      rowsCount={filteredRows.length}
-      minHeight={500}
-      toolbar={<Toolbar enableFilter={true} />}
-      onAddFilter={filter => setFilters(handleFilterChange(filter))}
-      onClearFilters={() => setFilters({})} />
+            <ReactDataGrid
+              key={gridRows}
+              columns={gridCols.map((c) => ({
+                ...c,
+                ...defaultColumnProperties,
+              }))}
+              rowGetter={(i) => filteredRows[i]}
+              rowsCount={filteredRows.length}
+              minHeight={500}
+              toolbar={<Toolbar enableFilter={true} />}
+              onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
+              onClearFilters={() => setFilters({})}
+            />
           </div>
           <div className={classes.num}>
             <PaginationP
@@ -144,22 +158,16 @@ const NewPreviewPage = () => {
           </div>
         </Pane>
         <Pane className="right" maxSize="35%">
-        {/* <Dropdown fluid multiple selection text="File">
-    <Dropdown.Menu className="dropdown">
-      <Dropdown.Item text="New" />
-      <Dropdown.Item text="Open..." description="ctrl + o" />
-      <Dropdown.Item text="Save as..." description="ctrl + s" />
-      <Dropdown.Item text="Rename" description="ctrl + r" />
-      <Dropdown.Item text="Make a copy" />
-      <Dropdown.Item icon="folder" text="Move to folder" />
-      <Dropdown.Item icon="trash" text="Move to trash" />
-      <Dropdown.Divider />
-      <Dropdown.Item text="Download As..." />
-      <Dropdown.Item text="Publish To Web" />
-      <Dropdown.Item text="E-mail Collaborators" />
-    </Dropdown.Menu>
-  </Dropdown> */}
- 
+
+        <div className={classes.num}>
+            <PaginationP
+              key={resultTotalRecords}
+              totalRecords={resultTotalRecords}
+              pageLimit={resultRows}
+              pageNeighbours={1}
+              onPageChanged={onPageChanged}
+            />
+          </div>
         </Pane>
       </SplitPane>
     </div>
