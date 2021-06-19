@@ -11,6 +11,7 @@ import SelectedValues from './components/selectedvaluespreview/SelectedValues'
 import PreviewPage from './pages/previewpage/PreviewPage';
 import JsonChecker from './pages/jsonchecker/JsonChecker';
 import QueryPage from './pages/querypage/QueryPage';
+import NewPreview from './pages/newpreview/NewPreviewPage';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/file-url"><FileUrl /></Route>
         <Route path="/json-input"><JsonInput /></Route>
         <Route path="/query-page"><QueryPage /></Route>
+        <Route path='/newpreview'><NewPreview></NewPreview></Route>
     </div>
 
   );
