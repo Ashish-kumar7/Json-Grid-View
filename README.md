@@ -235,6 +235,9 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 # Features
 
+### Excel Functionality
+![Gif](Screenshots/excel.gif)
+	
 ### Homepage
 ![Screenshot](Screenshots/homepage.png)
 
