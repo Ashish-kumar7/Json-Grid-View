@@ -67,12 +67,12 @@ const CustomizeModal = (props) => {
         initialDF.rows = res.data.rows_per_page;
         initialDF.records = res.data.total_records;
         initialDF.cols = res.data.columns;
-        console.log(res.data.tableRows);
+        // console.log(res.data.tableRows);
         setUploadPercentage(100);
         setTimeout(() => {
           setUploadPercentage(0);
         }, 1000);
-        console.log(initialDF.cols.length);
+        // console.log(initialDF.cols.length);
         history.push("/newpreview");
       })
       .catch((err) => {

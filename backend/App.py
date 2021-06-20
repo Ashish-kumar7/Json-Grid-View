@@ -255,7 +255,7 @@ def processFile():
         
         tableRows = []
         utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
-        print(tableRows)
+        # print(tableRows)
 
         response = jsonify(tableRows=tableRows, tableCols=tableCols,
                            total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=columnListOrd)
@@ -276,8 +276,6 @@ def returnDataFrame():
     print('form\n\n\n\n\n', request.form)
     try:
         page = int(request.form['page_number'])
-        print(type(page))
-        print(page)
         # html_string = utilities.GenPageHTML(
         #     df=PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
 
@@ -287,7 +285,7 @@ def returnDataFrame():
 
         tableRows = []
         utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = page)
-        print(tableRows)
+        # print(tableRows)
 
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)

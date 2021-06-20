@@ -313,12 +313,8 @@ def GenCrossSchema(pref,prefId, data, schema):
             colName = x 
             noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
             newPrefId = prefId + __JOINER_CHAR + noPreCol if prefId !='' else noPreCol
-            if prefId == 'features.45503.geometry' :
-                print(pref , prefId, colName, noPreCol, newPrefId)
             if x in __tableSchema:
                 # Recur further
-                if prefId == 'features.45503.geometry' :
-                    print("x " , x)
                 if noPreCol in data:
                     reqRows *= GenCrossSchema(colName,newPrefId, data[noPreCol], schema)
                 else:

@@ -123,9 +123,8 @@ const useStyles = makeStyles((theme) => ({
  
 
 const NewPreviewPage = () => {
-
-  console.log("new preview page");
-  console.log(initialDataFrame.dfrow);
+  // console.log("new preview page");
+  // console.log(initialDataFrame.dfrow);
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
   );
@@ -137,8 +136,8 @@ const NewPreviewPage = () => {
   const [filters, setFilters] = useState({});
   const filteredRows = getRows(gridRows, filters);
   // const [table, setTable] = useState(initialDataFrame.df);
-
-  console.log(resultTotalRecords);
+ 
+    // console.log(resultTotalRecords);
   const [resultRows, setResultRows] = useState(initialDataFrame.rows);
   let colWithIdx = [];
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -156,16 +155,15 @@ const NewPreviewPage = () => {
   // page change function for df preview
   const onPageChanged = (data) => {
     const { currentPage, totalPages, pageLimit } = data;
-    console.log(currentPage);
+    // console.log(currentPage);
     const offset = (currentPage - 1) * pageLimit;
     const formData = new FormData();
     formData.set("page_number", currentPage);
     axios
       .post("http://localhost:5000/api/page", formData)
       .then((response) => {
-        console.log(response);
-        // setResultTotalRecords(response.data.total_records);
-        console.log("result total records " + resultTotalRecords);
+        // console.log(response);
+        // console.log("result total records " + resultTotalRecords);
         // initialDataFrame.dfrow = response.data.tableRows;
         // initialDataFrame.dfcol = response.data.tableCols;
 
