@@ -147,6 +147,8 @@ const NewPreviewPage = () => {
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
+  const [query,setQuery] = useState("");
+
   socket.on("progress", (val) => {
     setUploadPercentage(val);
     console.log(val);
@@ -212,6 +214,33 @@ const NewPreviewPage = () => {
     FileDownload(downloadContent, fileExtension);
   };
 
+  const queryhandler = (e) => {
+    setQuery(e.target.value);
+  }
+
+   //On fetchButtonClick
+   const onFetchButtonClick = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.set("query_text", query);
+    axios
+      .post("http://localhost:5000/api/query", formData)
+      .then((response) => {
+        console.log(response);
+        if (response.data && response.data.message && response.data.message.startsWith("Error")) {
+          alert(response.data.message);
+        } else {
+        //    setGridRows(response.data.tableRows);
+        //   setResultTotalRecords(response.data.total_records);
+        // setResultRows(response.data.rows_per_page);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   
 
   return (
@@ -247,6 +276,16 @@ const NewPreviewPage = () => {
           </div>
         </Col>
         <Col lg="3">
+        <Container className="queryInside">
+          <Row>
+            <Row className="query">
+              <form id="message-form">
+                <input type="text" placeholder="Type your SQL query" onChange = {(event)=>queryhandler(event)} />
+                <button onClick={onFetchButtonClick}>Fetch</button>
+              </form>
+            </Row>
+          </Row>
+        </Container>
         <Container>
          
           <Row>

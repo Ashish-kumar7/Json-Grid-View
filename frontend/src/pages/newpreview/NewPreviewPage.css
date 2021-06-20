@@ -79,6 +79,45 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
   margin-right: 30%;
 }
 
+.queryInside {
+  margin-top: 7vh;
+}
+
+.queryInside .query {
+  background-color: #ffe206;;
+  border-radius: 50px;
+  display: flex;
+   flex-shrink: 0;
+   margin-top: 6px;
+   padding: 14px;
+   width: 90%;
+   margin-left: 1vh;
+   box-shadow: 5px 10px rgba(241, 227, 22, 0.15);
+}
+
+.query form {
+   display: flex;
+   flex-grow: 1;
+   margin-right: 16px;
+}
+
+.query input {
+   border: 1px solid #eeeeee;
+   width: 100%;
+   padding: 14px;
+   margin: 0 18px 0 0;
+   flex-grow: 1;
+   border-radius: 10px;
+}
+
+.query button {
+   font-size: 20px;
+   border-radius: 10px;
+   border-color: #09c6f9;
+   background-color: #09c6f9;
+   box-shadow: 5px 10px rgba(0, 0, 0, 0.15);
+}
+
 
 
 
