@@ -33,6 +33,11 @@ const defaultColumnProperties = {
 
 const selectors = Data.Selectors;
 
+const {
+  AutoCompleteFilter,
+  MultiSelectFilter
+} = Filters;
+
 const handleFilterChange = (filter) => (filters) => {
   const newFilters = { ...filters };
   if (filter.filterTerm) {
@@ -42,6 +47,14 @@ const handleFilterChange = (filter) => (filters) => {
   }
   return newFilters;
 };
+
+function getValidFilterValues(rows, columnId) {
+  return rows
+    .map(r => r[columnId])
+    .filter((item, i, a) => {
+      return i === a.indexOf(item);
+    });
+}
 
 function getRows(rows, filters) {
   return selectors.getRows({ rows, filters });
@@ -59,13 +72,17 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor:'#00b0ff',
     marginLeft: "30%",
     marginRight: "30%",
-    padding: "2%",
+    padding: "1.5%",
   },
   numval: {
     padding: "4%",
     marginLeft: "10%",
   },
   root2: {
+    "& div.react-grid-Header": {
+      // borderColor: "white",
+      backgroundColor: "#212342",
+    },
     "& div.react-grid-Canvas": {
       // borderColor: "white",
       backgroundColor: "#212342",
@@ -73,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
     "& div.react-grid-Main": {
       // outlineColor:"yellow",
       color: "white",
-      backgroundColor: "black",
+      backgroundColor: "#212342",
       // color: theme.palette.text.color
     },
     "& div.react-grid-Toolbar": {
@@ -125,12 +142,19 @@ const useStyles = makeStyles((theme) => ({
 const NewPreviewPage = () => {
   // console.log("new preview page");
   // console.log(initialDataFrame.dfrow);
+  let [, setState] = useState();
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
   );
   const [selectedPage, setSelectedPage] = useState(1);
   const [gridRows, setGridRows] = useState(initialDataFrame.dfrow);
   const [gridCols, setGridCols] = useState(initialDataFrame.dfcol);
+  const [gridCol1,setGridCol1] = useState(initialDataFrame.dfcol);
+ 
+  
+  const [showFilter ,setShowFilter]= useState(true);
+  const [showFilter1 ,setShowFilter1]= useState(false);
+
 
   const classes = useStyles();
   const [filters, setFilters] = useState({});
@@ -148,6 +172,36 @@ const NewPreviewPage = () => {
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
   const [query,setQuery] = useState("");
+
+  initialDataFrame.dfcol2 = gridCols;
+  for (var i =0;i<initialDataFrame.dfcol.length;i++ ){
+      
+        initialDataFrame.dfcol2[i]["filterRenderer"]=MultiSelectFilter;
+  }
+
+  const filterhandler = () => {
+   
+    console.log(initialDataFrame.dfcol);    
+       setShowFilter(true);
+       setShowFilter1(false);
+       setState({});
+  };
+
+  const filter1handler = () => {
+    
+    // const newCol2 = gridCols;
+    // for (var i =0;i<gridCols.length;i++ ){
+        
+    //       newCol2[i]["filterRenderer"]=MultiSelectFilter;
+    // }
+  
+  // setGridCol1(newCol2);
+    console.log(initialDataFrame.dfcol2);
+    setShowFilter1(true);
+    setShowFilter(false);
+    
+    setState({});
+  };
 
   socket.on("progress", (val) => {
     setUploadPercentage(val);
@@ -231,9 +285,9 @@ const NewPreviewPage = () => {
         if (response.data && response.data.message && response.data.message.startsWith("Error")) {
           alert(response.data.message);
         } else {
-        //    setGridRows(response.data.tableRows);
-        //   setResultTotalRecords(response.data.total_records);
-        // setResultRows(response.data.rows_per_page);
+           setGridRows(response.data.tableRows);
+          setResultTotalRecords(response.data.total_records);
+        setResultRows(response.data.rows_per_page);
         }
       })
       .catch((err) => {
@@ -249,21 +303,45 @@ const NewPreviewPage = () => {
       <div >
       <Row>
         <Col lg="9" className="left">
+          <div className="filterButton">
+            <button onClick={filterhandler}>AutoComplete</button>
+            <button onClick={filter1handler}>MultiSelect</button>
+          </div>
           <div  className={classes.root2}>
-            <ReactDataGrid
+            {showFilter?(
+               <ReactDataGrid
            
-              columns={initialDataFrame.dfcol.map((c) => ({
-                ...c,
-                ...defaultColumnProperties,
-              }))}
-              rowGetter={(i) => filteredRows[i]}
-              rowsCount={filteredRows.length}
-              minHeight={550}
-              
-              toolbar={<Toolbar enableFilter={true} />}
-              onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
-              onClearFilters={() => setFilters({})}
-            />
+               columns={initialDataFrame.dfcol.map((c) => ({
+                 ...c,
+                 ...defaultColumnProperties,
+               }))}
+               rowGetter={(i) => filteredRows[i]}
+               rowsCount={filteredRows.length}
+               minHeight={570}
+               
+               toolbar={<Toolbar enableFilter={true} />}
+               onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
+               onClearFilters={() => setFilters({})}
+               getValidFilterValues={columnKey => getValidFilterValues(gridRows, columnKey)}
+             />
+            ):<></>}
+           {showFilter1?(
+               <ReactDataGrid
+           
+               columns={initialDataFrame.dfcol2.map((c) => ({
+                 ...c,
+                 ...defaultColumnProperties,
+               }))}
+               rowGetter={(i) => filteredRows[i]}
+               rowsCount={filteredRows.length}
+               minHeight={570}
+               
+               toolbar={<Toolbar enableFilter={true} />}
+               onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
+               onClearFilters={() => setFilters({})}
+               getValidFilterValues={columnKey => getValidFilterValues(gridRows, columnKey)}
+             />
+            ):<></>}
           </div>
           <div className={classes.num}>
             <PaginationP
@@ -279,10 +357,11 @@ const NewPreviewPage = () => {
         <Container className="queryInside">
           <Row>
             <Row className="query">
-              <form id="message-form">
+              
                 <input type="text" placeholder="Type your SQL query" onChange = {(event)=>queryhandler(event)} />
+                
                 <button onClick={onFetchButtonClick}>Fetch</button>
-              </form>
+             
             </Row>
           </Row>
         </Container>
