@@ -19,7 +19,7 @@
 
 .left {
   padding-left: 3vh;
-  padding-top: 3vh;
+  padding-top: 1vh;
  
   
 }
@@ -83,9 +83,9 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
   margin-top: 7vh;
 }
 
-.queryInside .query {
+/* .queryInside .query {
   background-color: #ffe206;;
-  border-radius: 50px;
+  border-radius: 10px;
   display: flex;
    flex-shrink: 0;
    margin-top: 6px;
@@ -93,13 +93,13 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
    width: 90%;
    margin-left: 1vh;
    box-shadow: 5px 10px rgba(241, 227, 22, 0.15);
-}
+} */
 
-.query form {
+/* .query form {
    display: flex;
    flex-grow: 1;
    margin-right: 16px;
-}
+} */
 
 .query input {
    border: 1px solid #eeeeee;
@@ -115,7 +115,22 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
    border-radius: 10px;
    border-color: #09c6f9;
    background-color: #09c6f9;
-   box-shadow: 5px 10px rgba(0, 0, 0, 0.15);
+   box-shadow: 5px 10px rgba(0, 255, 255, 0.15);
+   margin-top: 2vh;
+   width: 30%;
+   margin-left: 40%;
+}
+
+.filterButton {
+  float: right;
+  padding-right: 1vh;
+  
+}
+
+.filterButton button {
+  margin-left: 1vh;
+  background-color: blueviolet;
+  color: white;
 }
 
 
