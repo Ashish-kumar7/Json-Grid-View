@@ -392,21 +392,22 @@ def searchValueInCol():
 @cross_origin()
 def convertFile():
     print("convert")
+    print(type(DF))
     print("\n\n\n\nForm Data in /api/convert\n", request.form)
     useDF = ''
     try:
         extension = request.form['content_type']
-        data_type = int(request.form['data_type'])
+        # data_type = int(request.form['data_type'])
 
         print(extension)
         # Generate CSV
         if extension == "csv":
             startTime = time.time()
 
-            if data_type == 1:
-                DF.to_csv(CSV_FILENAME + '.csv')
-            else:
-                PreviewDF.to_csv(CSV_FILENAME + '.csv')
+            # if data_type == 1:
+            DF.to_csv(CSV_FILENAME + '.csv')
+            # else:
+            #     PreviewDF.to_csv(CSV_FILENAME + '.csv')
 
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen csv : ", time.time() - startTime)
@@ -416,11 +417,11 @@ def convertFile():
         if extension == "excel":
             startTime = time.time()
 
-            if data_type == 1:
-                DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
-            else:
-                PreviewDF.to_excel(XLSX_FILENAME + '.xlsx',
-                                   sheet_name=SHEET_NAME)
+            # if data_type == 1:
+            DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+            # else:
+            #     PreviewDF.to_excel(XLSX_FILENAME + '.xlsx',
+            #                        sheet_name=SHEET_NAME)
 
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen xlsx : ", time.time() - startTime)
@@ -449,13 +450,13 @@ def convertFile():
             # startTime = time.time()
             # print("Total time taken : ", startTime - initTime)
             socketio.emit('progress', 80, broadcast=True)
-            if HADOOP_INSTALLED:
-                if data_type == 1:
-                    DF.to_csv('test.csv')
-                    hadoopstorage.saveFile(DF)
-                else:
-                    PreviewDF.to_csv('test.csv')
-                    hadoopstorage.saveFile(PreviewDF)
+            # if HADOOP_INSTALLED:
+            #     if data_type == 1:
+            #         DF.to_csv('test.csv')
+            #         hadoopstorage.saveFile(DF)
+            #     else:
+            #         PreviewDF.to_csv('test.csv')
+            #         hadoopstorage.saveFile(PreviewDF)
 
                 # code to convert csv file and saving it to hdfs
                 # df = pd.read_csv('generatedCsvFile.csv')

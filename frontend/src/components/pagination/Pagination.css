@@ -4,8 +4,8 @@ ul.pagination {
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   }
   ul.pagination li.page-item.active a.page-link {
-    color: #445565 !important;
-    background-color: #e3e7eb !important;
+    color: rgba(0, 0, 0, 0.782) !important;
+    background-color: #0cc3df !important;
     border-color: #ced4da !important;
   }
   ul.pagination a.page-link {
@@ -19,6 +19,6 @@ ul.pagination {
     font-size: 1rem;
   }
   ul.pagination a.page-link:hover {
-    background-color: #f4f4f4;
+    background-color: #80e5f5;
   }
   
