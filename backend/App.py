@@ -113,7 +113,7 @@ def uploadFile():
     utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
 
     # Added delay of 5 seconds to avoid conflict between deleting old files and writing new files
-    # time.sleep(5)
+    time.sleep(5)
     print("All files deleted !!!")
     print("\n\n\n\nForm Data in /api/upload\n", request.form)
     try:
@@ -484,9 +484,6 @@ def fetchQueryData():
         # DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
         # print("\n\nTABLE\n")
         # print(engine.execute("SELECT * FROM " + tableName).fetchall())
-        tableCols = []
-        for c in columnListOrd :
-            tableCols.append({'key' : c , 'name' : c})
 
         DF = pd.read_sql_query(queryText, sqlite_connection)
         PreviewDF = DF.copy()
@@ -496,18 +493,21 @@ def fetchQueryData():
 
         sqlite_connection.close()
         print("Time to gen db : ", time.time() - startTime)
-        
-        tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
-        
 
-        response = jsonify(
-            tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
-        # page = 1
+        page = 1
         # html_string = utilities.GenPageHTML(
         #     df=PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
         # response = jsonify(
         #     table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+        tableCols = []
+        for c in columnListOrd :
+            tableCols.append({'key' : c , 'name' : c})
+
+        tableRows = []
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = page)
+        response = jsonify(
+            tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+
         return response
 
     except Exception as e:

@@ -18,6 +18,7 @@ import IconBox from "../../components/iconbox/IconBox";
 import { faDatabase, faFileCsv, faFileExcel } from "@fortawesome/free-solid-svg-icons";
 import { ProgressBar } from "react-bootstrap";
 import io from 'socket.io-client'
+
 const socket = io("http://localhost:5000/");
 
 var FileDownload = require("js-file-download");
@@ -210,6 +211,7 @@ const NewPreviewPage = () => {
     console.log(val);
   });
 
+
   // page change function for df preview
   const onPageChanged = (data) => {
     const { currentPage, totalPages, pageLimit } = data;
@@ -287,9 +289,9 @@ const NewPreviewPage = () => {
         if (response.data && response.data.message && response.data.message.startsWith("Error")) {
           alert(response.data.message);
         } else {
-           setGridRows(response.data.tableRows);
+          setGridRows(response.data.tableRows);
           setResultTotalRecords(response.data.total_records);
-        setResultRows(response.data.rows_per_page);
+          setResultRows(response.data.rows_per_page);
         }
       })
       .catch((err) => {
