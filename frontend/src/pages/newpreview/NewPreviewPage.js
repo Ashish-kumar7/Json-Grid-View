@@ -148,6 +148,7 @@ const NewPreviewPage = () => {
   );
   const [selectedPage, setSelectedPage] = useState(1);
   const [gridRows, setGridRows] = useState(initialDataFrame.dfrow);
+  const [gridRows1, setGridRows1] = useState(initialDataFrame.dfrow);
   const [gridCols, setGridCols] = useState(initialDataFrame.dfcol);
   const [gridCol1,setGridCol1] = useState(initialDataFrame.dfcol);
  
@@ -159,6 +160,8 @@ const NewPreviewPage = () => {
   const classes = useStyles();
   const [filters, setFilters] = useState({});
   const filteredRows = getRows(gridRows, filters);
+  const [filters2, setFilters2] = useState({});
+  const filteredRows2 = getRows(gridRows, filters2);
   // const [table, setTable] = useState(initialDataFrame.df);
  
     // console.log(resultTotalRecords);
@@ -173,15 +176,14 @@ const NewPreviewPage = () => {
 
   const [query,setQuery] = useState("");
 
-  initialDataFrame.dfcol2 = gridCols;
-  for (var i =0;i<initialDataFrame.dfcol.length;i++ ){
-      
-        initialDataFrame.dfcol2[i]["filterRenderer"]=MultiSelectFilter;
-  }
-
   const filterhandler = () => {
-   
-    console.log(initialDataFrame.dfcol);    
+    const newCol2 = gridCols;
+    for (var i =0;i<gridCols.length;i++ ){
+        
+         delete newCol2[i]["filterRenderer"];
+    }
+   setGridCols(newCol2);
+    console.log(gridCols);    
        setShowFilter(true);
        setShowFilter1(false);
        setState({});
@@ -189,14 +191,14 @@ const NewPreviewPage = () => {
 
   const filter1handler = () => {
     
-    // const newCol2 = gridCols;
-    // for (var i =0;i<gridCols.length;i++ ){
+    const newCol2 = gridCols;
+    for (var i =0;i<gridCols.length;i++ ){
         
-    //       newCol2[i]["filterRenderer"]=MultiSelectFilter;
-    // }
+          newCol2[i]["filterRenderer"]=MultiSelectFilter;
+    }
   
-  // setGridCol1(newCol2);
-    console.log(initialDataFrame.dfcol2);
+  setGridCol1(newCol2);
+  console.log(gridCol1);
     setShowFilter1(true);
     setShowFilter(false);
     
@@ -311,7 +313,7 @@ const NewPreviewPage = () => {
             {showFilter?(
                <ReactDataGrid
            
-               columns={initialDataFrame.dfcol.map((c) => ({
+               columns={gridCols.map((c) => ({
                  ...c,
                  ...defaultColumnProperties,
                }))}
@@ -322,24 +324,24 @@ const NewPreviewPage = () => {
                toolbar={<Toolbar enableFilter={true} />}
                onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
                onClearFilters={() => setFilters({})}
-               getValidFilterValues={columnKey => getValidFilterValues(gridRows, columnKey)}
+               getValidFilterValues={columnKey => getValidFilterValues([], columnKey)}
              />
             ):<></>}
            {showFilter1?(
                <ReactDataGrid
            
-               columns={initialDataFrame.dfcol2.map((c) => ({
+               columns={gridCol1.map((c) => ({
                  ...c,
                  ...defaultColumnProperties,
                }))}
-               rowGetter={(i) => filteredRows[i]}
-               rowsCount={filteredRows.length}
+               rowGetter={(i) => filteredRows2[i]}
+               rowsCount={filteredRows2.length}
                minHeight={570}
                
                toolbar={<Toolbar enableFilter={true} />}
-               onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
-               onClearFilters={() => setFilters({})}
-               getValidFilterValues={columnKey => getValidFilterValues(gridRows, columnKey)}
+               onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
+               onClearFilters={() => setFilters2({})}
+               getValidFilterValues={columnKey => getValidFilterValues(gridRows1, columnKey)}
              />
             ):<></>}
           </div>
