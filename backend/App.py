@@ -108,12 +108,15 @@ def uploadFile():
     global jsonData
 
     # Delete the existing files
-    utilities.DeleteIfExists(SQL_DB_NAME + '.db')
-    utilities.DeleteIfExists(CSV_FILENAME + '.csv')
-    utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
+    try : 
+        utilities.DeleteIfExists(SQL_DB_NAME + '.db')
+        utilities.DeleteIfExists(CSV_FILENAME + '.csv')
+        utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
+    except Exception as e :
+        print("Exception while deleting " , e)
 
     # Added delay of 5 seconds to avoid conflict between deleting old files and writing new files
-    time.sleep(5)
+    # time.sleep(3)
     print("All files deleted !!!")
     print("\n\n\n\nForm Data in /api/upload\n", request.form)
     try:
