@@ -4,6 +4,7 @@ import locale from "react-json-editor-ajrm/locale/en";
 import Button from "../../components/button/Button";
 import Navbar from "../../components/navbar/Navbar";
 import "./JsonChecker.css";
+import Footer from "../../components/footer/Footer"
 var FileDownload = require("js-file-download");
 
 const JsonChecker = () => {
@@ -71,7 +72,7 @@ const JsonChecker = () => {
       <Button title={"Download"}
             classId={"downloadButton"}
             clickFunc={downloadFile}></Button>
-      
+      <Footer />
     </div>
   );
 };
