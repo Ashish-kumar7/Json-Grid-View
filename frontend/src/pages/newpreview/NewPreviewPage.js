@@ -278,7 +278,6 @@ const NewPreviewPage = () => {
 
    //On fetchButtonClick
    const onFetchButtonClick = (e) => {
-    e.preventDefault();
 
     const formData = new FormData();
     formData.set("query_text", query);
@@ -290,6 +289,7 @@ const NewPreviewPage = () => {
           alert(response.data.message);
         } else {
           setGridRows(response.data.tableRows);
+          
           setResultTotalRecords(response.data.total_records);
           setResultRows(response.data.rows_per_page);
         }
@@ -364,8 +364,12 @@ const NewPreviewPage = () => {
               
                 <input type="text" placeholder="Type your SQL query" onChange = {(event)=>queryhandler(event)} />
                 
-                <button onClick={onFetchButtonClick}>Fetch</button>
-             
+                {/* <button onClick={onFetchButtonClick}>Fetch</button> */}
+                <Button
+                title={"Fetch"}
+                classId={"uploadButton"}
+                clickFunc={ onFetchButtonClick}
+                ></Button>
             </Row>
           </Row>
         </Container>
