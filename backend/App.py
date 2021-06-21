@@ -31,6 +31,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Constants
 
 # File Constants
+ELECTRON_PATH = "..//backend//"
 CSV_FILENAME = 'generatedCsvFile'
 XLSX_FILENAME = 'generatedXlsxFile'
 SQL_DB_NAME = 'generatedDB'
@@ -109,9 +110,9 @@ def uploadFile():
 
     # Delete the existing files
     try : 
-        utilities.DeleteIfExists(SQL_DB_NAME + '.db')
-        utilities.DeleteIfExists(CSV_FILENAME + '.csv')
-        utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
+        utilities.DeleteIfExists(ELECTRON_PATH + SQL_DB_NAME + '.db')
+        utilities.DeleteIfExists(ELECTRON_PATH + CSV_FILENAME + '.csv')
+        utilities.DeleteIfExists(ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
     except Exception as e :
         print("Exception while deleting " , e)
 
@@ -233,7 +234,7 @@ def processFile():
 
         startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
-            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
 
         print("Conenction Made to SQL")
@@ -246,14 +247,9 @@ def processFile():
 
         startTime = time.time()
         print("Total time taken : ", startTime - initTime)
-<<<<<<< HEAD
         socketio.emit('progress', 90, broadcast=True)
         
         # html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
-=======
-        socketio.emit('progress', 0, broadcast=True)
-        html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
->>>>>>> d0eb607dc4b3b5905b3b7f12bd231e344de670e4
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
         # table = PreviewDF.iloc[startRow : endRow][:].to_dict()
 
@@ -403,47 +399,44 @@ def convertFile():
     useDF = ''
     try:
         extension = request.form['content_type']
-<<<<<<< HEAD
         # data_type = int(request.form['data_type'])
 
-=======
-        data_type = int(request.form['data_type'])
-        socketio.emit('progress', 40, broadcast=True)
->>>>>>> d0eb607dc4b3b5905b3b7f12bd231e344de670e4
         print(extension)
         # Generate CSV
         if extension == "csv":
             startTime = time.time()
 
             # if data_type == 1:
-            DF.to_csv(CSV_FILENAME + '.csv')
+            DF.to_csv(ELECTRON_PATH + CSV_FILENAME + '.csv')
             # else:
             #     PreviewDF.to_csv(CSV_FILENAME + '.csv')
 
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen csv : ", time.time() - startTime)
-            return send_file(CSV_FILENAME + '.csv')
+        
+            return send_file(ELECTRON_PATH + CSV_FILENAME + '.csv')
 
         # Generate XLSX
         if extension == "excel":
             startTime = time.time()
 
             # if data_type == 1:
-            DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+            DF.to_excel(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
             # else:
             #     PreviewDF.to_excel(XLSX_FILENAME + '.xlsx',
             #                        sheet_name=SHEET_NAME)
 
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen xlsx : ", time.time() - startTime)
-            return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
+            print("generated path = " , ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
+            return send_file(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
 
         # Generate SQL Database, Table
         if extension == "hive":
 
             # startTime = time.time()
             # sql_engine = sqlalchemy.create_engine(
-            #     'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            #     'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
             # sqlite_connection = sql_engine.connect()
 
             # print("Conenction Made to SQL")
@@ -475,7 +468,7 @@ def convertFile():
                 # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
                 # subprocess.call(hdfs_cmd, shell=True)
             socketio.emit('progress', 80, broadcast=True)
-            return send_file(SQL_DB_NAME + '.db')
+            return send_file(ELECTRON_PATH + SQL_DB_NAME + '.db')
 
     except Exception as e:
         print(e)
@@ -492,7 +485,7 @@ def fetchQueryData():
         queryText = request.form['query_text']
         startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
-            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
         # DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
         # print("\n\nTABLE\n")
@@ -537,7 +530,7 @@ def fetchQueryData():
 #         tableNameInput = request.form['tableName']
 #         startTime = time.time()
 #         sql_engine = sqlalchemy.create_engine(
-#             'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+#             'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
 #         sqlite_connection = sql_engine.connect()
 #         print("Conenction Made to SQL")
 
