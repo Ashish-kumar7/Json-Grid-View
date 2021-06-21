@@ -17,7 +17,7 @@ it('should return a <React.Fragment>', () => {
 
 // Find the text of <button> element
 it('able to find the text of <button> element ', () => {
-    expect(shallowWrapper.find('button').text()).toEqual('Send');
+    expect(shallowWrapper.find('button').text()).toEqual('Fetch');
 })
 
 // Find the <div> element
@@ -27,7 +27,7 @@ it('able to find the <div> element', () => {
 
 // Find the count of the <div> element.
 it('able to find the count of <div> element', () => {
-    expect(shallowWrapper.find('div').length).toBe(1);
+    expect(shallowWrapper.find('div').length).toBe(4);
 });
 
 // Find the <form> element
@@ -67,7 +67,7 @@ it('able to find the <Row> element', () => {
 
 //Find the count of <Row> element
 it('able to find the count of <Row> element', () => {
-    expect(shallowWrapper.find('Row').length).toBe(3);
+    expect(shallowWrapper.find('Row').length).toBe(2);
 });
 
 // Find the <Container> element
@@ -77,7 +77,7 @@ it('able to find the <Container> element', () => {
 
 //Find the count of <Container> element
 it('able to find the count of <Container> element', () => {
-    expect(shallowWrapper.find('Container').length).toBe(1);
+    expect(shallowWrapper.find('Container').length).toBe(2);
 });
 
 // Find the <Navbar> element
