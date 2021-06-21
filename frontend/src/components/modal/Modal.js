@@ -64,6 +64,7 @@ const CustomizeModal = (props) => {
     formData.set('nullName', nullName);
     // process with options , data frame received
     axios
+<<<<<<< HEAD
       .post("http://localhost:5000/api/process", formData)
       .then((res) => {
         setDataframe(res);
@@ -86,6 +87,49 @@ const CustomizeModal = (props) => {
         }, 1000);
         // console.log(initialDF.cols.length);
         history.push("/newpreview");
+=======
+      .post("http://localhost:5000/api/check-table", formDataSave)
+      .then((response) => {
+        if (response.data && response.data.message && response.data.message.startsWith("Error")) {
+          alert(response.data.message);
+        } else {
+          setUploadPercentage(5);
+          const formData = new FormData();
+          formData.set('table_type', tableType);
+          formData.set('join_char', joinChar);
+          formData.set('parentCol', parentCol);
+          formData.set('sheetName', sheetName);
+          formData.set('tableName', tableName);
+          formData.set('nullName', nullName);
+          // process with options , data frame received
+          axios
+            .post("http://localhost:5000/api/process", formData)
+            .then((res) => {
+              setDataframe(res);
+              // console.log(typeof res.data.table);
+              console.log("model pageeee");
+              // console.log(dataframe);
+              // response contains top 20 rows and total pages input
+              props.closeFunc();
+              initialDF.df = res.data.table;
+              initialDF.rows = res.data.rows_per_page;
+              initialDF.records = res.data.total_records;
+              initialDF.cols = res.data.columns;
+              initialDF.progress = 0;
+              setUploadPercentage(100);
+                   
+                      setUploadPercentage(0);
+                 
+              console.log(initialDF.cols.length);
+              history.push("/preview");
+            })
+            .catch((err) => {
+              setUploadPercentage(0);
+              console.log(err);
+              alert("Oops it breaks " + err);
+            });
+        }
+>>>>>>> d0eb607dc4b3b5905b3b7f12bd231e344de670e4
       })
       .catch((err) => {
         setDisable(false);
