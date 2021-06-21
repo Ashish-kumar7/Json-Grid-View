@@ -261,14 +261,14 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 ![Screenshot](Screenshots/customizeTable.png)
 
-### Preview of the table generated 
+<!-- ### Preview of the table generated 
 - implemented paging for large files
 <p float="left">
   <img src="Screenshots/tablePreviewPage1.png" width="49%" />
   <img src="Screenshots/tablePreviewPage2.png" width="49%" /> 
-</p>
+</p> -->
 
-### Perform Queries using UI
+<!-- ### Perform Queries using UI
 - Select columns to load unique values of selected column
 - Select from unique values (implemented paging)
 - Enter text in SearchBox to perform a StartsWith search on selected column
@@ -283,16 +283,16 @@ This project fetches the JSON in different ways and parses it into tabular form 
 <p float="left">
   <img src="Screenshots/clickUiQuery.png" width="49%" />
   <img src="Screenshots/uiQueryResults.png" width="49%" /> 
-</p>
+</p> -->
 	
 ### Perform Queries using SQL
 - Click 'Go to query page' button to perform sql queries
 - Enter Sql and click fetch
 
-<p float="left">
+<!-- <p float="left">
   <img src="Screenshots/sqlQueryPage.png" width="49%" />
   <img src="Screenshots/sqlQueryResult.png" width="49%" /> 
-</p>
+</p> -->
 
 ### Validate and Download corrected json
 - Click 'Json Checker' in the nav-bar
@@ -310,14 +310,14 @@ This project fetches the JSON in different ways and parses it into tabular form 
 - Save to Hadoop and Download Sql Db file
 	
 
-![Screenshot](Screenshots/downloadOptions.png)
+<!-- ![Screenshot](Screenshots/downloadOptions.png)
 	
 ### Example download : Download without query, download after query
 
 <p float="left">
   <img src="Screenshots/fullDataXlsx.png" width="49%" />
   <img src="Screenshots/queryDataXlsx.png" width="49%" /> 
-</p>
+</p> -->
 	
 ### SQL table
 	
