@@ -49,10 +49,11 @@
 
  .queryButton{
   background-color: #f50057;
-  margin: 20px 10px 20px 0px;
-  width: 10vh;
-  margin-left: 16vh;
-  padding: 5px;
+  /* margin: 20px 10px 20px 0px; */
+  width: 8vh;
+  height: 6vh;
+  /* margin-left: 16vh; */
+  /* padding: 5px; */
   border-radius: 20px;
   box-shadow: 5px 10px rgba(223, 223, 223, 0.15);
  }
@@ -77,6 +78,7 @@
   padding: 5px;
   border-radius: 10px;
   box-shadow: 5px 10px rgba(255,255,255,0.15);
+  height : 100%
 }
 
 .newpreview .nav-item .downloadButton {
@@ -87,8 +89,8 @@ align-self: center;
 
 
 margin: 80px 10px 20px 10px;
-width: 30vh;
-margin-left: 24%;
+width: 10vh;
+margin-left: 0%;
 
 padding: 10px;
 border-radius: 40px;
@@ -102,7 +104,7 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
 }
 
 .queryInside {
-  margin-top: 7vh;
+  margin-top: 0vh;
 }
 
 /* .queryInside .query {
@@ -127,9 +129,10 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
    border: 1px solid #eeeeee;
    width: 100%;
    padding: 14px;
-   margin: 0 18px 0 0;
+   /* margin: 0 18px 0 0; */
    flex-grow: 1;
    border-radius: 10px;
+   height : 10px;
 }
 
 .query button {
@@ -139,8 +142,7 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
    background-color: #09c6f9;
    box-shadow: 5px 10px rgba(0, 255, 255, 0.15);
    margin-top: 2vh;
-   width: 30%;
-   margin-left: 40%;
+   width: 18px;
 }
 
 .filterButton {

@@ -15,9 +15,13 @@ import Navbar from "../../components/navbar/Navbar";
 import { Row, Col, Container } from "react-bootstrap";
 import Button from "../../components/button/Button";
 import IconBox from "../../components/iconbox/IconBox";
-import { faDatabase, faFileCsv, faFileExcel } from "@fortawesome/free-solid-svg-icons";
+import {
+  faDatabase,
+  faFileCsv,
+  faFileExcel,
+} from "@fortawesome/free-solid-svg-icons";
 import { ProgressBar } from "react-bootstrap";
-import io from 'socket.io-client'
+import io from "socket.io-client";
 
 const socket = io("http://localhost:5000/");
 
@@ -34,10 +38,7 @@ const defaultColumnProperties = {
 
 const selectors = Data.Selectors;
 
-const {
-  AutoCompleteFilter,
-  MultiSelectFilter
-} = Filters;
+const { AutoCompleteFilter, MultiSelectFilter } = Filters;
 
 const handleFilterChange = (filter) => (filters) => {
   const newFilters = { ...filters };
@@ -51,7 +52,7 @@ const handleFilterChange = (filter) => (filters) => {
 
 function getValidFilterValues(rows, columnId) {
   return rows
-    .map(r => r[columnId])
+    .map((r) => r[columnId])
     .filter((item, i, a) => {
       return i === a.indexOf(item);
     });
@@ -73,7 +74,7 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor:'#00b0ff',
     marginLeft: "30%",
     marginRight: "30%",
-    padding: "1.5%",
+    padding: "0.5%",
   },
   numval: {
     padding: "4%",
@@ -95,50 +96,40 @@ const useStyles = makeStyles((theme) => ({
       // color: theme.palette.text.color
     },
     "& div.react-grid-Toolbar": {
-      
       backgroundColor: "black",
       // borderColor: "yellow",
       // color: theme.palette.text.color
     },
     "& button.btn": {
-      
       backgroundColor: "yellow",
       // color: theme.palette.text.color
     },
     "& div.react-grid-HeaderCell": {
       color: "white",
       backgroundColor: "#212529",
-     
+
       // color: theme.palette.text.color
     },
     "& div.react-grid-Cell": {
-      
       backgroundColor: "#2c3034",
-      '&:hover': {
+      "&:hover": {
         background: "blue",
-     },
+      },
       // color: theme.palette.text.color
     },
     "& div.react-grid-Row": {
       "& div.react-grid-Cell": {
-      
         backgroundColor: "#2c3034",
-        '&:hover': {
+        "&:hover": {
           background: "black",
-          cursor:"pointer"
-       },
+          cursor: "pointer",
+        },
       },
-     
-     
+
       // color: theme.palette.text.color
     },
-    
-    
   },
 }));
-
-
- 
 
 const NewPreviewPage = () => {
   // console.log("new preview page");
@@ -151,12 +142,10 @@ const NewPreviewPage = () => {
   const [gridRows, setGridRows] = useState(initialDataFrame.dfrow);
   const [gridRows1, setGridRows1] = useState(initialDataFrame.dfrow);
   const [gridCols, setGridCols] = useState(initialDataFrame.dfcol);
-  const [gridCol1,setGridCol1] = useState(initialDataFrame.dfcol);
- 
-  
-  const [showFilter ,setShowFilter]= useState(true);
-  const [showFilter1 ,setShowFilter1]= useState(false);
+  const [gridCol1, setGridCol1] = useState(initialDataFrame.dfcol);
 
+  const [showFilter, setShowFilter] = useState(true);
+  const [showFilter1, setShowFilter1] = useState(false);
 
   const classes = useStyles();
   const [filters, setFilters] = useState({});
@@ -164,8 +153,8 @@ const NewPreviewPage = () => {
   const [filters2, setFilters2] = useState({});
   const filteredRows2 = getRows(gridRows, filters2);
   // const [table, setTable] = useState(initialDataFrame.df);
- 
-    // console.log(resultTotalRecords);
+
+  // console.log(resultTotalRecords);
   const [resultRows, setResultRows] = useState(initialDataFrame.rows);
   let colWithIdx = [];
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -175,34 +164,31 @@ const NewPreviewPage = () => {
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
-  const [query,setQuery] = useState("");
+  const [query, setQuery] = useState("");
 
   const filterhandler = () => {
     const newCol2 = gridCols;
-    for (var i =0;i<gridCols.length;i++ ){
-        
-         delete newCol2[i]["filterRenderer"];
+    for (var i = 0; i < gridCols.length; i++) {
+      delete newCol2[i]["filterRenderer"];
     }
-   setGridCols(newCol2);
-    console.log(gridCols);    
-       setShowFilter(true);
-       setShowFilter1(false);
-       setState({});
+    setGridCols(newCol2);
+    console.log(gridCols);
+    setShowFilter(true);
+    setShowFilter1(false);
+    setState({});
   };
 
   const filter1handler = () => {
-    
     const newCol2 = gridCols;
-    for (var i =0;i<gridCols.length;i++ ){
-        
-          newCol2[i]["filterRenderer"]=MultiSelectFilter;
+    for (var i = 0; i < gridCols.length; i++) {
+      newCol2[i]["filterRenderer"] = MultiSelectFilter;
     }
-  
-  setGridCol1(newCol2);
-  console.log(gridCol1);
+
+    setGridCol1(newCol2);
+    console.log(gridCol1);
     setShowFilter1(true);
     setShowFilter(false);
-    
+
     setState({});
   };
 
@@ -210,7 +196,6 @@ const NewPreviewPage = () => {
     setUploadPercentage(val);
     console.log(val);
   });
-
 
   // page change function for df preview
   const onPageChanged = (data) => {
@@ -274,22 +259,25 @@ const NewPreviewPage = () => {
 
   const queryhandler = (e) => {
     setQuery(e.target.value);
-  }
+  };
 
-   //On fetchButtonClick
-   const onFetchButtonClick = (e) => {
-
+  //On fetchButtonClick
+  const onFetchButtonClick = (e) => {
     const formData = new FormData();
     formData.set("query_text", query);
     axios
       .post("http://localhost:5000/api/query", formData)
       .then((response) => {
         console.log(response);
-        if (response.data && response.data.message && response.data.message.startsWith("Error")) {
+        if (
+          response.data &&
+          response.data.message &&
+          response.data.message.startsWith("Error")
+        ) {
           alert(response.data.message);
         } else {
           setGridRows(response.data.tableRows);
-          
+
           setResultTotalRecords(response.data.total_records);
           setResultRows(response.data.rows_per_page);
         }
@@ -299,133 +287,141 @@ const NewPreviewPage = () => {
       });
   };
 
-  
-
   return (
     <div className="newpreview">
       <Navbar></Navbar>
-      <div >
-      <Row>
-        <Col lg="9" className="left">
-          <div className="filterButton">
-            <button onClick={filterhandler}>AutoComplete</button>
-            <button onClick={filter1handler}>MultiSelect</button>
-          </div>
-          <div  className={classes.root2}>
-            {showFilter?(
-               <ReactDataGrid
-           
-               columns={gridCols.map((c) => ({
-                 ...c,
-                 ...defaultColumnProperties,
-               }))}
-               rowGetter={(i) => filteredRows[i]}
-               rowsCount={filteredRows.length}
-               minHeight={495}
-               
-               toolbar={<Toolbar enableFilter={true} />}
-               onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
-               onClearFilters={() => setFilters({})}
-               getValidFilterValues={columnKey => getValidFilterValues([], columnKey)}
-             />
-            ):<></>}
-           {showFilter1?(
-               <ReactDataGrid
-           
-               columns={gridCol1.map((c) => ({
-                 ...c,
-                 ...defaultColumnProperties,
-               }))}
-               rowGetter={(i) => filteredRows2[i]}
-               rowsCount={filteredRows2.length}
-               minHeight={495}
-               
-               toolbar={<Toolbar enableFilter={true} />}
-               onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
-               onClearFilters={() => setFilters2({})}
-               getValidFilterValues={columnKey => getValidFilterValues(gridRows1, columnKey)}
-             />
-            ):<></>}
-          </div>
-          <div className={classes.num}>
-            <PaginationP
-              key={resultTotalRecords}
-              totalRecords={resultTotalRecords}
-              pageLimit={resultRows}
-              pageNeighbours={1}
-              onPageChanged={onPageChanged}
-            />
-          </div>
-        </Col>
-        <Col lg="3">
-        <Container className="queryInside">
-          <Row>
-            <Row className="query">
-              
-                <input type="text" placeholder="Type your SQL query" onChange = {(event)=>queryhandler(event)} />
-                
-                {/* <button onClick={onFetchButtonClick}>Fetch</button> */}
+      <div>
+        <Row>
+          <Col lg="11" className="left">
+            <div className="filterButton">
+              <button onClick={filterhandler}>AutoComplete</button>
+              <button onClick={filter1handler}>MultiSelect</button>
+            </div>
+            <div className={classes.root2}>
+              {showFilter ? (
+                <ReactDataGrid
+                  columns={gridCols.map((c) => ({
+                    ...c,
+                    ...defaultColumnProperties,
+                  }))}
+                  rowGetter={(i) => filteredRows[i]}
+                  rowsCount={filteredRows.length}
+                  minHeight={505}
+                  toolbar={<Toolbar enableFilter={true} />}
+                  onAddFilter={(filter) =>
+                    setFilters(handleFilterChange(filter))
+                  }
+                  onClearFilters={() => setFilters({})}
+                  getValidFilterValues={(columnKey) =>
+                    getValidFilterValues([], columnKey)
+                  }
+                />
+              ) : (
+                <></>
+              )}
+              {showFilter1 ? (
+                <ReactDataGrid
+                  columns={gridCol1.map((c) => ({
+                    ...c,
+                    ...defaultColumnProperties,
+                  }))}
+                  rowGetter={(i) => filteredRows2[i]}
+                  rowsCount={filteredRows2.length}
+                  minHeight={495}
+                  toolbar={<Toolbar enableFilter={true} />}
+                  onAddFilter={(filter) =>
+                    setFilters2(handleFilterChange(filter))
+                  }
+                  onClearFilters={() => setFilters2({})}
+                  getValidFilterValues={(columnKey) =>
+                    getValidFilterValues(gridRows1, columnKey)
+                  }
+                />
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className={classes.num}>
+              <PaginationP
+                key={resultTotalRecords}
+                totalRecords={resultTotalRecords}
+                pageLimit={resultRows}
+                pageNeighbours={1}
+                onPageChanged={onPageChanged}
+              />
+            </div>
+            <Container className="queryInside">
+              <Row>
+                <Row className="query">
+                  <Col lg="11">
+                    <input
+                      type="text"
+                      placeholder="Type your SQL query"
+                      onChange={(event) => queryhandler(event)}
+                    />
+                  </Col>
+                  <Col lg="1">
+                    {/* <button onClick={onFetchButtonClick}>Fetch</button>  */}
 
+                    <Button
+                      title={"Fetch"}
+                      classId={"queryButton"}
+                      clickFunc={onFetchButtonClick}
+                    ></Button>
+                  </Col>
+                </Row>
+              </Row>
+            </Container>
+          </Col>
+          <Col lg="1">
+            {/* <Container> */}
+              <Row>
+                {/* <IconBox iconType={faFileExcel} size={"1x"}></IconBox> */}
                 <Button
-                title={"Fetch"}
-                classId={"queryButton"}
-                clickFunc={ onFetchButtonClick}
+                  title={"Convert to Excel"}
+                  classId={"uploadButton"}
+                  clickFunc={() => handleConversion("excel")}
                 ></Button>
-                
-            </Row>
-          </Row>
-        </Container>
-        <Container>
-         
-          <Row>
-            <Col lg="4">
-              <IconBox iconType={faFileExcel} size={"1x"}></IconBox>
+              </Row>
+              <Row>
+                {/* <IconBox iconType={faFileCsv} size={"1x"}></IconBox> */}
+                <Button
+                  title={"Convert To CSV"}
+                  classId={"uploadButton"}
+                  clickFunc={() => handleConversion("csv")}
+                ></Button>
+              </Row>
+              <Row>
+                {/* <IconBox iconType={faDatabase} size={"1x"}></IconBox> */}
+                <Button
+                  title={"Save to Hive"}
+                  classId={"uploadButton"}
+                  clickFunc={() => handleConversion("hive")}
+                ></Button>
+              </Row>
+            {/* </Container> */}
+            {uploadPercentage > 0 && (
+              <div className="progressbar">
+                <ProgressBar
+                  now={uploadPercentage}
+                  striped={true}
+                  animated
+                  label={`${uploadPercentage}%`}
+                  variant="success"
+                />
+              </div>
+            )}
+            {showDownload ? (
               <Button
-                title={"Convert to Excel"}
-                classId={"uploadButton"}
-                clickFunc={() => handleConversion("excel")}
+                title={"Download"}
+                classId={"downloadButton"}
+                clickFunc={downloadFile}
               ></Button>
-            </Col>
-            <Col lg="4">
-              <IconBox iconType={faFileCsv} size={"1x"}></IconBox>
-              <Button
-                title={"Convert To CSV"}
-                classId={"uploadButton"}
-                clickFunc={() => handleConversion("csv")}
-              ></Button>
-            </Col>
-            <Col lg="4">
-              <IconBox iconType={faDatabase} size={"1x"}></IconBox>
-              <Button
-                title={"Save to Hive"}
-                classId={"uploadButton"}
-                clickFunc={() => handleConversion("hive")}
-              ></Button>
-            </Col>
-          </Row>
-        </Container>
-        {uploadPercentage > 0 && (
-        <div className="progressbar">
-          <ProgressBar
-            now={uploadPercentage}
-            striped={true}
-            animated
-            label={`${uploadPercentage}%`}
-            variant="success"
-          />
-        </div> 
-        )}
-        {showDownload ? (
-          <Button
-            title={"Download"}
-            classId={"downloadButton"}
-            clickFunc={downloadFile}
-          ></Button>
-        ) : (
-          <p></p>
-        )}
-        </Col>
-      </Row>
+            ) : (
+              <p></p>
+            )}
+          </Col>
+        </Row>
       </div>
     </div>
   );
