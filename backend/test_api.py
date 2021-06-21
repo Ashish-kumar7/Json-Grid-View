@@ -1,6 +1,9 @@
 import unittest
 import requests
 import sys
+import os
+import json
+from requests.api import head
 
 
 class ApiTest(unittest.TestCase):
@@ -21,8 +24,30 @@ class ApiTest(unittest.TestCase):
             "id" : "123"
         }
         """
+    STR_INCORRECT_JSON = \
+        """
+        {
+            "name" : "Ash"
+            "id" : "123"
+        }
+        """
 
     STR_FILE_INPTYPE = "file"
+
+    def test_valid_json(self):
+        try:
+            json_object = json.loads(ApiTest.STR_JSON)
+        except ValueError as e:
+            return False
+        return True
+
+    def test_invalid_json(self):
+        try:
+            json_object = json.loads(ApiTest.STR_INCORRECT_JSON)
+        except ValueError as e:
+            print(e)
+            return False
+        return True
 
     def test_string_URL_Excel(self):
         r = requests.post(ApiTest.API_URL, data=dict(
@@ -39,17 +64,10 @@ class ApiTest(unittest.TestCase):
             content_type=ApiTest.STR_CONTENT_TYPE_HIVE, input_type=ApiTest.STR_URL_INPTYPE, Url=ApiTest.STR_URL))
         self.assertEqual(r.status_code, 200)
 
-    def test_string_JSON_EXCEL(self):
-        r = requests.post(ApiTest.API_URL, data=dict(content_type=ApiTest.STR_CONTENT_TYPE_EXCEL,
-                                                     input_type=ApiTest.STR_STRING_INPTYPE, Json=ApiTest.STR_JSON))
-        self.assertEqual(r.status_code, 200)
-
     def test_string_JSON_CSV(self):
-        r = requests.post(ApiTest.API_URL, data=dict(content_type=ApiTest.STR_CONTENT_TYPE_CSV,
-                                                     input_type=ApiTest.STR_STRING_INPTYPE, Json=ApiTest.STR_JSON))
+        r = requests.post(ApiTest.API_URL, data=dict(content_type=ApiTest.STR_CONTENT_TYPE_CSV, input_type=ApiTest.STR_STRING_INPTYPE, Json=ApiTest.STR_JSON))
         self.assertEqual(r.status_code, 200)
 
     def test_string_JSON_HIVE(self):
-        r = requests.post(ApiTest.API_URL, data=dict(content_type=ApiTest.STR_CONTENT_TYPE_HIVE,
-                                                     input_type=ApiTest.STR_STRING_INPTYPE, Json=ApiTest.STR_JSON))
-        self.assertEqual(r.status_code, 200)
+       r = requests.post(ApiTest.API_URL, data=dict(content_type=ApiTest.STR_CONTENT_TYPE_HIVE,input_type=ApiTest.STR_STRING_INPTYPE, Json=ApiTest.STR_JSON))
+       self.assertEqual(r.status_code, 200)
