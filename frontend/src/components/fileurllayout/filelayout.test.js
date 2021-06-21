@@ -10,10 +10,6 @@ beforeEach(() => {
     shallowWrapper = shallow(<FileUrlLayout />);
 });
 
-// it('should return a <div>', () => {
-//     expect(shallowWrapper.type()).toEqual('div');
-// });
-
 // Find the <Container> element
 it('able to find the <Container> element', () => {
     expect(shallowWrapper.find('Container').exists()).toEqual(true);
