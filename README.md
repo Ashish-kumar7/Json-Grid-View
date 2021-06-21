@@ -288,7 +288,6 @@ This project fetches the JSON in different ways and parses it into tabular form 
 </p> -->
 	
 ### Perform Queries using SQL
-- Click 'Go to query page' button to perform sql queries
 - Enter Sql and click fetch
 
 <!-- <p float="left">
