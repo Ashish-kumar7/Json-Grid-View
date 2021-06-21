@@ -368,7 +368,7 @@ const NewPreviewPage = () => {
 
                 <Button
                 title={"Fetch"}
-                classId={"uploadButton"}
+                classId={"queryButton"}
                 clickFunc={ onFetchButtonClick}
                 ></Button>
                 
