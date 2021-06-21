@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme) => ({
     // backgroundColor:'#00b0ff',
     marginLeft: "30%",
     marginRight: "30%",
-    padding: "1.5%",
+    padding: "1%",
   },
   numval: {
     padding: "4%",
@@ -171,9 +171,13 @@ const NewPreviewPage = () => {
   const [selectedIndex, setSelectedIndex] = useState(1);
 
   const [downloadContent, setDownloadContent] = useState("");
+  const [downloadText, setDownloadText] = useState("Download");
   const [fileExtension, setFileExtension] = useState("");
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
+
+  const [disable ,setDisable ]= useState(false);
+  const [buttonId,setButtonId] = useState("uploadButton");
 
   const [query,setQuery] = useState("");
 
@@ -237,22 +241,33 @@ const NewPreviewPage = () => {
   };
 
   const handleConversion = (val) => {
+    if(disable){
+      console.log("disable true");
+    }
+    else{
+    setDisable(true);
+    setButtonId("disableButton");
     setUploadPercentage(10);
     const formData = new FormData();
     formData.set("content_type", val);
     // formData.set("data_type" , dataType);
     if (val == "excel") {
       setFileExtension("output.xlsx");
+      setDownloadText("Download Excel");
     } else if (val == "csv") {
       setFileExtension("output.csv");
+      setDownloadText("Download CSV");
     } else {
       setFileExtension("output.db");
+      setDownloadText("Download DB");
     }
     axios
       .post("http://localhost:5000/api/convert", formData, {
         responseType: "blob",
       })
       .then((response) => {
+        setDisable(false);
+          setButtonId("uploadButton");
         setUploadPercentage(100);
         setTimeout(() => {
           setUploadPercentage(0);
@@ -262,9 +277,12 @@ const NewPreviewPage = () => {
         setShowDownload(true);
       })
       .catch((err) => {
+        setDisable(false);
+          setButtonId("uploadButton");
         console.log(err);
         setUploadPercentage(0);
       });
+    }
   };
 
   // download content
@@ -306,7 +324,7 @@ const NewPreviewPage = () => {
       <Navbar></Navbar>
       <div >
       <Row>
-        <Col lg="9" className="left">
+        <Col lg="11" className="left">
           <div className="filterButton">
             <button onClick={filterhandler}>AutoComplete</button>
             <button onClick={filter1handler}>MultiSelect</button>
@@ -321,7 +339,7 @@ const NewPreviewPage = () => {
                }))}
                rowGetter={(i) => filteredRows[i]}
                rowsCount={filteredRows.length}
-               minHeight={495}
+               minHeight={456}
                
                toolbar={<Toolbar enableFilter={true} />}
                onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
@@ -338,7 +356,7 @@ const NewPreviewPage = () => {
                }))}
                rowGetter={(i) => filteredRows2[i]}
                rowsCount={filteredRows2.length}
-               minHeight={495}
+               minHeight={456}
                
                toolbar={<Toolbar enableFilter={true} />}
                onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
@@ -356,49 +374,67 @@ const NewPreviewPage = () => {
               onPageChanged={onPageChanged}
             />
           </div>
+          <Container className="queryInside">
+          <Row>
+            <Row className="query">
+              
+                <form>
+                <input type="text" placeholder="Type your SQL query" onChange = {(event)=>queryhandler(event)} />
+                
+                <button onClick={onFetchButtonClick}>Fetch</button>
+                </form>
+                {/* <Button
+                title={"Fetch"}
+                classId={"queryButton"}
+                clickFunc={ onFetchButtonClick}
+                ></Button> */}
+                
+            </Row>
+          </Row>
+        </Container>
         </Col>
-        <Col lg="3">
-        <Container className="queryInside">
+        <Col lg="1">
+        {/* <Container className="queryInside">
           <Row>
             <Row className="query">
               
                 <input type="text" placeholder="Type your SQL query" onChange = {(event)=>queryhandler(event)} />
                 
-                {/* <button onClick={onFetchButtonClick}>Fetch</button> */}
+                <button onClick={onFetchButtonClick}>Fetch</button> */}
 
-                <Button
+                {/* <Button
                 title={"Fetch"}
                 classId={"queryButton"}
                 clickFunc={ onFetchButtonClick}
-                ></Button>
+                ></Button> */}
                 
-            </Row>
+            {/* </Row>
           </Row>
-        </Container>
+        </Container> */}
         <Container>
          
           <Row>
-            <Col lg="4">
-              <IconBox iconType={faFileExcel} size={"1x"}></IconBox>
+            <Col lg="12">
+              {/* <IconBox iconType={faFileExcel} size={"1x"}></IconBox> */}
               <Button
                 title={"Convert to Excel"}
-                classId={"uploadButton"}
+                classId={buttonId}
                 clickFunc={() => handleConversion("excel")}
               ></Button>
             </Col>
-            <Col lg="4">
-              <IconBox iconType={faFileCsv} size={"1x"}></IconBox>
+            <Col lg="12">
+              {/* <IconBox iconType={faFileCsv} size={"1x"}></IconBox> */}
               <Button
                 title={"Convert To CSV"}
-                classId={"uploadButton"}
+                classId={buttonId}
                 clickFunc={() => handleConversion("csv")}
               ></Button>
             </Col>
-            <Col lg="4">
-              <IconBox iconType={faDatabase} size={"1x"}></IconBox>
+            <Col lg="12">
+              {/* <IconBox iconType={faDatabase} size={"1x"}></IconBox> */}
               <Button
-                title={"Save to Hive"}
-                classId={"uploadButton"}
+                title={"Convert To DB"}
+                classId={buttonId}
                 clickFunc={() => handleConversion("hive")}
               ></Button>
             </Col>
@@ -417,7 +453,7 @@ const NewPreviewPage = () => {
         )}
         {showDownload ? (
           <Button
-            title={"Download"}
+            title={downloadText}
             classId={"downloadButton"}
             clickFunc={downloadFile}
           ></Button>

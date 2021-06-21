@@ -15,7 +15,7 @@ const OptionsPage = () => {
       <Container>
         <Row>
           <Col lg="4">
-            <IconBox iconType={faFileUpload} size={"10x"}></IconBox>
+            <IconBox iconType={faFileUpload} size={"9x"}></IconBox>
             <Button
               id={"btn1"}
               title={"Upload A File"}
@@ -24,7 +24,7 @@ const OptionsPage = () => {
             ></Button>
           </Col>
           <Col lg="4">
-            <IconBox iconType={faLink} size={"10x"}></IconBox>
+            <IconBox iconType={faLink} size={"9x"}></IconBox>
             <Button
               id={"btn2"}
               title={"Provide A URL"}
@@ -33,7 +33,7 @@ const OptionsPage = () => {
             ></Button>
           </Col>
           <Col lg="4">
-            <IconBox iconType={faEdit} size={"10x"}></IconBox>
+            <IconBox iconType={faEdit} size={"9x"}></IconBox>
             <Button
               id={"btn3"}
               title={"Go To Editor"}

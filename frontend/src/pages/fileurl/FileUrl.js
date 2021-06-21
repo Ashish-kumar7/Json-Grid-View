@@ -26,6 +26,9 @@ const FileUrl = () => {
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ea80fc");
 
+  const [disable ,setDisable ]= useState(false);
+  const [buttonId,setButtonId] = useState("downloadButton");
+
   // on clicking customize button modal will be shown (show modal variable)
   const [open, setOpen] = useState(false);
 
@@ -126,9 +129,14 @@ const FileUrl = () => {
   //       alert("Oops it Breaks!!" + err);
   //     });
   // }
-  const [showCustomizeButton, setShowCustomizeButton] = useState(true);
+  
   const handleCustomize = () => {
-    setShowCustomizeButton(false);
+    if(disable){
+      console.log("disable true");
+    }
+    else{
+    setDisable(true);
+    setButtonId("disableButton");
     setLoading(true);
 
     const formData = new FormData();
@@ -141,9 +149,12 @@ const FileUrl = () => {
         setLoading(false);
 
         if (res.data.message.startsWith("Error")) {
+          setDisable(false);
+          setButtonId("downloadButton");
           alert(res.data.message);
         } else {
-          setShowCustomizeButton(true);
+          setDisable(false);
+          setButtonId("downloadButton");
           showModal();
         }
       })
@@ -151,13 +162,15 @@ const FileUrl = () => {
       .catch((err) => {
         // display alert for wrong json
         setLoading(false);
-
+        setDisable(false);
+        setButtonId("downloadButton");
         console.log(err);
         validJSON = false;
         setTimeout(() => {
           alert("Invalid JSON URL !!");
         }, 1000);
       });
+    }
   };
 
   return (
@@ -170,11 +183,11 @@ const FileUrl = () => {
       <RingLoader color={color} loading={loading} css={override} size={150} />
 
       <>
-        {showCustomizeButton ? (<Button
+       <Button
           title={"Customize"}
-          classId={"downloadButton"}
+          classId={buttonId}
           clickFunc={() => handleCustomize()}
-        ></Button>) : ""}
+        ></Button>
         <Modal
           show={open}
           openFunc={showModal}

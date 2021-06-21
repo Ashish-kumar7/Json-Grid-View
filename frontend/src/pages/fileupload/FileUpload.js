@@ -34,6 +34,9 @@ const FileUpload = () => {
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ea80fc");
 
+  const [disable ,setDisable ]= useState(false);
+  const [buttonId,setButtonId] = useState("downloadButton");
+
   // on clicking customize button modal will be shown (show modal variable)
   const [open, setOpen] = useState(false);
 
@@ -64,7 +67,12 @@ const FileUpload = () => {
 
   // on clicking customize button ,file will be sent to backend, schema will be received and customize modal will be shown
   const handleCustomize = () => {
-    setShowCustomizeButton(false);
+    if(disable){
+      console.log("disable true");
+    }
+    else{
+    setDisable(true);
+    setButtonId("disableButton");
     setLoading(true);
     const formData = new FormData();
     formData.append("File", selectedFile);
@@ -76,23 +84,28 @@ const FileUpload = () => {
         console.log("json loaded and checked");
         setLoading(false);
         if (res.data.message.startsWith("Error")) {
+          setDisable(false);
+          setButtonId("downloadButton");
           alert(res.data.message);
         }
         else {
-          setShowCustomizeButton(true);
+          setDisable(false);
+          setButtonId("downloadButton");
           showModal();
         }
       })
       .catch((err) => {
         // display alert for wrong json
         setLoading(false);
-
+        setDisable(false);
+        setButtonId("downloadButton");
         console.log(err);
         validJSON = false;
         setTimeout(() => {
           alert("Invalid JSON File !!");
         }, 1000);
       });
+    }
   };
   //   axios
   //     .post("http://localhost:5000/api/convert", formData, {
@@ -149,7 +162,7 @@ const FileUpload = () => {
         <>
           {showCustomizeButton ? (<Button
             title={"Customize"}
-            classId={"downloadButton"}
+            classId={buttonId}
             clickFunc={() => handleCustomize()}
           ></Button>) : ""}
 

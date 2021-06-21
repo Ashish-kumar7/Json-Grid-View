@@ -21,6 +21,9 @@ const CustomizeModal = (props) => {
 
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
+  const [disable ,setDisable ]= useState(false);
+  const [buttonId,setButtonId] = useState("downloadButton");
+
   const [totalRecords, setTotalRecords] = useState(1);
   const [rows, setRows] = useState(1);
   const [dataframe, setDataframe] = useState("");
@@ -45,6 +48,13 @@ const CustomizeModal = (props) => {
     //     if (response.data && response.data.message && response.data.message.startsWith("Error")) {
     //       alert(response.data.message);
     //     } else {
+
+      if(disable){
+        console.log("disable true");
+      }
+      else{
+      setDisable(true);
+      setButtonId("disableButton");
     const formData = new FormData();
     formData.set('table_type', tableType);
     formData.set('join_char', joinChar);
@@ -69,6 +79,8 @@ const CustomizeModal = (props) => {
         initialDF.cols = res.data.columns;
         // console.log(res.data.tableRows);
         setUploadPercentage(100);
+        setDisable(false);
+        setButtonId("downloadButton");
         setTimeout(() => {
           setUploadPercentage(0);
         }, 1000);
@@ -76,10 +88,13 @@ const CustomizeModal = (props) => {
         history.push("/newpreview");
       })
       .catch((err) => {
+        setDisable(false);
+        setButtonId("downloadButton");
         setUploadPercentage(0);
         console.log(err);
         alert("Oops it breaks " + err);
       });
+    }
     //   }
     // })
     // .catch((err) => {
@@ -273,7 +288,7 @@ const CustomizeModal = (props) => {
           )}
           <Button
             title={"Process"}
-            classId={"downloadButton"}
+            classId={buttonId}
             clickFunc={handleSubmission}
           ></Button>
         </Modal.Body>
