@@ -5,6 +5,18 @@
     overflow-x :hidden;
     
 }
+.newpreview .navbar-brand {
+  color: yellow;
+  font-weight: bold;
+  font-family:'Times New Roman', Times, serif;
+  font-size: x-large;
+}
+
+.newpreview button {
+  margin: 0 1vh;
+  
+  padding: 4px;
+} 
 
 .dataframeview {
     /* overflow-x: scroll;
@@ -131,6 +143,7 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
   margin-left: 1vh;
   background-color: blueviolet;
   color: white;
+  margin-bottom: 1px;
 }
 
 

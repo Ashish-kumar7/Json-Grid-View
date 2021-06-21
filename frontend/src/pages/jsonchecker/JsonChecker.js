@@ -61,7 +61,7 @@ const JsonChecker = () => {
         placeholder={sampleObject}
         onChange={(event) => valuehandler(event)}
         locale={locale}
-        height="500px"
+        height="418px"
         width="120vh"
         
         

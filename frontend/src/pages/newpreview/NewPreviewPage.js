@@ -322,7 +322,7 @@ const NewPreviewPage = () => {
                }))}
                rowGetter={(i) => filteredRows[i]}
                rowsCount={filteredRows.length}
-               minHeight={570}
+               minHeight={495}
                
                toolbar={<Toolbar enableFilter={true} />}
                onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
@@ -341,7 +341,7 @@ const NewPreviewPage = () => {
                }))}
                rowGetter={(i) => filteredRows2[i]}
                rowsCount={filteredRows2.length}
-               minHeight={570}
+               minHeight={495}
                
                toolbar={<Toolbar enableFilter={true} />}
                onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
