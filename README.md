@@ -261,6 +261,8 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 ![Screenshot](Screenshots/customizeTable.png)
 
+### New Preview Page
+![Screenshot](Screenshots/newPreviewPage.png)
 <!-- ### Preview of the table generated 
 - implemented paging for large files
 <p float="left">
