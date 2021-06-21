@@ -29,6 +29,7 @@ var FileDownload = require("js-file-download");
 
 const defaultColumnProperties = {
   filterable: true,
+  resizable: true,
   width: 120,
 };
 
@@ -327,6 +328,8 @@ const NewPreviewPage = () => {
                onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
                onClearFilters={() => setFilters({})}
                getValidFilterValues={columnKey => getValidFilterValues([], columnKey)}
+               onColumnResize={(idx, width) =>
+                console.log(`Column ${idx} has been resized to ${width}`)}
              />
             ):<></>}
            {showFilter1?(
@@ -344,6 +347,8 @@ const NewPreviewPage = () => {
                onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
                onClearFilters={() => setFilters2({})}
                getValidFilterValues={columnKey => getValidFilterValues(gridRows1, columnKey)}
+               onColumnResize={(idx, width) =>
+                console.log(`Column ${idx} has been resized to ${width}`)}
              />
             ):<></>}
           </div>
