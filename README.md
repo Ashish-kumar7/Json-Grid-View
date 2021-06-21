@@ -1,3 +1,7 @@
+### using this branch to test electron js
+**to run development server**
+- npm run electron-dev
+
 # Json-Grid-View
 
 This project fetches the JSON in different ways and parses it into tabular form and saves it into HDFS.
