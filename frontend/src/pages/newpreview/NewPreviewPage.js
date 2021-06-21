@@ -29,7 +29,6 @@ var FileDownload = require("js-file-download");
 
 const defaultColumnProperties = {
   filterable: true,
-  resizable: true,
   width: 120,
 };
 
@@ -279,7 +278,6 @@ const NewPreviewPage = () => {
 
    //On fetchButtonClick
    const onFetchButtonClick = (e) => {
-    e.preventDefault();
 
     const formData = new FormData();
     formData.set("query_text", query);
@@ -291,6 +289,7 @@ const NewPreviewPage = () => {
           alert(response.data.message);
         } else {
           setGridRows(response.data.tableRows);
+          
           setResultTotalRecords(response.data.total_records);
           setResultRows(response.data.rows_per_page);
         }
@@ -328,8 +327,6 @@ const NewPreviewPage = () => {
                onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
                onClearFilters={() => setFilters({})}
                getValidFilterValues={columnKey => getValidFilterValues([], columnKey)}
-               onColumnResize={(idx, width) =>
-                console.log(`Column ${idx} has been resized to ${width}`)}
              />
             ):<></>}
            {showFilter1?(
@@ -347,8 +344,6 @@ const NewPreviewPage = () => {
                onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
                onClearFilters={() => setFilters2({})}
                getValidFilterValues={columnKey => getValidFilterValues(gridRows1, columnKey)}
-               onColumnResize={(idx, width) =>
-                console.log(`Column ${idx} has been resized to ${width}`)}
              />
             ):<></>}
           </div>
@@ -369,8 +364,14 @@ const NewPreviewPage = () => {
               
                 <input type="text" placeholder="Type your SQL query" onChange = {(event)=>queryhandler(event)} />
                 
-                <button onClick={onFetchButtonClick}>Fetch</button>
-             
+                {/* <button onClick={onFetchButtonClick}>Fetch</button> */}
+
+                <Button
+                title={"Fetch"}
+                classId={"queryButton"}
+                clickFunc={ onFetchButtonClick}
+                ></Button>
+                
             </Row>
           </Row>
         </Container>
