@@ -143,7 +143,7 @@ const JsonInput = () => {
 
         <button onClick={handleSubmission}>Submit</button>
       </div> */}
-      {/* <Footer /> */}
+      <Footer />
     </div>
   );
 };
