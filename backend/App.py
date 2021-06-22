@@ -16,7 +16,7 @@ from flask import Flask, jsonify, request, send_file
 import re
 from logging import exception
 from enum import unique
-HADOOP_INSTALLED = False
+HADOOP_INSTALLED = True
 
 
 if HADOOP_INSTALLED:
@@ -31,6 +31,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Constants
 
 # File Constants
+ELECTRON_PATH = "..//backend//"
 CSV_FILENAME = 'generatedCsvFile'
 XLSX_FILENAME = 'generatedXlsxFile'
 SQL_DB_NAME = 'generatedDB'
@@ -109,9 +110,9 @@ def uploadFile():
 
     # Delete the existing files
     try : 
-        utilities.DeleteIfExists(SQL_DB_NAME + '.db')
-        utilities.DeleteIfExists(CSV_FILENAME + '.csv')
-        utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
+        utilities.DeleteIfExists(ELECTRON_PATH + SQL_DB_NAME + '.db')
+        utilities.DeleteIfExists(ELECTRON_PATH + CSV_FILENAME + '.csv')
+        utilities.DeleteIfExists(ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
     except Exception as e :
         print("Exception while deleting " , e)
 
@@ -233,7 +234,7 @@ def processFile():
 
         startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
-            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
 
         print("Conenction Made to SQL")
@@ -406,34 +407,36 @@ def convertFile():
             startTime = time.time()
 
             # if data_type == 1:
-            DF.to_csv(CSV_FILENAME + '.csv')
+            DF.to_csv(ELECTRON_PATH + CSV_FILENAME + '.csv')
             # else:
             #     PreviewDF.to_csv(CSV_FILENAME + '.csv')
 
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen csv : ", time.time() - startTime)
-            return send_file(CSV_FILENAME + '.csv')
+        
+            return send_file(ELECTRON_PATH + CSV_FILENAME + '.csv')
 
         # Generate XLSX
         if extension == "excel":
             startTime = time.time()
 
             # if data_type == 1:
-            DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+            DF.to_excel(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
             # else:
             #     PreviewDF.to_excel(XLSX_FILENAME + '.xlsx',
             #                        sheet_name=SHEET_NAME)
 
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen xlsx : ", time.time() - startTime)
-            return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
+            print("generated path = " , ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
+            return send_file(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
 
         # Generate SQL Database, Table
         if extension == "hive":
 
             # startTime = time.time()
             # sql_engine = sqlalchemy.create_engine(
-            #     'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            #     'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
             # sqlite_connection = sql_engine.connect()
 
             # print("Conenction Made to SQL")
@@ -451,21 +454,18 @@ def convertFile():
             # startTime = time.time()
             # print("Total time taken : ", startTime - initTime)
             socketio.emit('progress', 80, broadcast=True)
-            # if HADOOP_INSTALLED:
-            #     if data_type == 1:
-            #         DF.to_csv('test.csv')
-            #         hadoopstorage.saveFile(DF)
-            #     else:
-            #         PreviewDF.to_csv('test.csv')
-            #         hadoopstorage.saveFile(PreviewDF)
+            
+            if HADOOP_INSTALLED:
+                DF.to_csv('test.csv')
+                hadoopstorage.saveFile(DF)
 
                 # code to convert csv file and saving it to hdfs
                 # df = pd.read_csv('generatedCsvFile.csv')
                 # df.to_parquet("/test_parquet", compression="GZIP")
                 # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
                 # subprocess.call(hdfs_cmd, shell=True)
-
-            return send_file(SQL_DB_NAME + '.db')
+            socketio.emit('progress', 80, broadcast=True)
+            return send_file(ELECTRON_PATH + SQL_DB_NAME + '.db')
 
     except Exception as e:
         print(e)
@@ -477,22 +477,22 @@ def convertFile():
 def fetchQueryData():
     print("fetch")
     print("\n\n\n\nForm Data in /api/convert\n", request.form['query_text'])
-
+    global PreviewDF
     try:
         queryText = request.form['query_text']
         startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
-            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
         # DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
         # print("\n\nTABLE\n")
         # print(engine.execute("SELECT * FROM " + tableName).fetchall())
 
-        DF = pd.read_sql_query(queryText, sqlite_connection)
-        PreviewDF = DF.copy()
+        PreviewDF = pd.read_sql_query(queryText, sqlite_connection)
+        # PreviewDF = DF.copy()
 
-        print(DF.head())
-        print(PreviewDF.head())
+        # print(DF.head())
+        # print(PreviewDF.head())
 
         sqlite_connection.close()
         print("Time to gen db : ", time.time() - startTime)
@@ -527,7 +527,7 @@ def fetchQueryData():
 #         tableNameInput = request.form['tableName']
 #         startTime = time.time()
 #         sql_engine = sqlalchemy.create_engine(
-#             'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+#             'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
 #         sqlite_connection = sql_engine.connect()
 #         print("Conenction Made to SQL")
 
