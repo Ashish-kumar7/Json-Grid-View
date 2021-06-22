@@ -250,6 +250,7 @@ const NewPreviewPage = () => {
     } else {
       setFileExtension("output.db");
       setDownloadText("Download DB");
+      alert("Saving Files to Hadoop!")
     }
     axios
       .post("http://localhost:5000/api/convert", formData, {
@@ -427,7 +428,7 @@ const NewPreviewPage = () => {
             <Col lg="12">
               {/* <IconBox iconType={faDatabase} size={"1x"}></IconBox> */}
               <Button
-                title={"Convert To DB"}
+                title={"Save to Hadoop"}
                 classId={buttonId}
                 clickFunc={() => handleConversion("hive")}
               ></Button>
