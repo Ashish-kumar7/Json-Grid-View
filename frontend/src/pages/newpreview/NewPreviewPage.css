@@ -88,6 +88,23 @@
   
 }
 
+.newpreview .navbar-nav  .nav-link:link {
+  text-decoration: none;
+  color: white;
+}
+
+.newpreview .navbar-nav  .nav-link:visited {
+  text-decoration: none;
+  color: white;
+}
+
+
+
+.newpreview .navbar-nav  .nav-link:active {
+  text-decoration: none;
+  color: white;
+}
+
 
 .newpreview .fas {
   color: rgb(255, 255, 255);
