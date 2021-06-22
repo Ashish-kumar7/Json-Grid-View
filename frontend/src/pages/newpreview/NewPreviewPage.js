@@ -281,6 +281,7 @@ const NewPreviewPage = () => {
 
   //On fetchButtonClick
   const onFetchButtonClick = (e) => {
+    e.preventDefault();
     const formData = new FormData();
     formData.set("query_text", query);
     axios
