@@ -202,6 +202,7 @@ const NewPreviewPage = () => {
 
   // page change function for df preview
   const onPageChanged = (data) => {
+    console.log("onPageChanged Ran");
     const { currentPage, totalPages, pageLimit } = data;
     // console.log(currentPage);
     const offset = (currentPage - 1) * pageLimit;
@@ -225,6 +226,7 @@ const NewPreviewPage = () => {
   };
 
   const handleConversion = (val) => {
+    console.log("handleConversion Ran");
     if (disable) {
       console.log("disable true");
     }
@@ -280,6 +282,7 @@ const NewPreviewPage = () => {
 
   //On fetchButtonClick
   const onFetchButtonClick = (e) => {
+    console.log("onFetchButtonClick Ran");
     e.preventDefault();
     const formData = new FormData();
     formData.set("query_text", query);
