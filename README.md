@@ -303,6 +303,11 @@ This project fetches the JSON in different ways and parses it into tabular form 
 - Click 'Json Checker' in the nav-bar
 
 ![Screenshot](Screenshots/jsonValidator.png)
+	
+### Invalid Json Check
+- Shows the error in Json linewise
+
+![Screenshot](Screenshots/errorjson.PNG)
 
 ### Download Options
 - User can download 
