@@ -169,6 +169,7 @@ const NewPreviewPage = () => {
   const [buttonId,setButtonId] = useState("uploadButton");
 
   const [query,setQuery] = useState("");
+  const [fetchClicked, setFetchClicked] = useState(false);
 
   const filterhandler = () => {
     const newCol2 = gridCols;
@@ -203,26 +204,30 @@ const NewPreviewPage = () => {
 
   // page change function for df preview
   const onPageChanged = (data) => {
-    const { currentPage, totalPages, pageLimit } = data;
-    // console.log(currentPage);
-    const offset = (currentPage - 1) * pageLimit;
-    const formData = new FormData();
-    formData.set("page_number", currentPage);
-    axios
-      .post("http://localhost:5000/api/page", formData)
-      .then((response) => {
-        // console.log(response);
-        // console.log("result total records " + resultTotalRecords);
-        // initialDataFrame.dfrow = response.data.tableRows;
-        // initialDataFrame.dfcol = response.data.tableCols;
+    if(fetchClicked) {
+      setFetchClicked(false);
+    } else {
+      const { currentPage, totalPages, pageLimit } = data;
+      // console.log(currentPage);
+      const offset = (currentPage - 1) * pageLimit;
+      const formData = new FormData();
+      formData.set("page_number", currentPage);
+      axios
+        .post("http://localhost:5000/api/page", formData)
+        .then((response) => {
+          // console.log(response);
+          // console.log("result total records " + resultTotalRecords);
+          // initialDataFrame.dfrow = response.data.tableRows;
+          // initialDataFrame.dfcol = response.data.tableCols;
 
-        setGridCols(response.data.tableCols);
-        setGridRows(response.data.tableRows);
-        // setTable(response.data.table);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+          setGridCols(response.data.tableCols);
+          setGridRows(response.data.tableRows);
+          // setTable(response.data.table);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const handleConversion = (val) => {
@@ -284,6 +289,8 @@ const NewPreviewPage = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.set("query_text", query);
+    setFetchClicked(true);
+
     axios
       .post("http://localhost:5000/api/query", formData)
       .then((response) => {

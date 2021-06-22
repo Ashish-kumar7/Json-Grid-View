@@ -480,7 +480,7 @@ def convertFile():
 def fetchQueryData():
     print("fetch")
     print("\n\n\n\nForm Data in /api/convert\n", request.form['query_text'])
-
+    global PreviewDF
     try:
         queryText = request.form['query_text']
         startTime = time.time()
@@ -491,11 +491,11 @@ def fetchQueryData():
         # print("\n\nTABLE\n")
         # print(engine.execute("SELECT * FROM " + tableName).fetchall())
 
-        DF = pd.read_sql_query(queryText, sqlite_connection)
-        PreviewDF = DF.copy()
+        PreviewDF = pd.read_sql_query(queryText, sqlite_connection)
+        # PreviewDF = DF.copy()
 
-        print(DF.head())
-        print(PreviewDF.head())
+        # print(DF.head())
+        # print(PreviewDF.head())
 
         sqlite_connection.close()
         print("Time to gen db : ", time.time() - startTime)
