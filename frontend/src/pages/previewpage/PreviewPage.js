@@ -21,7 +21,9 @@ import initialDataFrame from "../../global_variable";
 import IOSSwitch from "../../material-styles/IOSwitch";
 import GreenCheckbox from "../../material-styles/GreenCheckBox";
 import Checkbox from "@material-ui/core/Checkbox";
-
+import { ProgressBar } from "react-bootstrap";
+import io from 'socket.io-client'
+const socket = io("http://localhost:5000/");
 var FileDownload = require("js-file-download");
 var parse = require("html-react-parser");
 
@@ -63,7 +65,7 @@ const PreviewPage = (props) => {
   const [fileExtension, setFileExtension] = useState("");
   const [showDownload, setShowDownload] = useState(false);
 
-  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [uploadPercentage, setUploadPercentage] = useState(initialDataFrame.progress);
   const [table, setTable] = useState(initialDataFrame.df);
   const [formDisplay, setFormDisplay] = useState(false);
   const [uniqueRowsPerPage, setUniqueRowsPerPage] = useState(1);
@@ -103,6 +105,7 @@ const PreviewPage = (props) => {
   const [searchval, setSearchval] = useState("");
   const [showSearchValue, setShowSearchValue] = useState(false);
 
+  
   // create dictionary to store selected values for columns
 
   const dataTypeHandler = (e) =>{
@@ -110,9 +113,15 @@ const PreviewPage = (props) => {
     setDataType(e.target.value);
   }
 
+   // for getting updates regarding progress
+   socket.on("progress", (val) => {
+    setUploadPercentage(val);
+    console.log(val);
+  });
 
   // function to download file
   const handleConversion = (val) => {
+    setUploadPercentage(10);
     const formData = new FormData();
     formData.set("content_type", val);
     formData.set("data_type" , dataType);
@@ -607,6 +616,17 @@ const PreviewPage = (props) => {
             </Col>
           </Row>
         </Container>
+        {uploadPercentage > 0 && (
+        <div className="progressbar">
+          <ProgressBar
+            now={uploadPercentage}
+            striped={true}
+            animated
+            label={`${uploadPercentage}%`}
+            variant="success"
+          />
+        </div> 
+        )}
         {showDownload ? (
           <Button
             title={"Download"}
