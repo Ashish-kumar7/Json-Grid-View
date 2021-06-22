@@ -387,7 +387,7 @@ const NewPreviewPage = () => {
           </Row>
         </Container>
         </Col>
-        <Col lg="1">
+        <Col lg="1" className="right">
         {/* <Container className="queryInside">
           <Row>
             <Row className="query">
