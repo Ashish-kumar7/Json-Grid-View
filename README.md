@@ -328,5 +328,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 	
 ![Screenshot](Screenshots/sqlData.png)
 	
+### Hadoop Storage
 
+![Screenshot](Screenshots/Hadoop.PNG)
 <!-- ![Finished App](UI.gif) -->
