@@ -306,9 +306,25 @@ This project fetches the JSON in different ways and parses it into tabular form 
 	
 ### Invalid Json Check
 - Shows the error in Json linewise
-
+	
 ![Screenshot](Screenshots/errorjson.PNG)
 
+	
+### Invalid Json File Check
+- Shows the error in Json File linewise
+	
+![Screenshot](Screenshots/invalid json file.PNG)
+
+### Invalid URL Check
+- Shows the error in URL
+	
+![Screenshot](Screenshots/invalid url.PNG)
+	
+### Invalid Raw JSON Check
+- Shows the error in JSON
+	
+![Screenshot](Screenshots/invalid raw json.PNG)
+	
 ### Download Options
 - User can download 
 	- Normal Data, data as it is
@@ -340,8 +356,9 @@ This project fetches the JSON in different ways and parses it into tabular form 
 ### Terminals running
 	--namenode
 	--datanode
-        --nodemanager
-        --resourcemanager
+	--nodemanager
+	--resourcemanager
+
 
 ![Screenshot](Screenshots/hadoop-all_terminals.PNG)
 <!-- ![Finished App](UI.gif) -->
