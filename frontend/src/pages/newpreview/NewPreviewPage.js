@@ -22,6 +22,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+// import SelectSearch from 'react-select-search';
+// import 'react-select-search/style.css';
+// import fuzzySearch from 'react-select-search/dist/cjs/fuzzySearch';
+// import Select from 'react-select';
+
 
 const socket = io("http://localhost:5000/");
 
@@ -32,6 +42,7 @@ var FileDownload = require("js-file-download");
 
 const defaultColumnProperties = {
   filterable: true,
+  resizable: true,
   width: 120,
 };
 
@@ -78,6 +89,16 @@ const useStyles = makeStyles((theme) => ({
   numval: {
     padding: "4%",
     marginLeft: "10%",
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    
+    
+    
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
   },
   root2: {
     "& div.react-grid-Header": {
@@ -133,6 +154,7 @@ const useStyles = makeStyles((theme) => ({
 const NewPreviewPage = () => {
   // console.log("new preview page");
   // console.log(initialDataFrame.dfrow);
+  
   let [, setState] = useState();
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
@@ -166,6 +188,9 @@ const NewPreviewPage = () => {
 
   const [disable, setDisable] = useState(false);
   const [buttonId, setButtonId] = useState("uploadButton");
+
+  const [selectedColumn, setSelectedColumn] =  useState("");
+  const [searchValue, setSearchValue] = useState("");
 
   const [query, setQuery] = useState("");
 
@@ -298,7 +323,6 @@ const NewPreviewPage = () => {
           alert(response.data.message);
         } else {
           setGridRows(response.data.tableRows);
-          setGridCols(response.data.tableCols);
           setResultTotalRecords(response.data.total_records);
           setResultRows(response.data.rows_per_page);
         }
@@ -308,16 +332,76 @@ const NewPreviewPage = () => {
       });
   };
 
+  let colList = [];
+
+  for (var i = 0; i < initialDataFrame.cols.length; i++) {
+    // dictIntermediate[initialDataFrame.cols[i]] = new Set();
+    let number = i;
+    colList.push(
+      <MenuItem value={initialDataFrame.cols[number]}>{initialDataFrame.cols[number]}</MenuItem>
+    );
+  }
+
+  const columnnamehandler = (e)=> {
+    setSelectedColumn(e.target.value);
+    console.log(e.target.value);
+  };
+  const searchvaluehandler = (e)=> {
+    setSearchValue(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const searchhandler = () => {
+    const formData = new FormData();
+    formData.set("col_name", selectedColumn);
+    formData.set("search_val", searchValue);
+    axios
+      .post("http://localhost:5000/api/searchRecord", formData)
+      .then((response) => {
+        setGridRows(response.data.tableRows);
+        setResultTotalRecords(response.data.total_records);
+        setResultRows(response.data.rows_per_page);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      
+  };
+
   return (
     <div className="newpreview">
       <Navbar></Navbar>
-      <div >
+      <div className="searchmenu">
+        <p>Search here to find from all records:</p>
         <Row>
           <Col lg="11" className="left">
-            <div className="filterButton">
+            <Row>
+              <Col>
+              <div className="searchall">
+            <FormControl id="searchform" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-label">Select Column</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={selectedColumn}
+          onChange={columnnamehandler}
+        >
+          {colList}
+        </Select>
+      </FormControl>
+      <input type="text" placeholder="Find" onChange={searchvaluehandler}></input>
+      <button onClick={searchhandler}>Search</button>
+            </div>
+              </Col>
+              <Col>
+              <div className="filterButton">
               <button onClick={filterhandler}>AutoComplete</button>
               <button onClick={filter1handler}>MultiSelect</button>
             </div>
+              </Col>
+            </Row>
+            
+           
             <div className={classes.root2}>
               {showFilter ? (
                 <ReactDataGrid
@@ -334,6 +418,8 @@ const NewPreviewPage = () => {
                   onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
                   onClearFilters={() => setFilters({})}
                   getValidFilterValues={columnKey => getValidFilterValues([], columnKey)}
+                  onColumnResize={(idx, width) =>
+                    console.log(`Column ${idx} has been resized to ${width}`)}
                 />
               ) : <></>}
               {showFilter1 ? (
@@ -351,6 +437,8 @@ const NewPreviewPage = () => {
                   onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
                   onClearFilters={() => setFilters2({})}
                   getValidFilterValues={columnKey => getValidFilterValues(gridRows1, columnKey)}
+                  onColumnResize={(idx, width) =>
+                    console.log(`Column ${idx} has been resized to ${width}`)}
                 />
               ) : <></>}
             </div>

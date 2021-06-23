@@ -203,6 +203,26 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
   margin-bottom: 1px;
 }
 
+#demo-simple-select {
+  color: aliceblue;
+  background-color: #09c6f9;
+}
+
+#demo-simple-select-label {
+  color: palevioletred;
+  
+}
+
+#searchform {
+  margin-top: -16px;
+}
+
+.searchmenu p {
+  color:bisque;
+  margin-left: 2vh;
+}
+
+
 
 
 
