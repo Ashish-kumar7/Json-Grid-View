@@ -313,17 +313,17 @@ This project fetches the JSON in different ways and parses it into tabular form 
 ### Invalid Json File Check
 - Shows the error in Json File linewise
 	
-![Screenshot](Screenshots/invalid json file.PNG)
+![Screenshot](Screenshots/invalidjsonfile.png)
 
 ### Invalid URL Check
 - Shows the error in URL
 	
-![Screenshot](Screenshots/invalid url.PNG)
+![Screenshot](Screenshots/invalidurl.png)
 	
 ### Invalid Raw JSON Check
 - Shows the error in JSON
 	
-![Screenshot](Screenshots/invalid raw json.PNG)
+![Screenshot](Screenshots/invalidrawjson.png)
 	
 ### Download Options
 - User can download 
