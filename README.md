@@ -336,4 +336,12 @@ This project fetches the JSON in different ways and parses it into tabular form 
 ### Hadoop Storage
 
 ![Screenshot](Screenshots/Hadoop.PNG)
+	
+### Terminals running
+	--namenode
+	--datanode
+        --nodemanager
+        --resourcemanager
+
+![Screenshot](Screenshots/hadoop-all_terminals.PNG)
 <!-- ![Finished App](UI.gif) -->
