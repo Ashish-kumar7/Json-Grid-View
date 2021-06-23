@@ -248,7 +248,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 ### Upload Json
 **There are three different ways to parse the JSON**
 
-![Screenshot](Screenshots/uploadJson.png)
+![Screenshot](Screenshots/optionspage.PNG)
 	
 - via URL
 - via JSON in text box
