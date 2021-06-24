@@ -1,9 +1,11 @@
 ### using this branch to test electron js
 **to run electron server**
+- cd frontend
 - npm start
 - npm run start-electron
 -
 ** to generate backend production ** 
+- cd backend
 - pip install pyinstaller  
 - pyinstaller App.spec
 
