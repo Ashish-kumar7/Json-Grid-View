@@ -1,8 +1,21 @@
 {
+  "build": {
+    "appId": "json-grid-view",
+    "files": [
+      "build/**/*",
+      "node_modules/**/*",
+      "public/**/*",
+      "src/**/*"
+    ],
+    "directories":{
+      "buildResources": "assets"
+    }
+  }, 
+  "productName": "Json-Grid-View",
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+  "proxy": "http://localhost:50000",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-brands-svg-icons": "^5.15.3",
@@ -41,14 +54,22 @@
     "socket.io-client": "^4.1.2",
     "web-vitals": "^1.1.2"
   },
+  
   "main": "public/electron.js",
+  
   "scripts": {
-    "start": "react-scripts start",
+    "start":"set BROWSER=none && react-scripts start",
+    "start-electron": "electron .",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "preelectron-pack": "yarn build",
+    "electron-pack": "build public/electron.js=build/electron.js",
     "electron-dev": "concurrently \"SET BROWSER=none&&npm run start\" \"wait-on http://localhost:3000 && electron .\""
   },
+  
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -77,5 +98,7 @@
     "jest-enzyme": "^7.1.2",
     "mock-prop-types": "^2.1.5",
     "wait-on": "^5.3.0"
-  }
+  } ,
+  "author": "Abhishek",
+  "homepage": "./"
 }

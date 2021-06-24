@@ -56,7 +56,7 @@ const QueryPage = (props) => {
     const formData = new FormData();
     formData.set("page_number", currentPage);
     axios
-      .post("http://localhost:5000/api/page", formData)
+      .post("http://localhost:50000/api/page", formData)
       .then((response) => {
         console.log(response);
         setTable(response.data.table);
@@ -73,7 +73,7 @@ const QueryPage = (props) => {
     const formData = new FormData();
     formData.set("query_text", data.setqueryText);
     axios
-      .post("http://localhost:5000/api/query", formData)
+      .post("http://localhost:50000/api/query", formData)
       .then((response) => {
         console.log(response);
         if (response.data && response.data.message && response.data.message.startsWith("Error")) {

@@ -31,7 +31,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Constants
 
 # File Constants
-ELECTRON_PATH = ("..//backend//output//App//" , "..//backend//")[1] # path for prod, dev 
+ELECTRON_PATH = ("..//backend//dist//App//" , "..//backend//" , "")[0] # path for prod, dev 
 CSV_FILENAME = 'generatedCsvFile'
 XLSX_FILENAME = 'generatedXlsxFile'
 SQL_DB_NAME = 'generatedDB'
@@ -122,6 +122,8 @@ def uploadFile():
     print("\n\n\n\nForm Data in /api/upload\n", request.form)
     try:
         print("form  : ", request.form)
+        # with open(ELECTRON_PATH + "Form.txt") as file : 
+        #     file.write(request.form)
         startTime = time.time()
         global initTime
         initTime = startTime
@@ -552,4 +554,4 @@ def fetchQueryData():
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    app.run(debug=True, port = 50000)

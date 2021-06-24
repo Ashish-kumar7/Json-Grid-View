@@ -26,7 +26,7 @@ function createWindow() {
 
   // Production Backend Server------------------starts here
     // let backend;
-    // backend = path.join(process.cwd(), '..//backend//output//App//App.exe')
+    // backend = path.join(process.cwd(), '..//backend//dist//App//App.exe')
     // var execfile = require('child_process').execFile;
     // execfile(
     // backend,
@@ -52,6 +52,21 @@ app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
+
+    // Kill backend here
+    // const { exec } = require('child_process');
+    // exec('taskkill /f /t /im App.exe', (err, stdout, stderr) => {
+    // if (err) {
+    //   console.log(err)
+    // return;
+    // }
+    // console.log(`stdout: ${stdout}`);
+    // console.log(`stderr: ${stderr}`);
+    // });
+
+    // ------------------------------------------------- ends here
+
+
     app.quit();
   }
 });

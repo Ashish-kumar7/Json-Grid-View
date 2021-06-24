@@ -10,7 +10,7 @@ import Modal from "../../components/modal/Modal";
 import Navbar from "../../components/navbar/Navbar";
 import "./JsonInput.css";
 
-// const socket = io("http://localhost:5000/");
+// const socket = io("http://localhost:50000/");
 
 const override = css`
   display: block;
@@ -62,7 +62,7 @@ const JsonInput = () => {
   //   }
   //   axios
   //     .post(
-  //       "http://localhost:5000/api/convert",
+  //       "http://localhost:50000/api/convert",
   //       formData,
   //       { responseType: "blob" }
   //     )
@@ -89,7 +89,7 @@ const JsonInput = () => {
     formData.append("Json", inputJson);
     formData.set("input_type", "text");
     axios
-      .post("http://localhost:5000/api/upload", formData)
+      .post("http://localhost:50000/api/upload", formData)
       .then((res) => {
         console.log("json loaded and checked");
         setLoading(false);

@@ -23,7 +23,7 @@ import {
 import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:5000/");
+const socket = io("http://localhost:50000/");
 
 var FileDownload = require("js-file-download");
 
@@ -213,7 +213,7 @@ const NewPreviewPage = () => {
       const formData = new FormData();
       formData.set("page_number", currentPage);
       axios
-        .post("http://localhost:5000/api/page", formData)
+        .post("http://localhost:50000/api/page", formData)
         .then((response) => {
           // console.log(response);
           // console.log("result total records " + resultTotalRecords);
@@ -252,10 +252,11 @@ const NewPreviewPage = () => {
       setDownloadText("Download DB");
     }
     axios
-      .post("http://localhost:5000/api/convert", formData, {
+      .post("http://localhost:50000/api/convert", formData, {
         responseType: "blob",
       })
       .then((response) => {
+        console.log(response);
         setDisable(false);
           setButtonId("uploadButton");
         setUploadPercentage(100);
@@ -292,7 +293,7 @@ const NewPreviewPage = () => {
     setFetchClicked(true);
 
     axios
-      .post("http://localhost:5000/api/query", formData)
+      .post("http://localhost:50000/api/query", formData)
       .then((response) => {
         console.log(response);
         if (

@@ -15,7 +15,7 @@ import ClockLoader from "react-spinners/ClockLoader";
 
 
 
-// const socket = io("http://localhost:5000/");
+// const socket = io("http://localhost:50000/");
 
 const override = css`
   display: block;
@@ -79,7 +79,7 @@ const FileUpload = () => {
     formData.set("input_type", "file");
 
     axios
-      .post("http://localhost:5000/api/upload", formData)
+      .post("http://localhost:50000/api/upload", formData)
       .then((res) => {
         console.log("json loaded and checked");
         setLoading(false);
@@ -108,7 +108,7 @@ const FileUpload = () => {
     }
   };
   //   axios
-  //     .post("http://localhost:5000/api/convert", formData, {
+  //     .post("http://localhost:50000/api/convert", formData, {
   //       responseType: "blob",
   //     })
   //     .then((response) => {

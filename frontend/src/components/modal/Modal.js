@@ -8,7 +8,7 @@ import Button from "../button/Button";
 import "./Modal.css";
 import { ProgressBar } from "react-bootstrap";
 import io from 'socket.io-client'
-const socket = io("http://localhost:5000/");
+const socket = io("http://localhost:50000/");
 
 const CustomizeModal = (props) => {
   const [tableType, setTableType] = useState(1);
@@ -43,7 +43,7 @@ const CustomizeModal = (props) => {
     // const formDataSave = new FormData();
     // formDataSave.set('tableName', tableName);
     // axios
-    //   .post("http://localhost:5000/api/check-table", formDataSave)
+    //   .post("http://localhost:50000/api/check-table", formDataSave)
     //   .then((response) => {
     //     if (response.data && response.data.message && response.data.message.startsWith("Error")) {
     //       alert(response.data.message);
@@ -64,7 +64,7 @@ const CustomizeModal = (props) => {
     formData.set('nullName', nullName);
     // process with options , data frame received
     axios
-      .post("http://localhost:5000/api/process", formData)
+      .post("http://localhost:50000/api/process", formData)
       .then((res) => {
         setDataframe(res);
         // console.log(typeof res.data.table);

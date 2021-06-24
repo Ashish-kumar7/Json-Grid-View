@@ -23,7 +23,7 @@ import GreenCheckbox from "../../material-styles/GreenCheckBox";
 import Checkbox from "@material-ui/core/Checkbox";
 import { ProgressBar } from "react-bootstrap";
 import io from 'socket.io-client'
-const socket = io("http://localhost:5000/");
+const socket = io("http://localhost:50000/");
 var FileDownload = require("js-file-download");
 var parse = require("html-react-parser");
 
@@ -133,7 +133,7 @@ const PreviewPage = (props) => {
       setFileExtension("output.db");
     }
     axios
-      .post("http://localhost:5000/api/convert", formData, {
+      .post("http://localhost:50000/api/convert", formData, {
         responseType: "blob",
       })
       .then((response) => {
@@ -176,7 +176,7 @@ const PreviewPage = (props) => {
     const formData = new FormData();
     formData.set("page_number", currentPage);
     axios
-      .post("http://localhost:5000/api/page", formData)
+      .post("http://localhost:50000/api/page", formData)
       .then((response) => {
         console.log(response);
         setTable(response.data.table);
@@ -194,7 +194,7 @@ const PreviewPage = (props) => {
     formData.set("col_name", colWithIdx[selectedIndex]);
     formData.set("page_number", currentPage);
     axios
-      .post("http://localhost:5000/api/uniqueValues", formData)
+      .post("http://localhost:50000/api/uniqueValues", formData)
       .then((response) => {
         // receive  20 unique values
 
@@ -226,7 +226,7 @@ const PreviewPage = (props) => {
     formData.set("col_name", colWithIdx[index]);
     formData.set("page_number", 1);
     axios
-      .post("http://localhost:5000/api/uniqueValues", formData)
+      .post("http://localhost:50000/api/uniqueValues", formData)
       .then((response) => {
         // receive first 20 unique values
 
@@ -296,7 +296,7 @@ const PreviewPage = (props) => {
     formData.set("search_val", searchval);
     console.log("value = " + searchval);
     axios
-      .post("http://localhost:5000/api/searchValues", formData)
+      .post("http://localhost:50000/api/searchValues", formData)
       .then((response) => {
         // set  search values
         console.log("search results arrived!!");
@@ -402,7 +402,7 @@ const PreviewPage = (props) => {
     console.log(JSON.stringify(queryDict));
     formData.set("dict", JSON.stringify(queryDict));
     axios
-      .post("http://localhost:5000/api/queryForm", formData)
+      .post("http://localhost:50000/api/queryForm", formData)
       .then((response) => {
         // receive data frame
         console.log("Response after query using dict");
