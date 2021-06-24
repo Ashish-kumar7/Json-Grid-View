@@ -16,7 +16,7 @@ from flask import Flask, jsonify, request, send_file
 import re
 from logging import exception
 from enum import unique
-HADOOP_INSTALLED = False
+HADOOP_INSTALLED = True
 
 
 if HADOOP_INSTALLED:
@@ -456,13 +456,10 @@ def convertFile():
             # startTime = time.time()
             # print("Total time taken : ", startTime - initTime)
             socketio.emit('progress', 80, broadcast=True)
-            # if HADOOP_INSTALLED:
-            #     if data_type == 1:
-            #         DF.to_csv('test.csv')
-            #         hadoopstorage.saveFile(DF)
-            #     else:
-            #         PreviewDF.to_csv('test.csv')
-            #         hadoopstorage.saveFile(PreviewDF)
+            
+            if HADOOP_INSTALLED:
+                DF.to_csv('test.csv')
+                hadoopstorage.saveFile(DF)
 
                 # code to convert csv file and saving it to hdfs
                 # df = pd.read_csv('generatedCsvFile.csv')
