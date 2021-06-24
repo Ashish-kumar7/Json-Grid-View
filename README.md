@@ -1,14 +1,23 @@
 ### using this branch to test electron js
-**to run electron server**
+**to run electron server** - uses backend/dist/App/App.exe for backend
 - cd frontend
 - npm start
 - npm run start-electron
 
+If you update backend and want to generate prouction exe for backend
+- this generates App.exe in  backend/dist/App/
 **to generate backend production** 
 - cd backend
 - pip install pyinstaller  
 - pyinstaller App.spec
 
+
+
+refs 
+- pyinstaller https://pyinstaller.readthedocs.io/en/stable/operating-mode.html
+- generating production https://medium.com/@johndyer24/building-a-production-electron-create-react-app-application-with-shared-code-using-electron-builder-c1f70f0e2649
+- electron production https://medium.com/@kitze/%EF%B8%8F-from-react-to-an-electron-app-ready-for-production-a0468ecb1da3
+- integrating backend with electron https://medium.com/red-buffer/integrating-python-flask-backend-with-electron-nodejs-frontend-8ac621d13f72
 # Json-Grid-View
 
 This project fetches the JSON in different ways and parses it into tabular form and saves it into HDFS.
