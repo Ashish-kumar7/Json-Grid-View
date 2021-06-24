@@ -1,6 +1,11 @@
 ### using this branch to test electron js
-**to run development server**
-- npm run electron-dev
+**to run electron server**
+- npm start
+- npm run start-electron
+-
+** to generate backend production ** 
+- pip install pyinstaller  
+- pyinstaller App.spec
 
 # Json-Grid-View
 
