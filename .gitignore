@@ -11,5 +11,5 @@
 /backend/generatedDB.db
 /backend/generatedCsvFile.csv
 /backend/generatedXlsxFile.xlsx
-
+/dist/
 
