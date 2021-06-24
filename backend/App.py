@@ -31,7 +31,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Constants
 
 # File Constants
-ELECTRON_PATH = ("..//backend//dist//App//" , "..//backend//" , "")[0] # path for prod, dev 
+ELECTRON_PATH = ("..//backend//dist//App//" , "..//backend//" , "backend//dist//App//")[2] # path for prod, dev 
 CSV_FILENAME = 'generatedCsvFile'
 XLSX_FILENAME = 'generatedXlsxFile'
 SQL_DB_NAME = 'generatedDB'
