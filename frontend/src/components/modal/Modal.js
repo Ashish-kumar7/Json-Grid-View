@@ -12,9 +12,7 @@ const socket = io("http://localhost:50000/");
 
 const CustomizeModal = (props) => {
   const [tableType, setTableType] = useState(1);
-  const [joinChar, setJoinChar] = useState("_");
   const [parentCol, setParentCol] = useState(true);
-  // const [missingVal, setMissingVal] = useState("null");
   const [sheetName, setSheetName] = useState("Sheet1");
   const [nullName, setNullName] = useState("null");
   const [tableName, setTablename] = useState("table001");
@@ -57,7 +55,6 @@ const CustomizeModal = (props) => {
       setButtonId("disableButton");
     const formData = new FormData();
     formData.set('table_type', tableType);
-    formData.set('join_char', joinChar);
     formData.set('parentCol', parentCol);
     formData.set('sheetName', sheetName);
     formData.set('tableName', tableName);
@@ -106,12 +103,6 @@ const CustomizeModal = (props) => {
   const tablehandler = (e) => {
     console.log(e.target.value);
     setTableType(e.target.value);
-  }
-
-  const charhandler = (e) => {
-    console.log("joiner changed")
-    console.log(e.target.value);
-    setJoinChar(e.target.value);
   }
 
   const sheethandler = (e) => {
@@ -192,7 +183,7 @@ const CustomizeModal = (props) => {
               </Row>
 
               <Row className="entry" onChange={parenthandler}>
-                <h6>Do you want parent names in column? </h6>
+                <h6>Include parent names in column</h6>
                 <Col>
                   <InputGroup>
                     <InputGroup.Radio
@@ -214,16 +205,6 @@ const CustomizeModal = (props) => {
                     No
                   </InputGroup>
                 </Col>
-              </Row>
-              <Row className="entry2" onChange={charhandler}>
-                <h6>Join Column name with character</h6>
-                <select aria-label="Default select example" >
-                  <option>Open this select menu</option>
-                  <option value="_" selected>_</option>
-                  <option value=".">.</option>
-                  <option value="-">-</option>
-
-                </select>
               </Row>
               <Row className="entry2" onChange={nullhandler}>
                 <Form.Label>Fill Missing Value</Form.Label>
@@ -268,8 +249,7 @@ const CustomizeModal = (props) => {
                 <Card.Body>
                   <Card.Title>Card Title</Card.Title>
                   <Card.Text>
-                    Some quick example text to build on the card title and make up
-                    the bulk of the card's content.
+                    This is the quick preview of how the table will look.
                   </Card.Text>
                 </Card.Body>
               </Card>
