@@ -155,7 +155,7 @@ const CustomizeModal = (props) => {
                       aria-label="Radio button for following text input"
                       defaultChecked
                     />
-                    <label>Normal Table</label>
+                    <label>Generate Normal Table</label>
                   </InputGroup>
                 </Col>
                 <Col>
@@ -166,7 +166,7 @@ const CustomizeModal = (props) => {
                       value="2"
                       aria-label="Radio button for following text input"
                     />
-                    Cross Product Table
+                    <label>Cross Product Table</label>
                   </InputGroup>
                 </Col>
                 <Col>
