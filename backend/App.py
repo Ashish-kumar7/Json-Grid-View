@@ -172,7 +172,7 @@ def processFile():
         global prevQueryCols
         prevQueryCols = {}
 
-        JOINER_CHAR = request.form['join_char']
+        JOINER_CHAR = "_"
         JOIN_PAR_IN_COLS = True if request.form['parentCol'] == 'true' else False
         SHEET_NAME = request.form['sheetName']
         SQL_TAB_NAME = request.form['tableName']
