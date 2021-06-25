@@ -107,23 +107,6 @@ const FileUpload = () => {
       });
     }
   };
-  //   axios
-  //     .post("http://localhost:50000/api/convert", formData, {
-  //       responseType: "blob",
-  //     })
-  //     .then((response) => {
-  //       setUploadPercentage(100);
-  //       setTimeout(() => {
-  //         setUploadPercentage(0);
-  //       }, 1000);
-  //       setDownloadContent(response.data);
-  //       console.log(response);
-  //       setShowDownload(true);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setUploadPercentage(0);
-  //     });
 
   return (
     <div className="fileUpload">
@@ -147,8 +130,9 @@ const FileUpload = () => {
         {isSelected ? (
           <div>
             <pre>
-              Filename: {selectedFile.name} Filetype: {selectedFile.type} Size
-              in bytes: {selectedFile.size}
+              Filename: {selectedFile.name} <br></br>
+              Filetype: {selectedFile.type} <br></br>
+              Size: {selectedFile.size} bytes
             </pre>
           </div>
         ) : (
