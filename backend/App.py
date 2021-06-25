@@ -1,3 +1,4 @@
+from flask.helpers import send_from_directory
 from flask_socketio import *
 import subprocess
 import time
@@ -31,7 +32,8 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Constants
 
 # File Constants
-ELECTRON_PATH = ("..//backend//dist//App//" , "..//backend//" , "backend//dist//App//")[2] # path for prod, dev 
+ELECTRON_PATH = ("..//backend//dist//App//", "..//backend//",
+                 "backend//dist//App//")[2]  # path for prod, dev
 CSV_FILENAME = 'generatedCsvFile'
 XLSX_FILENAME = 'generatedXlsxFile'
 SQL_DB_NAME = 'generatedDB'
@@ -109,12 +111,12 @@ def uploadFile():
     global jsonData
 
     # Delete the existing files
-    try : 
+    try:
         utilities.DeleteIfExists(ELECTRON_PATH + SQL_DB_NAME + '.db')
         utilities.DeleteIfExists(ELECTRON_PATH + CSV_FILENAME + '.csv')
         utilities.DeleteIfExists(ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
-    except Exception as e :
-        print("Exception while deleting " , e)
+    except Exception as e:
+        print("Exception while deleting ", e)
 
     # Added delay of 5 seconds to avoid conflict between deleting old files and writing new files
     # time.sleep(3)
@@ -122,7 +124,7 @@ def uploadFile():
     print("\n\n\n\nForm Data in /api/upload\n", request.form)
     try:
         print("form  : ", request.form)
-        # with open(ELECTRON_PATH + "Form.txt") as file : 
+        # with open(ELECTRON_PATH + "Form.txt") as file :
         #     file.write(request.form)
         startTime = time.time()
         global initTime
@@ -250,17 +252,18 @@ def processFile():
         startTime = time.time()
         print("Total time taken : ", startTime - initTime)
         socketio.emit('progress', 90, broadcast=True)
-        
+
         # html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
         # table = PreviewDF.iloc[startRow : endRow][:].to_dict()
 
         tableCols = []
-        for c in columnListOrd :
-            tableCols.append({'key' : c , 'name' : c})
-        
+        for c in columnListOrd:
+            tableCols.append({'key': c, 'name': c})
+
         tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
+        utilities.GenReactDataGridRows(
+            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
         # print(tableRows)
 
         response = jsonify(tableRows=tableRows, tableCols=tableCols,
@@ -286,11 +289,12 @@ def returnDataFrame():
         #     df=PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
 
         tableCols = []
-        for c in columnListOrd :
-            tableCols.append({'key' : c , 'name' : c})
+        for c in columnListOrd:
+            tableCols.append({'key': c, 'name': c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = page)
+        utilities.GenReactDataGridRows(
+            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=page)
         # print(tableRows)
 
         response = jsonify(
@@ -346,12 +350,12 @@ def queryUsingDict():
         #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
 
         tableCols = []
-        for c in columnListOrd :
-            tableCols.append({'key' : c , 'name' : c})
+        for c in columnListOrd:
+            tableCols.append({'key': c, 'name': c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
-        
+        utilities.GenReactDataGridRows(
+            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
 
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
@@ -415,7 +419,6 @@ def convertFile():
 
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen csv : ", time.time() - startTime)
-        
             return send_file(ELECTRON_PATH + CSV_FILENAME + '.csv')
 
         # Generate XLSX
@@ -430,9 +433,11 @@ def convertFile():
 
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen xlsx : ", time.time() - startTime)
-            print("generated path = " , ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
-            return send_file(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
+            print("generated path = ", ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
 
+            # os.chmod(ELECTRON_DIR + XLSX_FILENAME + '.xlsx' , 0o777)
+            # return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
+            return send_from_directory(ELECTRON_PATH, XLSX_FILENAME, as_attachment=True, mimetype='application/EXCELMIME', attachment_filename=(XLSX_FILENAME + '.xlsx'))
         # Generate SQL Database, Table
         if extension == "hive":
 
@@ -456,7 +461,7 @@ def convertFile():
             # startTime = time.time()
             # print("Total time taken : ", startTime - initTime)
             socketio.emit('progress', 80, broadcast=True)
-            
+
             if HADOOP_INSTALLED:
                 DF.to_csv('test.csv')
                 hadoopstorage.saveFile(DF)
@@ -505,11 +510,12 @@ def fetchQueryData():
         # response = jsonify(
         #     table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
         tableCols = []
-        for c in columnListOrd :
-            tableCols.append({'key' : c , 'name' : c})
+        for c in columnListOrd:
+            tableCols.append({'key': c, 'name': c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = page)
+        utilities.GenReactDataGridRows(
+            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=page)
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
 
@@ -551,4 +557,4 @@ def fetchQueryData():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port = 50000)
+    app.run(debug=True, port=50000)

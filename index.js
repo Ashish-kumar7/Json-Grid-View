@@ -12,7 +12,8 @@ function createWindow () {
     height: 1080,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: true
+      nodeIntegration: true,
+      webSecurity : false
     }
   })
 
@@ -34,7 +35,7 @@ function createWindow () {
     execfile(
     backend,
     {
-    windowsHide: true,
+    windowsHide: false,
     },
     (err, stdout, stderr) => {
     if (err) {

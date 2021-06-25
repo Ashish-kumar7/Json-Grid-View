@@ -12,4 +12,4 @@
 /backend/generatedCsvFile.csv
 /backend/generatedXlsxFile.xlsx
 /dist/
-
+/src/node_modules/
