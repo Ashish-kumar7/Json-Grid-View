@@ -75,8 +75,8 @@ const JsonChecker = () => {
 
       </div>
       <Button title={"Download"}
-        classId={"downloadButton"}
-        clickFunc={downloadFile}></Button>
+            classId={"downloadButton"}
+            clickFunc={downloadFile}></Button>
       <Footer />
     </div>
   );

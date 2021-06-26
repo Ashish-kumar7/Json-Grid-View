@@ -56,36 +56,37 @@ align-self: center;
 
 
 
-margin: 20px 20px 20px 0px;
-width: 10vh;
-margin-left: -2vh;
-padding: 5px;
-border-radius: 20px;
-box-shadow: 5px 10px rgba(255,255,255,0.15);
-}
+  
+  margin: 20px 20px 20px 0px;
+  width: 10vh;
+  margin-left: -2vh;
+  padding: 5px;
+  border-radius: 20px;
+  box-shadow: 5px 10px rgba(255,255,255,0.15);
+ }
 
-/* .queryButton{
-background-color: #f50057;
-/* margin: 20px 10px 20px 0px; */
-/* width: 8vh;
-height: 6vh; */
-/* margin-left: 16vh; */
-/* padding: 5px; */
-/* border-radius: 20px;
-box-shadow: 5px 10px rgba(223, 223, 223, 0.15); */
-/* } */ */
+ /* .queryButton{
+  background-color: #f50057;
+  /* margin: 20px 10px 20px 0px; */
+  /* width: 8vh;
+  height: 6vh; */
+  /* margin-left: 16vh; */
+  /* padding: 5px; */
+  /* border-radius: 20px;
+  box-shadow: 5px 10px rgba(223, 223, 223, 0.15); */
+ /* } */ */
 
-.newpreview .navbar-nav  .nav-link {
-text-align: center;
-color: white;
-font-weight: 500;
-font-size: small;
+ .newpreview .navbar-nav  .nav-link {
+  text-align: center;
+  color: rgb(255, 255, 255);
+  font-weight: 500;
+  font-size: small;
 }
 
 .newpreview .navbar-nav  .nav-link:hover {
-font-weight: 500;
-color: rgb(0, 0, 0);
-
+  font-weight: 500;
+  color: rgb(0, 0, 0);
+  
 }
 
 .newpreview .navbar-nav  .nav-link:link {
@@ -191,9 +192,35 @@ display: flex;
 }
 
 .filterButton {
-float: right;
+  float: right;
+  
+  
+}
 
+.filterButton button {
+  
+  background-color: blueviolet;
+  color: white;
+  margin-bottom: 1px;
+}
 
+#demo-simple-select {
+  color: aliceblue;
+  background-color: #09c6f9;
+}
+
+#demo-simple-select-label {
+  color: palevioletred;
+  
+}
+
+#searchform {
+  margin-top: -16px;
+}
+
+.searchmenu p {
+  color:bisque;
+  margin-left: 2vh;
 }
 
 .filterButton button {

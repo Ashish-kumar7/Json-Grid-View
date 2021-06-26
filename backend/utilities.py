@@ -1,5 +1,6 @@
 # Imports
 import numpy as np
+from numpy.lib.function_base import select
 import pandas as pd
 from collections import OrderedDict
 import time
@@ -461,6 +462,13 @@ def queryUsingDict(df , queryDict) :
         df = df.loc[ df[colName].isin(valList) ]
         # print("after " , colName, valList)
         # print(df)
+    return df
+
+def queryUsingForm(df, colName, select_val ) :
+    print(type(df))
+    df = df.loc[ df[colName].str.match(select_val) ]
+    print(df)
+       
     return df
 
 

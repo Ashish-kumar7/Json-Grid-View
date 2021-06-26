@@ -1,6 +1,7 @@
 from flask_socketio import *
 import subprocess
 import time
+from numpy.lib.function_base import select
 from pandas.core.base import SelectionMixin
 import sqlalchemy
 import pandas as pd
@@ -391,6 +392,40 @@ def searchValueInCol():
         print(e)
         return jsonify({'message:', 'error'})
 
+@app.route('/api/searchRecord', methods=['POST'])
+@cross_origin()
+def searchRecords():
+    global prevQueryCols
+    global PreviewDF
+
+    print('search Value Form')
+    print()
+    print('form \n\n\n\n\n', request.form)
+    try:
+        s_selected_col = request.form['col_name']
+        s_search_val = request.form['search_val']
+
+        PreviewDF = utilities.queryUsingForm(df=DF, colName =s_selected_col, select_val =s_search_val )
+
+        # html_string = utilities.GenPageHTML(
+        #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
+
+        tableCols = []
+        for c in columnListOrd :
+            tableCols.append({'key' : c , 'name' : c})
+
+        tableRows = []
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+        
+
+        response = jsonify(
+            tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+
+        return response
+        
+    except Exception as e:
+        print(e)
+        return jsonify({'message:', 'error'})
 
 @app.route('/api/convert', methods=['POST'])
 @cross_origin()
@@ -494,7 +529,7 @@ def fetchQueryData():
         # PreviewDF = DF.copy()
 
         # print(DF.head())
-        # print(PreviewDF.head())
+        print(PreviewDF.head())
 
         sqlite_connection.close()
         print("Time to gen db : ", time.time() - startTime)

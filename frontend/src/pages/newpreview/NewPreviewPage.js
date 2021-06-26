@@ -22,17 +22,27 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+// import SelectSearch from 'react-select-search';
+// import 'react-select-search/style.css';
+// import fuzzySearch from 'react-select-search/dist/cjs/fuzzySearch';
+// import Select from 'react-select';
+
 
 const socket = io("http://localhost:50000/");
 
 var FileDownload = require("js-file-download");
 
 // const columns = initialDataFrame.dfcol;
-
 // const rows = initialDataFrame.dfrow;
 
 const defaultColumnProperties = {
   filterable: true,
+  resizable: true,
   width: 120,
 };
 
@@ -79,6 +89,16 @@ const useStyles = makeStyles((theme) => ({
   numval: {
     padding: "4%",
     marginLeft: "10%",
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+    
+    
+    
+  },
+  selectEmpty: {
+    marginTop: theme.spacing(2),
   },
   root2: {
     "& div.react-grid-Header": {
@@ -134,6 +154,7 @@ const useStyles = makeStyles((theme) => ({
 const NewPreviewPage = () => {
   // console.log("new preview page");
   // console.log(initialDataFrame.dfrow);
+  
   let [, setState] = useState();
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
@@ -165,11 +186,13 @@ const NewPreviewPage = () => {
   const [showDownload, setShowDownload] = useState(false);
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
-  const [disable ,setDisable ]= useState(false);
-  const [buttonId,setButtonId] = useState("uploadButton");
+  const [disable, setDisable] = useState(false);
+  const [buttonId, setButtonId] = useState("uploadButton");
 
-  const [query,setQuery] = useState("");
-  const [fetchClicked, setFetchClicked] = useState(false);
+  const [selectedColumn, setSelectedColumn] =  useState("");
+  const [searchValue, setSearchValue] = useState("");
+
+  const [query, setQuery] = useState("");
 
   const filterhandler = () => {
     const newCol2 = gridCols;
@@ -204,76 +227,72 @@ const NewPreviewPage = () => {
 
   // page change function for df preview
   const onPageChanged = (data) => {
-    if(fetchClicked) {
-      setFetchClicked(false);
-    } else {
-      const { currentPage, totalPages, pageLimit } = data;
-      // console.log(currentPage);
-      const offset = (currentPage - 1) * pageLimit;
-      const formData = new FormData();
-      formData.set("page_number", currentPage);
-      axios
-        .post("http://localhost:50000/api/page", formData)
-        .then((response) => {
-          // console.log(response);
-          // console.log("result total records " + resultTotalRecords);
-          // initialDataFrame.dfrow = response.data.tableRows;
-          // initialDataFrame.dfcol = response.data.tableCols;
+    console.log("onPageChanged Ran");
+    const { currentPage, totalPages, pageLimit } = data;
+    // console.log(currentPage);
+    const offset = (currentPage - 1) * pageLimit;
+    const formData = new FormData();
+    formData.set("page_number", currentPage);
+    axios
+      .post("http://localhost:50000/api/page", formData)
+      .then((response) => {
+        // console.log(response);
+        // console.log("result total records " + resultTotalRecords);
+        // initialDataFrame.dfrow = response.data.tableRows;
+        // initialDataFrame.dfcol = response.data.tableCols;
 
-          setGridCols(response.data.tableCols);
-          setGridRows(response.data.tableRows);
-          // setTable(response.data.table);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+        setGridCols(response.data.tableCols);
+        setGridRows(response.data.tableRows);
+        // setTable(response.data.table);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleConversion = (val) => {
-    if(disable){
+    console.log("handleConversion Ran");
+    if (disable) {
       console.log("disable true");
     }
-    else{
-    setDisable(true);
-    setButtonId("disableButton");
-    setUploadPercentage(10);
-    const formData = new FormData();
-    formData.set("content_type", val);
-    // formData.set("data_type" , dataType);
-    if (val == "excel") {
-      setFileExtension("output.xlsx");
-      setDownloadText("Download Excel");
-    } else if (val == "csv") {
-      setFileExtension("output.csv");
-      setDownloadText("Download CSV");
-    } else {
-      setFileExtension("output.db");
-      setDownloadText("Download DB");
-      alert("Saving Files to Hadoop!")
-    }
-    axios
-      .post("http://localhost:50000/api/convert", formData, {
-        responseType: "blob",
-      })
-      .then((response) => {
-        console.log(response);
-        setDisable(false);
+    else {
+      setDisable(true);
+      setButtonId("disableButton");
+      setUploadPercentage(10);
+      const formData = new FormData();
+      formData.set("content_type", val);
+      // formData.set("data_type" , dataType);
+      if (val == "excel") {
+        setFileExtension("output.xlsx");
+        setDownloadText("Download Excel");
+      } else if (val == "csv") {
+        setFileExtension("output.csv");
+        setDownloadText("Download CSV");
+      } else {
+        setFileExtension("output.db");
+        setDownloadText("Download DB");
+      }
+      axios
+        .post("http://localhost:50000/api/convert", formData, {
+          responseType: "blob",
+        })
+        .then((response) => {
+          setDisable(false);
           setButtonId("uploadButton");
-        setUploadPercentage(100);
-        setTimeout(() => {
+          setUploadPercentage(100);
+          setTimeout(() => {
+            setUploadPercentage(0);
+          }, 1000);
+          setDownloadContent(response.data);
+          console.log(response);
+          setShowDownload(true);
+        })
+        .catch((err) => {
+          setDisable(false);
+          setButtonId("uploadButton");
+          console.log(err);
           setUploadPercentage(0);
-        }, 1000);
-        setDownloadContent(response.data);
-        console.log(response);
-        setShowDownload(true);
-      })
-      .catch((err) => {
-        setDisable(false);
-          setButtonId("uploadButton");
-        console.log(err);
-        setUploadPercentage(0);
-      });
+        });
     }
   };
 
@@ -288,11 +307,10 @@ const NewPreviewPage = () => {
 
   //On fetchButtonClick
   const onFetchButtonClick = (e) => {
+    console.log("onFetchButtonClick Ran");
     e.preventDefault();
     const formData = new FormData();
     formData.set("query_text", query);
-    setFetchClicked(true);
-
     axios
       .post("http://localhost:50000/api/query", formData)
       .then((response) => {
@@ -305,7 +323,6 @@ const NewPreviewPage = () => {
           alert(response.data.message);
         } else {
           setGridRows(response.data.tableRows);
-
           setResultTotalRecords(response.data.total_records);
           setResultRows(response.data.rows_per_page);
         }
@@ -315,149 +332,188 @@ const NewPreviewPage = () => {
       });
   };
 
+  let colList = [];
+
+  for (var i = 0; i < initialDataFrame.cols.length; i++) {
+    // dictIntermediate[initialDataFrame.cols[i]] = new Set();
+    let number = i;
+    colList.push(
+      <MenuItem value={initialDataFrame.cols[number]}>{initialDataFrame.cols[number]}</MenuItem>
+    );
+  }
+
+  const columnnamehandler = (e)=> {
+    setSelectedColumn(e.target.value);
+    console.log(e.target.value);
+  };
+  const searchvaluehandler = (e)=> {
+    setSearchValue(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const searchhandler = () => {
+    const formData = new FormData();
+    formData.set("col_name", selectedColumn);
+    formData.set("search_val", searchValue);
+    axios
+      .post("http://localhost:50000/api/searchRecord", formData)
+      .then((response) => {
+        setGridRows(response.data.tableRows);
+        setResultTotalRecords(response.data.total_records);
+        setResultRows(response.data.rows_per_page);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+      
+  };
+
   return (
     <div className="newpreview">
       <Navbar></Navbar>
-      <div >
-      <Row>
-        <Col lg="11" className="left">
-          <div className="filterButton">
-            <button onClick={filterhandler}>AutoComplete</button>
-            <button onClick={filter1handler}>MultiSelect</button>
-          </div>
-          <div  className={classes.root2}>
-            {showFilter?(
-               <ReactDataGrid
-           
-               columns={gridCols.map((c) => ({
-                 ...c,
-                 ...defaultColumnProperties,
-               }))}
-               rowGetter={(i) => filteredRows[i]}
-               rowsCount={filteredRows.length}
-               minHeight={456}
-               
-               toolbar={<Toolbar enableFilter={true} />}
-               onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
-               onClearFilters={() => setFilters({})}
-               getValidFilterValues={columnKey => getValidFilterValues([], columnKey)}
-             />
-            ):<></>}
-           {showFilter1?(
-               <ReactDataGrid
-           
-               columns={gridCol1.map((c) => ({
-                 ...c,
-                 ...defaultColumnProperties,
-               }))}
-               rowGetter={(i) => filteredRows2[i]}
-               rowsCount={filteredRows2.length}
-               minHeight={456}
-               
-               toolbar={<Toolbar enableFilter={true} />}
-               onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
-               onClearFilters={() => setFilters2({})}
-               getValidFilterValues={columnKey => getValidFilterValues(gridRows1, columnKey)}
-             />
-            ):<></>}
-          </div>
-          <div className={classes.num}>
-            <PaginationP
-              key={resultTotalRecords}
-              totalRecords={resultTotalRecords}
-              pageLimit={resultRows}
-              pageNeighbours={1}
-              onPageChanged={onPageChanged}
-            />
-          </div>
-          <Container className="queryInside">
-          <Row>
-            <Row className="query">
-              
-                <form>
-                <input type="text" placeholder="Type your SQL query" onChange = {(event)=>queryhandler(event)} />
-                
-                <button onClick={onFetchButtonClick}>Fetch</button>
-                </form>
-                {/* <Button
-                title={"Fetch"}
-                classId={"queryButton"}
-                clickFunc={ onFetchButtonClick}
-                ></Button> */}
-                
+      <div className="searchmenu">
+        <p>Search here to find from all records:</p>
+        <Row>
+          <Col lg="11" className="left">
+            <Row>
+              <Col>
+              <div className="searchall">
+            <FormControl id="searchform" className={classes.formControl}>
+        <InputLabel id="demo-simple-select-label">Select Column</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={selectedColumn}
+          onChange={columnnamehandler}
+        >
+          {colList}
+        </Select>
+      </FormControl>
+      <input type="text" placeholder="Find" onChange={searchvaluehandler}></input>
+      <button onClick={searchhandler}>Search</button>
+            </div>
+              </Col>
+              <Col>
+              <div className="filterButton">
+              <button onClick={filterhandler}>AutoComplete</button>
+              <button onClick={filter1handler}>MultiSelect</button>
+            </div>
+              </Col>
             </Row>
-          </Row>
-        </Container>
-        </Col>
-        <Col lg="1" className="right">
-        {/* <Container className="queryInside">
-          <Row>
-            <Row className="query">
-              
-                <input type="text" placeholder="Type your SQL query" onChange = {(event)=>queryhandler(event)} />
-                
-                <button onClick={onFetchButtonClick}>Fetch</button> */}
+            
+           
+            <div className={classes.root2}>
+              {showFilter ? (
+                <ReactDataGrid
 
-                {/* <Button
-                title={"Fetch"}
-                classId={"queryButton"}
-                clickFunc={ onFetchButtonClick}
-                ></Button> */}
-                
-            {/* </Row>
-          </Row>
-        </Container> */}
-        <Container>
-         
-          <Row>
-            <Col lg="12">
-              {/* <IconBox iconType={faFileExcel} size={"1x"}></IconBox> */}
+                  columns={gridCols.map((c) => ({
+                    ...c,
+                    ...defaultColumnProperties,
+                  }))}
+                  rowGetter={(i) => filteredRows[i]}
+                  rowsCount={filteredRows.length}
+                  minHeight={456}
+
+                  toolbar={<Toolbar enableFilter={true} />}
+                  onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
+                  onClearFilters={() => setFilters({})}
+                  getValidFilterValues={columnKey => getValidFilterValues([], columnKey)}
+                  onColumnResize={(idx, width) =>
+                    console.log(`Column ${idx} has been resized to ${width}`)}
+                />
+              ) : <></>}
+              {showFilter1 ? (
+                <ReactDataGrid
+
+                  columns={gridCol1.map((c) => ({
+                    ...c,
+                    ...defaultColumnProperties,
+                  }))}
+                  rowGetter={(i) => filteredRows2[i]}
+                  rowsCount={filteredRows2.length}
+                  minHeight={456}
+
+                  toolbar={<Toolbar enableFilter={true} />}
+                  onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
+                  onClearFilters={() => setFilters2({})}
+                  getValidFilterValues={columnKey => getValidFilterValues(gridRows1, columnKey)}
+                  onColumnResize={(idx, width) =>
+                    console.log(`Column ${idx} has been resized to ${width}`)}
+                />
+              ) : <></>}
+            </div>
+            <div className={classes.num}>
+              <PaginationP
+                key={resultTotalRecords}
+                totalRecords={resultTotalRecords}
+                pageLimit={resultRows}
+                pageNeighbours={1}
+                onPageChanged={onPageChanged}
+              />
+            </div>
+            <Container className="queryInside">
+              <Row>
+                <Row className="query">
+                  <form>
+                    <input type="text" placeholder="Type your SQL query" onChange={(event) => queryhandler(event)} />
+                    <button onClick={onFetchButtonClick}>Fetch</button>
+                  </form>
+                </Row>
+              </Row>
+            </Container>
+          </Col>
+          <Col lg="1" className="right">
+            <Container>
+
+              <Row>
+                <Col lg="12">
+                  {/* <IconBox iconType={faFileExcel} size={"1x"}></IconBox> */}
+                  <Button
+                    title={"Convert to Excel"}
+                    classId={buttonId}
+                    clickFunc={() => handleConversion("excel")}
+                  ></Button>
+                </Col>
+                <Col lg="12">
+                  {/* <IconBox iconType={faFileCsv} size={"1x"}></IconBox> */}
+                  <Button
+                    title={"Convert To CSV"}
+                    classId={buttonId}
+                    clickFunc={() => handleConversion("csv")}
+                  ></Button>
+                </Col>
+                <Col lg="12">
+                  {/* <IconBox iconType={faDatabase} size={"1x"}></IconBox> */}
+                  <Button
+                    title={"Convert To DB"}
+                    classId={buttonId}
+                    clickFunc={() => handleConversion("hive")}
+                  ></Button>
+                </Col>
+              </Row>
+            </Container>
+            {uploadPercentage > 0 && (
+              <div className="progressbar">
+                <ProgressBar
+                  now={uploadPercentage}
+                  striped={true}
+                  animated
+                  label={`${uploadPercentage}%`}
+                  variant="success"
+                />
+              </div>
+            )}
+            {showDownload ? (
               <Button
-                title={"Convert to Excel"}
-                classId={buttonId}
-                clickFunc={() => handleConversion("excel")}
+                title={downloadText}
+                classId={"downloadButton"}
+                clickFunc={downloadFile}
               ></Button>
-            </Col>
-            <Col lg="12">
-              {/* <IconBox iconType={faFileCsv} size={"1x"}></IconBox> */}
-              <Button
-                title={"Convert To CSV"}
-                classId={buttonId}
-                clickFunc={() => handleConversion("csv")}
-              ></Button>
-            </Col>
-            <Col lg="12">
-              {/* <IconBox iconType={faDatabase} size={"1x"}></IconBox> */}
-              <Button
-                title={"Save to Hadoop"}
-                classId={buttonId}
-                clickFunc={() => handleConversion("hive")}
-              ></Button>
-            </Col>
-          </Row>
-        </Container>
-        {uploadPercentage > 0 && (
-        <div className="progressbar">
-          <ProgressBar
-            now={uploadPercentage}
-            striped={true}
-            animated
-            label={`${uploadPercentage}%`}
-            variant="success"
-          />
-        </div> 
-        )}
-        {showDownload ? (
-          <Button
-            title={downloadText}
-            classId={"downloadButton"}
-            clickFunc={downloadFile}
-          ></Button>
-        ) : (
-          <p></p>
-        )}
-        </Col>
-      </Row>
+            ) : (
+              <p></p>
+            )}
+          </Col>
+        </Row>
       </div>
     </div>
   );
