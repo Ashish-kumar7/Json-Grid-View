@@ -19,7 +19,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.jsonparser.jsonparser.database.DatabaseConnection;
 
 public class ExcelToSQLTable {
-
+	
+	//set the name of table where you need to save the data in the database
 	private static final String JS_TABLE_NAME = "JSON_TABLE5";
 	public static void saveIntoDatabase(String fileName) {
 		try {
