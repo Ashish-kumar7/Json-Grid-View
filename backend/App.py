@@ -53,29 +53,73 @@ SQL_TAB_NAME = 'table001'
 SHEET_NAME = 'Sheet1'
 
 # Generation constants
+
+# Charachter used to join parent-names to child-names for generating column-headers
 JOINER_CHAR = '_'
+
+"""
+Join parent-names to child-names for generating column-headers
+
+example data : {
+    "A" : {
+        "b" : "c" , 
+        "d" : "e"  
+    }
+}
+
+JOIN_PAR_IN_COLS = True  --- headers : A_b , A_d
+JOIN_PAR_IN_COLS = False --- headers : b , d
+"""
 JOIN_PAR_IN_COLS = True
-REPEAT_IN_COL = True
+
+# If set True adds extra column for Index
 ADD_INDEX_FOR_LIST = False
+
+# The name of Index column if ADD_INDEX_FOR_LIST == True
 INDEX_FOR_LIST_SUFFIX = '_INDEX'  # Index colname = par + joiner + index_suffix
+
+# Value used to fill missing data
 FILL_MISSING_WITH = 'null'
+
+# If set True Cross Product Table is generated, has no missing values
 GEN_CROSS_TABLE = False
+
+# Value used to fill NA data
 FILL_NA = ''
+
+"""
+TABLE_TYPE  : (1,2,3)
+1 : Normal table
+2 : Cross-product table
+3 : Table with added index columns
+"""
 TABLE_TYPE = '1'
 
+# Number of rows per page for pagination in TablePreview
 ROWS_PER_PAGE = 20
+# Selected page for pagination in TablePreview
 CURRENT_PAGE = 1
+# Total pages for pagination in TablePreview
 TOTAL_PAGES = 1
 
+# DataFrame used to convert tables
 DF = ''
+# DataFrame used to handle Preview,Queries
 PreviewDF = ''
+# Used to Cache previous queries for faster queries
 prevQueryCols = {}
+# contains (columnName : [filterList]) to query on PreviewDF
 queryDict = {}
 
 HTML_PREV_STR = ''
+
+# Used to store loaded json data
 jsonData = {}
+# Used to store schema to table
 tableSchema = ''
+# Ordered list of column-headers
 columnListOrd = ''
+
 initTime = ''
 
 
