@@ -32,6 +32,18 @@ import Select from '@material-ui/core/Select';
 // import fuzzySearch from 'react-select-search/dist/cjs/fuzzySearch';
 // import Select from 'react-select';
 
+// import Paper from '@material-ui/core/Paper';
+// import {
+//   FilteringState,
+//   IntegratedFiltering,
+// } from '@devexpress/dx-react-grid';
+// import {
+//   Grid,
+//   Table,
+//   TableHeaderRow,
+//   TableFilterRow,
+// } from '@devexpress/dx-react-grid-material-ui';
+
 
 const socket = io("http://localhost:5000/");
 
@@ -51,6 +63,11 @@ const selectors = Data.Selectors;
 const { AutoCompleteFilter, MultiSelectFilter } = Filters;
 
 const handleFilterChange = (filter) => (filters) => {
+  // console.log(filter.column.key);
+  // console.log(filter.filterTerm);
+  // initialDataFrame.selectCol = filter.column.key;
+  // initialDataFrame.selectSearch = filter.filterTerm;
+  initialDataFrame.searchColauto[filter.column.key]=filter.filterTerm;
   const newFilters = { ...filters };
   if (filter.filterTerm) {
     newFilters[filter.column.key] = filter;
@@ -64,6 +81,11 @@ function getValidFilterValues(rows, columnId) {
   return rows
     .map((r) => r[columnId])
     .filter((item, i, a) => {
+      console.log(columnId);
+      // initialDataFrame.searchColmulti[columnId].add()
+      // console.log(a[i]);
+      // console.log(a);
+      // console.log(item);
       return i === a.indexOf(item);
     });
 }
@@ -191,7 +213,7 @@ const NewPreviewPage = () => {
 
   const [selectedColumn, setSelectedColumn] =  useState("");
   const [searchValue, setSearchValue] = useState("");
-
+  
   const [query, setQuery] = useState("");
 
   const filterhandler = () => {
@@ -353,8 +375,9 @@ const NewPreviewPage = () => {
 
   const searchhandler = () => {
     const formData = new FormData();
-    formData.set("col_name", selectedColumn);
-    formData.set("search_val", searchValue);
+    // formData.set("col_name", initialDataFrame.selectCol);
+    // formData.set("search_val", initialDataFrame.selectSearch);
+    formData.set('serach_dict', initialDataFrame.searchColauto);
     axios
       .post("http://localhost:5000/api/searchRecord", formData)
       .then((response) => {
@@ -372,13 +395,13 @@ const NewPreviewPage = () => {
     <div className="newpreview">
       <Navbar></Navbar>
       <div className="searchmenu">
-        <p>Search here to find from all records:</p>
+        <p>After entering in below search click here to search in all records</p>
         <Row>
           <Col lg="11" className="left">
             <Row>
               <Col>
               <div className="searchall">
-            <FormControl id="searchform" className={classes.formControl}>
+            {/* <FormControl id="searchform" className={classes.formControl}>
         <InputLabel id="demo-simple-select-label">Select Column</InputLabel>
         <Select
           labelId="demo-simple-select-label"
@@ -389,7 +412,7 @@ const NewPreviewPage = () => {
           {colList}
         </Select>
       </FormControl>
-      <input type="text" placeholder="Find" onChange={searchvaluehandler}></input>
+      <input type="text" placeholder="Find" onChange={searchvaluehandler}></input> */}
       <button onClick={searchhandler}>Search</button>
             </div>
               </Col>
@@ -451,6 +474,20 @@ const NewPreviewPage = () => {
                 onPageChanged={onPageChanged}
               />
             </div>
+            {/* <div>
+            <Paper>
+      <Grid
+        rows={gridRows}
+        columns={gridCols}
+      >
+        <FilteringState defaultFilters={[]} />
+        <IntegratedFiltering />
+        <Table />
+        <TableHeaderRow />
+        <TableFilterRow />
+      </Grid>
+    </Paper>
+            </div> */}
             <Container className="queryInside">
               <Row>
                 <Row className="query">

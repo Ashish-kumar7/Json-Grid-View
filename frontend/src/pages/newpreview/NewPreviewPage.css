@@ -31,7 +31,7 @@
 
 .left {
   padding-left: 3vh;
-  padding-top: 1vh;
+  padding-top: 0vh;
  
   
 }
@@ -220,6 +220,12 @@ box-shadow: 5px 10px rgba(255,255,255,0.15);
 .searchmenu p {
   color:bisque;
   margin-left: 2vh;
+}
+
+.method2 {
+  max-height: 50vh;
+  overflow-y: scroll;
+
 }
 
 

@@ -77,6 +77,12 @@ const CustomizeModal = (props) => {
         initialDF.rows = res.data.rows_per_page;
         initialDF.records = res.data.total_records;
         initialDF.cols = res.data.columns;
+        initialDF.searchColauto ={};
+        initialDF.searchColmulti = {};
+        for(var i =0;i<initialDF.cols.length;i++){
+          initialDF.searchColauto[initialDF.cols[i]] = "";
+          initialDF.searchColmulti[initialDF.cols[i]] = new Set();
+        }
         // console.log(res.data.tableRows);
         setUploadPercentage(100);
         setDisable(false);
