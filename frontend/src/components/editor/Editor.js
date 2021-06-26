@@ -1,7 +1,6 @@
 import Button from '../button/Button'
 import './Editor.css'
 
-
 const Editor = (props) => {
   return (
     <div className="editor">

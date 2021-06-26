@@ -19,8 +19,8 @@ const CustomizeModal = (props) => {
 
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
-  const [disable ,setDisable ]= useState(false);
-  const [buttonId,setButtonId] = useState("downloadButton");
+  const [disable, setDisable] = useState(false);
+  const [buttonId, setButtonId] = useState("downloadButton");
 
   const [totalRecords, setTotalRecords] = useState(1);
   const [rows, setRows] = useState(1);
@@ -33,71 +33,50 @@ const CustomizeModal = (props) => {
     console.log(val);
   });
 
-
-
-  // on clicking any process button
   const handleSubmission = () => {
-
-    // const formDataSave = new FormData();
-    // formDataSave.set('tableName', tableName);
-    // axios
-    //   .post("http://localhost:50000/api/check-table", formDataSave)
-    //   .then((response) => {
-    //     if (response.data && response.data.message && response.data.message.startsWith("Error")) {
-    //       alert(response.data.message);
-    //     } else {
-
-      if(disable){
-        console.log("disable true");
-      }
-      else{
+    if (disable) {
+      console.log("disable true");
+    }
+    else {
       setDisable(true);
       setButtonId("disableButton");
-    const formData = new FormData();
-    formData.set('table_type', tableType);
-    formData.set('parentCol', parentCol);
-    formData.set('sheetName', sheetName);
-    formData.set('tableName', tableName);
-    formData.set('nullName', nullName);
-    // process with options , data frame received
-    axios
-      .post("http://localhost:50000/api/process", formData)
-      .then((res) => {
-        setDataframe(res);
-        // console.log(typeof res.data.table);
-        console.log("model pageeee");
-        // console.log(dataframe);
-        // response contains top 20 rows and total pages input
-        props.closeFunc();
-        initialDF.dfrow = res.data.tableRows;
-        initialDF.dfcol = res.data.tableCols;
-        initialDF.rows = res.data.rows_per_page;
-        initialDF.records = res.data.total_records;
-        initialDF.cols = res.data.columns;
-        // console.log(res.data.tableRows);
-        setUploadPercentage(100);
-        setDisable(false);
-        setButtonId("downloadButton");
-        setTimeout(() => {
+      const formData = new FormData();
+      formData.set('table_type', tableType);
+      formData.set('parentCol', parentCol);
+      formData.set('sheetName', sheetName);
+      formData.set('tableName', tableName);
+      formData.set('nullName', nullName);
+      // process with options , data frame received
+      axios
+        .post("http://localhost:50000/api/process", formData)
+        .then((res) => {
+          setDataframe(res);
+          // console.log(typeof res.data.table);
+          console.log("model pageeee");
+          // console.log(dataframe);
+          // response contains top 20 rows and total pages input
+          props.closeFunc();
+          initialDF.dfrow = res.data.tableRows;
+          initialDF.dfcol = res.data.tableCols;
+          initialDF.rows = res.data.rows_per_page;
+          initialDF.records = res.data.total_records;
+          initialDF.cols = res.data.columns;
+          setUploadPercentage(100);
+          setDisable(false);
+          setButtonId("downloadButton");
+          setTimeout(() => {
+            setUploadPercentage(0);
+          }, 1000);
+          history.push("/newpreview");
+        })
+        .catch((err) => {
+          setDisable(false);
+          setButtonId("downloadButton");
           setUploadPercentage(0);
-        }, 1000);
-        // console.log(initialDF.cols.length);
-        history.push("/newpreview");
-      })
-      .catch((err) => {
-        setDisable(false);
-        setButtonId("downloadButton");
-        setUploadPercentage(0);
-        console.log(err);
-        alert("Oops it breaks " + err);
-      });
+          console.log(err);
+          alert("Oops it breaks " + err);
+        });
     }
-    //   }
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    //   alert("Oops table-checker breaks " + err);
-    // });
   };
 
   const tablehandler = (e) => {
