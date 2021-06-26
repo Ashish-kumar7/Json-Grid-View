@@ -485,7 +485,7 @@ const NewPreviewPage = () => {
                 <Col lg="12">
                   {/* <IconBox iconType={faDatabase} size={"1x"}></IconBox> */}
                   <Button
-                    title={"Convert To DB"}
+                    title={"Save To Hadoop"}
                     classId={buttonId}
                     clickFunc={() => handleConversion("hive")}
                   ></Button>
