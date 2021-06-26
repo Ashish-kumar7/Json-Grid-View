@@ -83,9 +83,9 @@ function getValidFilterValues(rows, columnId) {
     .filter((item, i, a) => {
       console.log(columnId);
       // initialDataFrame.searchColmulti[columnId].add()
-      // console.log(a[i]);
-      // console.log(a);
-      // console.log(item);
+      console.log(a[i]);
+      console.log(a);
+      console.log(item);
       return i === a.indexOf(item);
     });
 }
@@ -176,7 +176,11 @@ const useStyles = makeStyles((theme) => ({
 const NewPreviewPage = () => {
   // console.log("new preview page");
   // console.log(initialDataFrame.dfrow);
-  
+
+  // ch.addEventListener(()=>{
+
+  // });
+
   let [, setState] = useState();
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
@@ -377,7 +381,34 @@ const NewPreviewPage = () => {
     const formData = new FormData();
     // formData.set("col_name", initialDataFrame.selectCol);
     // formData.set("search_val", initialDataFrame.selectSearch);
-    formData.set('serach_dict', initialDataFrame.searchColauto);
+    try{
+      var list = document.getElementsByClassName("Select has-value is-clearable is-searchable Select--multi");
+      for(var i =0;i<list.length;i++){
+          var input = list[i].getElementsByTagName("input");
+         
+          for(var j=0;j<input.length-1;j++)
+          {
+            initialDataFrame.searchColmulti[input[j].getAttribute("name").substring(7)].add(input[j].getAttribute("value"));
+          }
+          
+      }
+      
+      
+    }catch(error){
+      console.log(error);
+    }
+    if(showFilter){
+      formData.set("filter_type", "autoComplete");
+      formData.set('search_dict_auto', initialDataFrame.searchColauto);
+      // console.log(initialDataFrame.searchColauto);
+    }
+    else{
+      formData.set("filter_type", "multiSelect");
+      formData.set('search_dict_multi', initialDataFrame.searchColmulti);
+      // console.log(initialDataFrame.searchColmulti);
+    }
+   
+   
     axios
       .post("http://localhost:5000/api/searchRecord", formData)
       .then((response) => {
