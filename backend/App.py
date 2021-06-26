@@ -32,12 +32,24 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Constants
 
 # File Constants
+
+# Relative path from electron-directory to where Generated-files should be stored 
 ELECTRON_PATH = ("..//backend//dist//App//", "..//backend//",
                  "backend//dist//App//" , "./GeneratedFiles/")[3]  # path for prod, dev
+
+# Filename for generated .csv 
 CSV_FILENAME = 'generatedCsvFile'
+
+# Filename for generated .xlsx 
 XLSX_FILENAME = 'generatedXlsxFile'
+
+# Filename for generated .db 
 SQL_DB_NAME = 'generatedDB'
+
+# Tablename for table created inside .db file
 SQL_TAB_NAME = 'table001'
+
+# Sheet name for .xlsx file
 SHEET_NAME = 'Sheet1'
 
 # Generation constants
