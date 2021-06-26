@@ -120,16 +120,13 @@ tableSchema = ''
 # Ordered list of column-headers
 columnListOrd = ''
 
-initTime = ''
 
-
+# Using SocketIO to update progress-bar
 @socketio.on('connect')
 def connected():
     print('connected with socketio')
 
 # Custom JSON Encoder for Numpy data types
-
-
 class NumpyEncoder(json.JSONEncoder):
     """ Custom encoder for numpy data types """
 
@@ -158,9 +155,10 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
+# Set json-decoder to NumpyEncoder for handling Numpy data types
 app.json_encoder = NumpyEncoder
 
-
+# Route to load Json-Data
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
 def uploadFile():
@@ -174,17 +172,10 @@ def uploadFile():
     except Exception as e:
         print("Exception while deleting ", e)
 
-    # Added delay of 5 seconds to avoid conflict between deleting old files and writing new files
-    # time.sleep(3)
-    print("All files deleted !!!")
-    print("\n\n\n\nForm Data in /api/upload\n", request.form)
+    # print("All files deleted !!!")
+    # print("\n\n\n\nForm Data in /api/upload\n", request.form)
     try:
-        print("form  : ", request.form)
-        # with open(ELECTRON_PATH + "Form.txt") as file :
-        #     file.write(request.form)
-        startTime = time.time()
-        global initTime
-        initTime = startTime
+        # print("form  : ", request.form)
 
         type = request.form['input_type']
         if type == "file":
@@ -198,9 +189,7 @@ def uploadFile():
         if type == "text":
             jsonData = json.loads(request.form['Json'])
 
-        print("Time to load data : ", time.time() - startTime)
         # Json Loaded Successfully!
-        # print(jsonData)
         response = jsonify(message="File processed")
         return response
 
@@ -209,12 +198,12 @@ def uploadFile():
         response = jsonify(message="Error: " + str(e))
         return response
 
-
+# Route to process json and create table inside pandas DataFrame
 @app.route('/api/process', methods=['POST'])
 @cross_origin()
 def processFile():
-    print("process")
-    print("\n\n\n\nForm Data in /api/process\n", request.form)
+    # print("process")
+    # print("\n\n\n\nForm Data in /api/process\n", request.form)
     try:
         # Assign global variables based on received
         socketio.emit('progress', 10, broadcast=True)
@@ -248,7 +237,6 @@ def processFile():
             ADD_INDEX_FOR_LIST = True
             GEN_CROSS_TABLE = False
 
-        startTime = time.time()
         socketio.emit('progress', 20, broadcast=True)
         global tableSchema, columnListOrd
         columnList, tableSchema, columnListOrd, tableSchemaOrd, columnListOrdNoPar = utilities.GenTableSchema(
@@ -256,7 +244,6 @@ def processFile():
             INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX)
 
         print("\n\n\n\nNoParCols", columnListOrdNoPar)
-        print("Time to gen schema : ", time.time() - startTime)
         socketio.emit('progress', 30, broadcast=True)
         # Generated columnList and schemaTree
         # print("columns : ", columnList)
@@ -265,7 +252,6 @@ def processFile():
         # print("schema Tree Ord: ", tableSchemaOrd)
 
         DataDict = {}
-        startTime = time.time()
         socketio.emit('progress', 40, broadcast=True)
         # utilities.WriteDict(DataDict, 0, '', jsonData)
         utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
@@ -273,12 +259,9 @@ def processFile():
         # print(DataDict)
         socketio.emit('progress', 60, broadcast=True)
         print(60)
-        print("Time to create DataDict: ", time.time() - startTime)
 
-        startTime = time.time()
 
         # DF = pd.DataFrame.from_dict(DataDict, "index")
-        # print("Time to create DF from Dict: ", time.time() - startTime)
         columnsOrder = columnListOrd
 
         DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
@@ -287,12 +270,10 @@ def processFile():
             # Remove parent names from columns
             DF.columns = columnListOrdNoPar
 
-        print("Time to create DF from Dict in order: ", time.time() - startTime)
         socketio.emit('progress', 80, broadcast=True)
         print(80)
         PreviewDF = DF.copy()
 
-        startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
             'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
@@ -303,10 +284,7 @@ def processFile():
         print("\n\nData Saved in TABLE!! \n")
         # print(engine.execute("SELECT * FROM " + tableName).fetchall())
         sqlite_connection.close()
-        print("Time to gen db : ", time.time() - startTime)
 
-        startTime = time.time()
-        print("Total time taken : ", startTime - initTime)
         socketio.emit('progress', 90, broadcast=True)
 
         # html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
@@ -466,7 +444,6 @@ def convertFile():
         print(extension)
         # Generate CSV
         if extension == "csv":
-            startTime = time.time()
 
             # if data_type == 1:
             DF.to_csv(ELECTRON_PATH + CSV_FILENAME + '.csv')
@@ -474,7 +451,6 @@ def convertFile():
             #     PreviewDF.to_csv(CSV_FILENAME + '.csv')
 
             socketio.emit('progress', 80, broadcast=True)
-            print("Time to gen csv : ", time.time() - startTime)
 
             res = {
                 'status' : 'success' , 
@@ -487,7 +463,6 @@ def convertFile():
 
         # Generate XLSX
         if extension == "excel":
-            startTime = time.time()
 
             # if data_type == 1:
             DF.to_excel(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
@@ -496,7 +471,6 @@ def convertFile():
             #                        sheet_name=SHEET_NAME)
 
             socketio.emit('progress', 80, broadcast=True)
-            print("Time to gen xlsx : ", time.time() - startTime)
             print("generated path = ", ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
 
             res = {
@@ -511,8 +485,6 @@ def convertFile():
             # return send_from_directory(ELECTRON_PATH, XLSX_FILENAME, as_attachment=True, mimetype='application/EXCELMIME', attachment_filename=(XLSX_FILENAME + '.xlsx'))
         # Generate SQL Database, Table
         if extension == "hive":
-
-            # startTime = time.time()
             # sql_engine = sqlalchemy.create_engine(
             #     'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
             # sqlite_connection = sql_engine.connect()
@@ -527,10 +499,6 @@ def convertFile():
             # print("\n\nTABLE\n")
             # # print(engine.execute("SELECT * FROM " + tableName).fetchall())
             # sqlite_connection.close()
-            # print("Time to gen db : ", time.time() - startTime)
-
-            # startTime = time.time()
-            # print("Total time taken : ", startTime - initTime)
             socketio.emit('progress', 80, broadcast=True)
 
             if HADOOP_INSTALLED:
@@ -566,7 +534,6 @@ def fetchQueryData():
     global PreviewDF
     try:
         queryText = request.form['query_text']
-        startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
             'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
@@ -581,7 +548,6 @@ def fetchQueryData():
         # print(PreviewDF.head())
 
         sqlite_connection.close()
-        print("Time to gen db : ", time.time() - startTime)
 
         page = 1
         # html_string = utilities.GenPageHTML(
@@ -612,7 +578,6 @@ def fetchQueryData():
 #     print("\n\n\n\nForm Data in /api/check-table\n" , request.form)
 #     try:
 #         tableNameInput = request.form['tableName']
-#         startTime = time.time()
 #         sql_engine = sqlalchemy.create_engine(
 #             'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
 #         sqlite_connection = sql_engine.connect()
