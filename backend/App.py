@@ -33,7 +33,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 # File Constants
 ELECTRON_PATH = ("..//backend//dist//App//", "..//backend//",
-                 "backend//dist//App//")[2]  # path for prod, dev
+                 "backend//dist//App//" , "./GeneratedFiles/")[3]  # path for prod, dev
 CSV_FILENAME = 'generatedCsvFile'
 XLSX_FILENAME = 'generatedXlsxFile'
 SQL_DB_NAME = 'generatedDB'
@@ -419,7 +419,15 @@ def convertFile():
 
             socketio.emit('progress', 80, broadcast=True)
             print("Time to gen csv : ", time.time() - startTime)
-            return send_file(ELECTRON_PATH + CSV_FILENAME + '.csv')
+
+            res = {
+                'status' : 'success' , 
+                'filename' : CSV_FILENAME,
+                'extension' : '.csv',
+                'directory' : ELECTRON_PATH
+            }
+            return jsonify(res)
+            # return send_file(ELECTRON_PATH + CSV_FILENAME + '.csv')
 
         # Generate XLSX
         if extension == "excel":
@@ -435,9 +443,16 @@ def convertFile():
             print("Time to gen xlsx : ", time.time() - startTime)
             print("generated path = ", ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
 
+            res = {
+                'status' : 'success' , 
+                'filename' : XLSX_FILENAME,
+                'extension' : '.xlsx',
+                'directory' : ELECTRON_PATH
+            }
+            return jsonify(res)
             # os.chmod(ELECTRON_DIR + XLSX_FILENAME + '.xlsx' , 0o777)
             # return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
-            return send_from_directory(ELECTRON_PATH, XLSX_FILENAME, as_attachment=True, mimetype='application/EXCELMIME', attachment_filename=(XLSX_FILENAME + '.xlsx'))
+            # return send_from_directory(ELECTRON_PATH, XLSX_FILENAME, as_attachment=True, mimetype='application/EXCELMIME', attachment_filename=(XLSX_FILENAME + '.xlsx'))
         # Generate SQL Database, Table
         if extension == "hive":
 
@@ -472,7 +487,15 @@ def convertFile():
                 # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
                 # subprocess.call(hdfs_cmd, shell=True)
             socketio.emit('progress', 80, broadcast=True)
-            return send_file(ELECTRON_PATH + SQL_DB_NAME + '.db')
+
+            res = {
+                'status' : 'success' , 
+                'filename' : SQL_DB_NAME,
+                'extension' : '.db',
+                'directory' : ELECTRON_PATH
+            }
+            return jsonify(res)
+            # return send_file(ELECTRON_PATH + SQL_DB_NAME + '.db')
 
     except Exception as e:
         print(e)

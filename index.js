@@ -30,7 +30,7 @@ function createWindow () {
 
     // Production Backend Server------------------starts here
     let backend;
-    backend = path.join(process.cwd(), './/backend//dist//App//App.exe')
+    backend = path.join(process.cwd(), './backend/dist/App/App.exe')
     var execfile = require('child_process').execFile;
     execfile(
     backend,

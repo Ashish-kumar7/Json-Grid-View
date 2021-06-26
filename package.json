@@ -1,13 +1,20 @@
 {
-  "name": "electron-react",
+  "name": "Json-Grid-View",
   "version": "1.0.0",
-  "description": "",
+  "description": "Convert json data to .xlsx, .csv, .db easily!",
   "main": "index.js",
   "build": {
     "extraFiles": [
       {
         "from": "./backend/dist/App",
         "to": "backend/dist/App/",
+        "filter": [
+          "**/*"
+        ]
+      } , 
+      {
+        "from": "./GeneratedFiles",
+        "to": "GeneratedFiles",
         "filter": [
           "**/*"
         ]
@@ -18,7 +25,7 @@
     "start": "set BROWSER=none && react-scripts start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"electron .\" \"cd src && npm start\"",
-    "build": "cd src && npm run build && cd .. && electron-builder"
+    "build": "cd src && npm run build && cd .. && electron-builder --ia32"
   },
   "keywords": [],
   "author": "Abhishek Tiwari",
