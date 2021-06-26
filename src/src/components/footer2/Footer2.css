@@ -1,0 +1,13 @@
+ .jsonfooter2 footer2 { 
+     flex: 0 0 auto; 
+     color: #fff4e3; 
+     position: absolute; 
+     width: 100%;
+     background-color: #212342; 
+     bottom:0
+ }
+.jsonfooter2 { 
+    height: 30px;
+    bottom: 0vh;
+    margin-top:9vh;
+} 
