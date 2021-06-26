@@ -17,7 +17,7 @@ from flask import Flask, jsonify, request, send_file
 import re
 from logging import exception
 from enum import unique
-HADOOP_INSTALLED = False
+HADOOP_INSTALLED = True
 
 
 if HADOOP_INSTALLED:
