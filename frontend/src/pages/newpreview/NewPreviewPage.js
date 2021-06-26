@@ -399,13 +399,13 @@ const NewPreviewPage = () => {
     }
     if(showFilter){
       formData.set("filter_type", "autoComplete");
-      formData.set('search_dict_auto', initialDataFrame.searchColauto);
+      formData.set('search_dict_auto', JSON.stringify(initialDataFrame.searchColauto));
       // console.log(initialDataFrame.searchColauto);
     }
     else{
       formData.set("filter_type", "multiSelect");
-      formData.set('search_dict_multi', initialDataFrame.searchColmulti);
-      // console.log(initialDataFrame.searchColmulti);
+      formData.set('search_dict_multi', JSON.stringify(initialDataFrame.searchColmulti));
+      console.log(initialDataFrame.searchColmulti);
     }
    
    

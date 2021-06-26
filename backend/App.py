@@ -399,11 +399,16 @@ def searchRecords():
     print()
     print('form \n\n\n\n\n', request.form)
     try:
-        s_selected_col = request.form['col_name']
-        s_search_val = request.form['search_val']
-
-        PreviewDF = utilities.queryUsingForm(df=DF, colName =s_selected_col, select_val =s_search_val )
-
+        filter_type = request.form['filter_type']
+        if filter_type == "autoComplete" :
+            queryDict = dict(json.loads(request.form['search_dict_auto']))
+            print("\n\n\n\n\n\n\n", queryDict)
+            PreviewDF = utilities.queryUsingForm(PreviewDF, queryDict)
+        elif filter_type == "multiSelect" :
+            queryDict = dict(json.loads(request.form['search_dict_multi']))
+            print("\n\n\n\n\n\n\n", queryDict)
+            PreviewDF = utilities.queryUsingDict(PreviewDF, queryDict)
+            
         # html_string = utilities.GenPageHTML(
         #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
 
