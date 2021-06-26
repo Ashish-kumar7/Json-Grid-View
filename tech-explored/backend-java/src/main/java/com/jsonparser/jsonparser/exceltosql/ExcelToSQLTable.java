@@ -22,8 +22,10 @@ public class ExcelToSQLTable {
 	
 	//set the name of table where you need to save the data in the database
 	private static final String JS_TABLE_NAME = "JSON_TABLE5";
+	
 	public static void saveIntoDatabase(String fileName) {
 		try {
+			//load the excel file and read it into the workbook
 			InputStream ExcelFileToRead = new FileInputStream(fileName);
 			XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
 
@@ -42,13 +44,17 @@ public class ExcelToSQLTable {
 				rowdata = new ArrayList<>();
 				if (rowCount == 0) {
 					for (int i = 0; i < row.getLastCellNum(); i++) {
+						//set policy for NULL fields
 						cell = row.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+						// set data in string format and add to rowheader
 						rowheader.add(cell.toString());
 						System.out.print(cell.toString() + " ");
 					}
 				} else {
 					for (int i = 0; i < row.getLastCellNum(); i++) {
+						//set policy for NULL fields
 						cell = row.getCell(i, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+						// set data in string format and add to rowdata
 						rowdata.add(cell.toString());
 						System.out.print(cell.toString() + " ");
 					}
@@ -58,10 +64,12 @@ public class ExcelToSQLTable {
 				System.out.println();
 				rowCount++;
 			}
+			
 			System.out.println(rowheader);
 			System.out.println(rowList);
-
+			//call createtable function
 			 createTable(rowheader);
+			 // call insertdataintothetable function
 			insertDataIntoTable(rowheader, rowList);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -79,7 +87,7 @@ public class ExcelToSQLTable {
 				if (i < rowheader.size() - 1)
 					columnList.append(",");
 			}
-
+			//set connection to database
 			conn = DatabaseConnection.getConnection();
 			Statement stat = conn.createStatement();
 			String insertQuery = "";
@@ -109,7 +117,7 @@ public class ExcelToSQLTable {
 	}
 
 	private static void createTable(List<String> rowheader) throws SQLException {
-		// create table USER
+		// create table 
 		StringBuffer createTableQuery = new StringBuffer();
 		Connection conn = null;
 		createTableQuery.append("CREATE TABLE " + JS_TABLE_NAME + " (");
