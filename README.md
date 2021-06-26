@@ -19,9 +19,34 @@ refs
 - electron production https://medium.com/@kitze/%EF%B8%8F-from-react-to-an-electron-app-ready-for-production-a0468ecb1da3
 - integrating backend with electron https://medium.com/red-buffer/integrating-python-flask-backend-with-electron-nodejs-frontend-8ac621d13f72
 
-
 <details>
-	<summary>Steps to create production electron app</summary>
+	<summary>Steps to generate production backend [req- python3,pip]</summary>
+	open a new cmd
+	cd <your backend directory>
+
+	Make sure your main flask application is named  App.py
+
+	pip install pyinstaller
+
+	pyinstaller App.py
+
+	this generates App.exe inside ./dist/App/ directory
+	and App.spec inside  ./ 
+
+	Open App.spec file and add following hidden imports if not already present
+
+	hiddenimports=['engineio.async_drivers.threading', 
+		     'engineio.async_drivers.aiohttp', 'engineio.async_aiohttp'],
+
+	pyinstaller App.spec
+
+	Now your App.exe has been generated inside ./dist/App/ 
+
+	Paste the contents of this directory inside backend/dist/App/ when generating production electron application
+
+</details>
+<details>
+	<summary>Steps to create production electron app[req-node npm]</summary>
 	open a new cmd 
 	cd <location-where-you-want-to-build-jsonGridView>
 
