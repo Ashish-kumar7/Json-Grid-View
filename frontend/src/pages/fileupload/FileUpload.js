@@ -102,7 +102,7 @@ const FileUpload = () => {
 
   return (
     <div className="fileUpload">
-      <Navbar></Navbar>
+      <Navbar/>
       <div class="wrapper">
         <div className="file-upload">
           <input
