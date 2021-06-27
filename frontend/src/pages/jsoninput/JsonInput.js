@@ -1,17 +1,14 @@
 import { css } from "@emotion/react";
-import axios from 'axios';
+import axios from "axios";
 import { useState } from "react";
-import { Col, Container, Row } from 'react-bootstrap';
-import { useHistory } from "react-router";
+import { Col, Container, Row } from "react-bootstrap";
 import RingLoader from "react-spinners/RingLoader";
 import Editor from "../../components/editor/Editor";
-import Footer from "../../components/footer/Footer";
 import Modal from "../../components/modal/Modal";
 import Navbar from "../../components/navbar/Navbar";
 import "./JsonInput.css";
 
-// const socket = io("http://localhost:5000/");
-
+// css for loader
 const override = css`
   display: block;
   margin: 0 auto;
@@ -19,105 +16,77 @@ const override = css`
 `;
 
 const JsonInput = () => {
-  let history = useHistory();
+  // store json written in textbox by user
   const [inputJson, setInputJson] = useState();
-
+  // used to show or hide the loader
   let [loading, setLoading] = useState(false);
+  // stores color of loader
   let [color, setColor] = useState("#ea80fc");
-
-  // on clicking customize button modal will be shown (show modal variable)
+  // once a button is clicked  it is used to set disable property for button
+  const [disable, setDisable] = useState(false);
+  // to change the button id to disableButton when disable variable is set true
+  const [buttonId, setButtonId] = useState("downloadButton");
+  // on clicking customize button modal will be shown (show customization page)
   const [open, setOpen] = useState(false);
-
+  // to check json is valid or not
   var validJSON = true;
 
-  // for getting updates regarding progress 
-  // socket.on("progress", (val) => {
-  //   setUploadPercentage(val);
-  //   console.log(val);
-  // });
-
+  // function to store json
   const changeHandler = (e) => {
     setInputJson(e.target.value);
-    console.log(typeof JSON.parse(e.target.value));
   };
 
+  // function to close customization page
   const hideModal = () => {
     setOpen(false);
   };
 
+  // function to open customization page
   const showModal = () => {
     setOpen(true);
   };
 
-  // const handleConversion = (val) => {
-  //   const formData = new FormData();
-  //   formData.set("content_type", val);
-  //   console.log(val)
-  //   if (val == "excel") {
-  //     setFileExtension("output.xlsx");
-  //   } else if (val == "csv") {
-  //     setFileExtension("output.csv");
-  //   } else {
-  //     setFileExtension("output.db");
-  //   }
-  //   axios
-  //     .post(
-  //       "http://localhost:5000/api/convert",
-  //       formData,
-  //       { responseType: "blob" }
-  //     )
-  //     .then((response) => {
-  //       setUploadPercentage(100);
-  //       setTimeout(() => {
-  //         setUploadPercentage(0);
-  //       }, 1000);
-  //       setDownloadContent(response.data);
-  //       console.log(response);
-  //       setShowDownload(true);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setUploadPercentage(0);
-  //       alert("Oops it breaks " + err);
-  //     });
-  // }
-
+  // on clicking customize button this function is called ,json will be sent to backend, on receiving response with response status 200 - customization page will be shown
   const handleCustomize = () => {
-    setLoading(true);
-
-    const formData = new FormData();
-    formData.append("Json", inputJson);
-    formData.set("input_type", "text");
-    axios
-      .post("http://localhost:5000/api/upload", formData)
-      .then((res) => {
-        console.log("json loaded and checked");
-        setLoading(false);
-        if (res.data.message.startsWith("Error")) {
-           alert(res.data.message);
-          // global_var.json = inputJson;
-          // history.push('/jsonchecker');
-        }
-        else {
-          showModal();
-        }
-      })
-      .catch((err) => {
-        // display alert for wrong json
-        setLoading(false);
-        // global_var.json = inputJson;
-        //   history.push('/jsonchecker');
-        console.log(err);
-        validJSON = false;
-        
-       
-        setTimeout(() => {
-          alert("Invalid JSON Input !!");
-        }, 1000);
-      });
+    if (disable) {
+      console.log("disable true");
+    } else {
+      setDisable(true);
+      setButtonId("disableButton");
+      setLoading(true);
+      // sending data - json(string) and type of data - text to backend
+      const formData = new FormData();
+      formData.append("Json", inputJson);
+      formData.set("input_type", "text");
+      // this api checks whether json is valid or not
+      axios
+        .post("http://localhost:5000/api/upload", formData)
+        .then((res) => {
+          console.log("json loaded and checked");
+          setLoading(false);
+          if (res.data.message.startsWith("Error")) {
+            setDisable(false);
+            setButtonId("downloadButton");
+            alert(res.data.message);
+          } else {
+            setDisable(false);
+            setButtonId("downloadButton");
+            showModal();
+          }
+        })
+        .catch((err) => {
+          // display alert for wrong json
+          setLoading(false);
+          setDisable(false);
+          setButtonId("downloadButton");
+          console.log(err);
+          validJSON = false;
+          setTimeout(() => {
+            alert("Invalid JSON Input !!");
+          }, 1000);
+        });
+    }
   };
-
-
 
   return (
     <div className="jsonInput">
@@ -125,25 +94,25 @@ const JsonInput = () => {
       <Container>
         <Row>
           <Col lg="12">
-            <Editor process={true} onChange={changeHandler} click={() => handleCustomize()} ></Editor>
+            <Editor
+              process={true}
+              onChange={changeHandler}
+              click={() => handleCustomize()}
+            ></Editor>
             <Modal
               show={open}
               openFunc={showModal}
               closeFunc={hideModal}
             ></Modal>
-            <RingLoader color={color} loading={loading} css={override} size={150} />
+            <RingLoader
+              color={color}
+              loading={loading}
+              css={override}
+              size={150}
+            />
           </Col>
-          
         </Row>
       </Container>
-
-      {/*      
-      <div>
-        <textarea rows="10" cols="10" type="text" onChange={changeHandler} />
-
-        <button onClick={handleSubmission}>Submit</button>
-      </div> */}
-      <Footer />
     </div>
   );
 };

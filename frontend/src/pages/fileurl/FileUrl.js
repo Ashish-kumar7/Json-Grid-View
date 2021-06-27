@@ -91,7 +91,7 @@ const FileUrl = () => {
 
   return (
     <div className="fileUrl">
-      <Navbar/>
+      <Navbar />
       <div className="urldiv">
         <label>URL</label>
         <input
