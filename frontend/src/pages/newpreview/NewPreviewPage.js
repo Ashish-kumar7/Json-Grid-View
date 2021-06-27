@@ -83,9 +83,9 @@ function getValidFilterValues(rows, columnId) {
     .filter((item, i, a) => {
       console.log(columnId);
       // initialDataFrame.searchColmulti[columnId].add()
-      console.log(a[i]);
-      console.log(a);
-      console.log(item);
+      // console.log(a[i]);
+      // console.log(a);
+      // console.log(item);
       return i === a.indexOf(item);
     });
 }

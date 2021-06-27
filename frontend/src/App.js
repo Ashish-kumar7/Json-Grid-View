@@ -4,7 +4,7 @@ import HomePage from './pages/homepage/HomePage';
 import OptionsPage from './pages/optionpage/OptionsPage';
 import FileUpload from './pages/fileupload/FileUpload';
 import Footer from './components/footer/Footer'
-import Footer2 from './components/footer2/Footer2'
+
 import FileUrl from './pages/fileurl/FileUrl'
 import JsonInput from './pages/jsoninput/JsonInput'
 import SelectedValues from './components/selectedvaluespreview/SelectedValues'
