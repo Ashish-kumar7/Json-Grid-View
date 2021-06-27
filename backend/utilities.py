@@ -64,30 +64,13 @@ def isScalarList(data):
 def isScalar(data):
     return isScalarData(data) or isScalarList(data)
 
-"""
-Parameters : data , pref
-    data : json-data (dict or list object)
-    pref : string (contains prefix for column-header)
-Returns : None
-Updates : __colTree , __colTreeOrd, __reqCols, __reqColsOrd, __reqColsOrdNoPar
-    
-    __colTree : unordered-dict 
-        keys : pref 
-        values : set( [pref + col1, pref+col2, pref+col3, ...] )
-    
-    __colTreeOrd : unordered-dict
-        keys : pref
-        values : list( [pref + col1, pref+col2, pref+col3, ...] )
-
-    __reqCols : unordered-set
-        contains names for column-headers
-    
-    __reqColsOrd : list
-        contains names for column-headers (ordered)
-    
-    __reqColsOrdNoPar : list
-        contains names for column-headers without parent-prefix (ordered)
-"""
+# dfsGenCol(data , pref):
+#     Working:    Generates column-header-names and table-schema using depth-first-search
+#     Parameters: data:   dict    :   json-data
+#                 pref:   str     :   prefix-for-column-headers
+#     Returns:
+#         None
+#     Updates:  __colTree , __colTreeOrd, __reqCols, __reqColsOrd, __reqColsOrdNoPar  
 def dfsGenCol(data, pref):
     global __colTree
     global __colTreeOrd
@@ -97,18 +80,6 @@ def dfsGenCol(data, pref):
 
     # If 'data' is-list-of-dict then we recur 
     # and fill values 'one-below-other'
-    # 
-    # ie. 
-    # [ 
-    #   {"name" : "A", "type" : "x"} , 
-    #   {"name" : "B", "type" : "y"} 
-    # ] 
-    # 
-    # results in 
-    # 
-    # name      type
-    # A         x
-    # B         y
     if isListOfDict(data):
         if __ADD_INDEX_FOR_LIST:
 
@@ -133,18 +104,6 @@ def dfsGenCol(data, pref):
 
     # If 'data' is-dict then we recur 
     # and fill values 'one-beside-other'
-    # 
-    # ie. 
-    # {
-    #   "name" : "A" , 
-    #   "type" : "y" , 
-    #   "row" : 1 
-    # } 
-    # 
-    # results in 
-    # 
-    # name      type    row
-    # A         y       1
     elif type(data) is dict:
         for x in data:
             # Name for column-header
@@ -173,6 +132,13 @@ def dfsGenCol(data, pref):
         print("Something went wrong!!!")
 
 
+# GenTableSchema(data , pref):
+    # Working:    Generates column-header-names and table-schema by calling dfsGenCol
+    # Parameters: data:   dict    :   json-data
+    #             JOINER_CHAR: str 
+    #             ADD_INDEX_FOR_LIST : bool
+    #             INDEX_FOR_LIST_SUFFIX : str
+    # Returns:(__reqCols, __colTree, __reqColsOrd, __colTreeOrd, __reqColsOrdNoPar)
 def GenTableSchema(data, JOINER_CHAR='.',  ADD_INDEX_FOR_LIST=False,
                    INDEX_FOR_LIST_SUFFIX='Index'):
     global __colTree
@@ -196,7 +162,15 @@ def GenTableSchema(data, JOINER_CHAR='.',  ADD_INDEX_FOR_LIST=False,
     dfsGenCol(data, '')
     return (__reqCols, __colTree, __reqColsOrd, __colTreeOrd, __reqColsOrdNoPar)
 
-
+# Write(cdf, row, pref, colTree, data, __NULL='null'):
+#     Working:    Writes data in Pandas-dataframe by performing depth-first-search
+#     Parameters: cdf:    Pandas-dataframe   
+#                 row:    int     :to keep track of row in df 
+#                 pref:   str     :to keep track of column-header
+#                 colTree:dict    :table-schema to perform dfs
+#                 data:   dict    :json-data
+#                 __NULL: str     :used to fill missing-values
+#     Returns:None
 def Write(cdf, row, pref, colTree, data, __NULL='null'):
     if isListOfDict(data):
         for x in data:
@@ -204,17 +178,14 @@ def Write(cdf, row, pref, colTree, data, __NULL='null'):
             row = len(cdf)
 
     elif type(data) is dict:
-        # print("data = " , data)
         for x in colTree[pref]:
             colName = str(x)  # if (pref=="")  else (pref + '.' + str(x) )
             # Name of col without prefix
             noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
             # Available cols
             if not colName in colTree:
-                # print("writing " , colName , noPreCol)
                 if not noPreCol in data:
                     cdf.loc[row, colName] = __NULL
-                    # print(row, colName , "fill null")
                     continue
 
                 towrt = str(data[noPreCol])
@@ -222,18 +193,25 @@ def Write(cdf, row, pref, colTree, data, __NULL='null'):
                     cdf.at[row, colName] = data[noPreCol]
                 else:
                     cdf.at[row, colName] = towrt
-                # print(row , colName , " = " , towrt)
             else:
                 if not noPreCol in data:
                     Write(cdf, row, colName, colTree, {}, __NULL)
                 else:
                     Write(cdf, row, colName, colTree, data[noPreCol], __NULL)
 
-
+# WriteToDF(cdf, data, colTree) :
+#     Working:    Writes data in Pandas-dataframe by calling Write
+#     Parameters: cdf:    Pandas-dataframe   
+#                 colTree:dict    :table-schema to perform dfs
+#                 data:   dict    :json-data
+#     Returns: None
 def WriteToDF(cdf, data, colTree):
     Write(cdf, 0, '', colTree, data, __NULL='null')
 
-
+# fillNaN(df) :
+#     Working:    Copies df.iloc[r-1, c] if df.iloc[r, c] is NaN
+#     Parameters: df:    Pandas-dataframe 
+#     Returns: None
 def fillNaN(df):
     R, C = df.shape
     r, c = 1, 0
@@ -245,7 +223,15 @@ def fillNaN(df):
             c += 1
         r += 1
 
-
+# WriteDict_NaN_NoIndex(d, row, pref, data) : 
+#     Working:    Writes data in dict by performing depth-first-search
+#                 fills nan values with __FILL_MISSING_WITH
+#                 No extra Index columns are added
+#     Parameters: d:    Python-dict  
+#                 row:    int     :to keep track of row in dict
+#                 pref:   str     :to keep track of column-header
+#                 data:   dict    :json-data
+#     Returns: int : number of rows required to write data
 def WriteDict_NaN_NoIndex(d, row, pref, data):
     reqRows = 0
     if isListOfDict(data):
@@ -256,7 +242,6 @@ def WriteDict_NaN_NoIndex(d, row, pref, data):
 
     elif type(data) is dict:
 
-        # print("data = " , data)
         for x in data:
             colName = str(x) if (pref == "") else (
                 pref + __JOINER_CHAR + str(x))
@@ -269,13 +254,19 @@ def WriteDict_NaN_NoIndex(d, row, pref, data):
                     d[row][colName] = data[x]
                 else:
                     d[row][colName] = towrt
-                # print(row , colName , " = " , towrt)
             else:
                 reqRows = max(reqRows, WriteDict_NaN_NoIndex(
                     d, row, colName, data[x]))
     return reqRows
 
-
+# WriteDict_NoIndex(d, row, pref, data) : 
+#     Working:    Writes data in dict by performing depth-first-search
+#                 No extra Index columns are added
+#     Parameters: d:    Python-dict  
+#                 row:    int     :to keep track of row in dict
+#                 pref:   str     :to keep track of column-header
+#                 data:   dict    :json-data
+#     Returns: int : number of rows required to write data
 def WriteDict_NoIndex(d, row, pref, data):
     reqRows = 0
     if isListOfDict(data):
@@ -286,13 +277,11 @@ def WriteDict_NoIndex(d, row, pref, data):
 
     elif type(data) is dict:
 
-        # print("data = " , data)
         for x in __tableSchema[pref]:
             colName = x  # Name of col without prefix
             noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
 
             if x in __tableSchema:
-                # Recur further
                 if noPreCol in data:
                     reqRows = max(reqRows, WriteDict_NoIndex(
                         d, row, colName, data[noPreCol]))
@@ -313,7 +302,14 @@ def WriteDict_NoIndex(d, row, pref, data):
                     d[row][colName] = __FILL_MISSING_WITH
     return reqRows
 
-
+# WriteDict_Index(d, row, pref, data): 
+#     Working:    Writes data in dict by performing depth-first-search
+#                 Extra Index columns are added
+#     Parameters: d:    Python-dict  
+#                 row:    int     :to keep track of row in dict
+#                 pref:   str     :to keep track of column-header
+#                 data:   dict    :json-data
+#     Returns: int : number of rows required to write data
 def WriteDict_Index(d, row, pref, data):
     global __addedColumns
     reqRows = 0
@@ -335,20 +331,13 @@ def WriteDict_Index(d, row, pref, data):
             startRow += curRows
             __addedColumns.add(colName)
 
-        # for i in range(reqRows):
-        #     if (i+startRow) not in d:
-        #         d[i+startRow] = {}
-        #     d[i + startRow][pref + __JOINER_CHAR + __INDEX_FOR_LIST_SUFFIX] = i
-
     elif type(data) is dict:
 
-        # print("data = " , data)
         for x in __tableSchema[pref]:
             colName = x  # Name of col without prefix
             noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
 
             if x in __tableSchema:
-                # Recur further
                 if noPreCol in data:
                     reqRows = max(reqRows, WriteDict_Index(
                         d, row, colName, data[noPreCol]))
@@ -369,14 +358,13 @@ def WriteDict_Index(d, row, pref, data):
                     d[row][colName] = __FILL_MISSING_WITH
     return reqRows
 
-
-# Generate Cross Table
-
-"""
-Generate Schema Dictionary for generating cross product table
-"""
-
-
+# GenCrossSchema(pref, prefId, data, schema): 
+#     Working:    Generates schema for Cross-product-table by performing depth-first-search
+#     Parameters: pref:   str     :to keep track of column-header
+#                 prefid: str     :to keep track of list-indexes-after-dfs
+#                 data:   dict    :json-data
+#                 schema: dict    :cross-product-table schema
+#     Returns: int : number of rows required to write data
 def GenCrossSchema(pref, prefId, data, schema):
     reqRows = 0
     if isListOfDict(data):
@@ -392,13 +380,11 @@ def GenCrossSchema(pref, prefId, data, schema):
 
     else:
         reqRows = 1
-        # print("data = " , data)
         for x in __tableSchema[pref]:
             colName = x
             noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
             newPrefId = prefId + __JOINER_CHAR + noPreCol if prefId != '' else noPreCol
             if x in __tableSchema:
-                # Recur further
                 if noPreCol in data:
                     reqRows *= GenCrossSchema(colName,
                                               newPrefId, data[noPreCol], schema)
@@ -408,15 +394,18 @@ def GenCrossSchema(pref, prefId, data, schema):
                 reqRows *= 1
                 schema[newPrefId] = 1
         schema[prefId] = reqRows
-    # else:
-    #     print("error in generating schema\n: pref\n", pref,"\ntype\n", type(data))
     return reqRows
 
-# Generate cross product dictionary
-
-
+# GenCrossDict(pref, prefId, row, Dict, data, schema): 
+#     Working:    Generates data-dict for Cross-product-table by performing depth-first-search
+#     Parameters: pref:   str     :to keep track of column-header
+#                 prefid: str     :to keep track of list-indexes-after-dfs
+#                 row:    int     :to keep track of row in Dict
+#                 Dict:   dict    :data-dict for generating dataframe 
+#                 data:   dict    :json-data
+#                 schema: dict    :cross-product-table schema
+#     Returns: None
 def GenCrossDict(pref, prefId, row, Dict, data, schema):
-    global __isList
     reqRows = 0
     if isListOfDict(data):
         idx = 0
@@ -429,7 +418,6 @@ def GenCrossDict(pref, prefId, row, Dict, data, schema):
 
     else:
         reqRows = 1
-        # print("data = " , data)
         initRow = row
         for x in __tableSchema[pref]:
             colName = x  # Name of col without prefix
@@ -437,8 +425,6 @@ def GenCrossDict(pref, prefId, row, Dict, data, schema):
             newPrefId = prefId + __JOINER_CHAR + noPreCol if prefId != '' else noPreCol
             row = initRow
             if x in __tableSchema:
-                # Recur further
-
                 if (not data is None) and (noPreCol in data):
                     for i in range(schema[prefId] // schema[newPrefId]):
                         GenCrossDict(colName, newPrefId, row,
@@ -458,10 +444,18 @@ def GenCrossDict(pref, prefId, row, Dict, data, schema):
                     if not (row+i) in Dict:
                         Dict[row + i] = {}
                     Dict[row + i][colName] = towrt
-    # else:
-    #     print("error in gen cross data dict: pref\n", pref,"\ntype\n", type(data))
 
-
+# WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_FOR_LIST=False,
+#               INDEX_FOR_LIST_SUFFIX='INDEX', GEN_CROSS_TABLE=False): 
+#     Working:    Fills DataDict by calling appropriate functions depending on parameters
+#     Parameters: DataDict:   dict    :to store row-data for generating DataFrame
+#                 Data:       dict    :json-data
+#                 tableSchema:dict    :table-schema for performing depth-first-search
+#                 FILL_MISSING_WITH:      str : value used for filling missing-values
+#                 ADD_INDEX_FOR_LIST:     bool: if True extra INDEX columns are added to table
+#                 INDEX_FOR_LIST_SUFFIX:  str : suffix for added-index-columns 
+#                 GEN_CROSS_TABLE:        bool: if True, cross-product-table is generated
+#     Returns: None
 def WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_FOR_LIST=False,
               INDEX_FOR_LIST_SUFFIX='INDEX', GEN_CROSS_TABLE=False):
 
@@ -477,12 +471,8 @@ def WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_F
 
     if GEN_CROSS_TABLE:
         crossSchema = {}
-        startTime = time.time()
         GenCrossSchema('', '', Data, crossSchema)
-        print("time to gen cross schema", time.time() - startTime)
-        startTime = time.time()
         GenCrossDict('', '', 0, DataDict, Data, crossSchema)
-        print("time to gen cross schema", time.time() - startTime)
     else:
         if ADD_INDEX_FOR_LIST:
             __addedColumns = set()
@@ -498,7 +488,10 @@ def GenPageHTML(df, Page, ROWS_PER_PAGE):
     endRow = min(df.shape[0], startRow + ROWS_PER_PAGE)
     return df.iloc[startRow: endRow][:].to_html(classes='mystyle')
 
-
+# Encode(obj): 
+#     Working:    Convert numpy data-types to python data-types
+#     Parameters: obj:   any-data-type    : data to convert
+#     Returns: converted-obj
 def Encode(obj):
     if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
                         np.int16, np.int32, np.int64, np.uint8,
@@ -524,17 +517,17 @@ def Encode(obj):
     else:
         return obj
 
-
+# GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page): 
+#     Working:    returns unique values from selected_page for selected_col
+#     Parameters: PreviewDF:      dataframe:  dataframe for reading unique values
+#                 prevQueryCols:  dict:       cache for previous queries      
+#                 selected_col:   str:        selected column
+#                 selected_page:  int:        selected page
+#                 rows_per_page:  int:        number of unique values per page
+#     Returns:    list:   list of unique values
 def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page):
-    print('in gen page data')
     if not selected_col in prevQueryCols:
-        # Load data here
-        # print('load data for ', selected_col)
         prevQueryCols[selected_col] = list(pd.unique(PreviewDF[selected_col]))
-        # prevQueryCols[selected_col] = list()
-        # tmp = list(pd.unique(PreviewDF[selected_col]))
-        # for obj in tmp :
-        #     prevQueryCols[selected_col].append( Encode(obj) )
 
     total_records = len(prevQueryCols[selected_col])
     total_pages = int(np.ceil(total_records/rows_per_page))
@@ -544,36 +537,44 @@ def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_
     endIdx = min(total_records, startIdx + rows_per_page)
     return prevQueryCols[selected_col][startIdx:endIdx]
 
-
+# queryUsingDict(df, queryDict): 
+#     Working:    applies multi-select queries on df
+#     Parameters: df:         dataframe:  dataframe for applying queries
+#                 queryDict:  dict:       contains column-names and selected-values     
+#     Returns:    dataframe:   dataframe after applying queries
 def queryUsingDict(df, queryDict):
-    # print('in queryUsingDict Function ' , queryDict)
     for colName, valList in queryDict.items() : 
-        
         if len(valList) != 0:
-            print("/ncolName"+colName)
             df = df.loc[ df[colName].isin(valList) ]
-        # print("after " , colName, valList)
-        # print(df)
     return df
 
-
+# queryUsingForm(df, queryDict): 
+#     Working:    applies auto-complete queries on df
+#     Parameters: df:         dataframe:  dataframe for applying queries
+#                 queryDict:  dict:       contains column-names and text-to-complete    
+#     Returns:    dataframe:   dataframe after applying queries
 def queryUsingForm(df, queryDict):
-    # print('in queryUsingForm Function ' , queryDict)
     for colName, colVal in queryDict.items():
         if colVal != "":
             df = df.loc[df[colName].astype(
                 str).str.startswith(colVal, na=False)]
     return df
 
-
+# DeleteIfExists(FileName): 
+#     Working:    deletes file if it exists
+#     Parameters: FileName:         str:  name of the file to delete
+#     Returns:    None
 def DeleteIfExists(FileName):
     if os.path.exists(FileName):
         os.remove(FileName)
-        print('deleted ', FileName)
-    else:
-        print(FileName, 'not found')
 
-
+# GenReactDataGridRows(tableRows, df, ROWS_PER_PAGE, SELECTED_PAGE): 
+#     Working:    generate row-dict for React-Data-Grid
+#     Parameters: tableRows:      dict:       row-dict for react-data-grid
+#                 df:             dataframe:  for reading data
+#                 ROWS_PER_PAGE:  int:        number of rows to display per page
+#                 SELECTED_PAGE:  int:        selected page
+#     Returns:    None
 def GenReactDataGridRows(tableRows, df, ROWS_PER_PAGE, SELECTED_PAGE):
     startRow = (SELECTED_PAGE - 1) * ROWS_PER_PAGE
     endRow = min(df.shape[0], startRow + ROWS_PER_PAGE)
