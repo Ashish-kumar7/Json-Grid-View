@@ -217,7 +217,7 @@ queryUsingDict(df, queryDict):
     Returns:    dataframe:   dataframe after applying queries
 
 queryUsingForm(df, queryDict): 
-    Working:    applies auto-complete queries on df
+    Working:    applies auto-complete queries on df, case-insensitive
     Parameters: df:         dataframe:  dataframe for applying queries
                 queryDict:  dict:       contains column-names and text-to-complete    
     Returns:    dataframe:   dataframe after applying queries

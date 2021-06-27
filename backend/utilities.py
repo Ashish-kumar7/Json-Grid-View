@@ -549,15 +549,14 @@ def queryUsingDict(df, queryDict):
     return df
 
 # queryUsingForm(df, queryDict): 
-#     Working:    applies auto-complete queries on df
+#     Working:    applies auto-complete queries on df, case-insensitive
 #     Parameters: df:         dataframe:  dataframe for applying queries
 #                 queryDict:  dict:       contains column-names and text-to-complete    
 #     Returns:    dataframe:   dataframe after applying queries
 def queryUsingForm(df, queryDict):
     for colName, colVal in queryDict.items():
         if colVal != "":
-            df = df.loc[df[colName].astype(
-                str).str.startswith(colVal, na=False)]
+            df = df.loc[df[colName].astype(str).str.lower().str.startswith(colVal.lower(), na=False)]
     return df
 
 # DeleteIfExists(FileName): 
