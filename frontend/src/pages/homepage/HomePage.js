@@ -2,11 +2,12 @@ import { Row, Col, Container } from "react-bootstrap";
 import gif from "../../assets/homegif.gif";
 import "./HomePage.css";
 import Button from "../../components/button/Button";
-import Footer from "../../components/footer/Footer";
+
+// This is home page , it contains a button which will redirect to options page where you can select a file to upload or give a url or write your own json
+
 const HomePage = () => {
   return (
     <div className="homepage">
-      
       <Container>
         <Row>
           <Col lg="5">
@@ -14,7 +15,7 @@ const HomePage = () => {
               <h1 class="display-4">JSON GRID VIEWER</h1>
               <p class="lead">
                 An application to convert json to csv or excel sheet, storing
-                data in hive and an editor to write your own json and convert
+                data in hadoop and an editor to write or correct your own json and convert
                 it.
               </p>
             </div>
@@ -31,7 +32,6 @@ const HomePage = () => {
           </Col>
         </Row>
       </Container>
-     
     </div>
   );
 };
