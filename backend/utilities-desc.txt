@@ -100,3 +100,40 @@ isScalar(data):
         isScalar([ {'a' :'b'} ])=> False
         isScalar({'a' , 'b'})   => False
 
+dfsGenCol(data , pref):
+    Working:    Generates column-header-names and table-schema using depth-first-search
+    Parameters: data:   dict    :   json-data
+                pref:   str     :   prefix-for-column-headers
+    Returns: None
+    Updates:  __colTree , __colTreeOrd, __reqCols, __reqColsOrd, __reqColsOrdNoPar  
+
+GenTableSchema(data, JOINER_CHAR='.',  ADD_INDEX_FOR_LIST=False,
+                   INDEX_FOR_LIST_SUFFIX='Index'):
+    Working:    Generates column-header-names and table-schema by calling dfsGenCol
+    Parameters: data:   dict    :   json-data
+                JOINER_CHAR: str 
+                ADD_INDEX_FOR_LIST : bool
+                INDEX_FOR_LIST_SUFFIX : str
+    Returns: (__reqCols, __colTree, __reqColsOrd, __colTreeOrd, __reqColsOrdNoPar)   
+
+Write(cdf, row, pref, colTree, data, __NULL='null'):
+    Working:    Writes data in Pandas-dataframe by performing depth-first-search
+    Parameters: cdf:    Pandas-dataframe   
+                row:    int     :to keep track of row in df 
+                pref:   str     :to keep track of column-header
+                colTree:dict    :table-schema to perform dfs
+                data:   dict    :json-data
+                __NULL: str     :used to fill missing-values
+    Returns: None
+
+WriteToDF(cdf, data, colTree) :
+    Working:    Writes data in Pandas-dataframe by calling Write
+    Parameters: cdf:    Pandas-dataframe   
+                colTree:dict    :table-schema to perform dfs
+                data:   dict    :json-data
+    Returns: None
+
+fillNaN(df) :
+    Working:    Copies df.iloc[r-1, c] if df.iloc[r, c] is NaN
+    Parameters: df:    Pandas-dataframe 
+    Returns: None

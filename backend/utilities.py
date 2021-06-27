@@ -64,30 +64,13 @@ def isScalarList(data):
 def isScalar(data):
     return isScalarData(data) or isScalarList(data)
 
-"""
-Parameters : data , pref
-    data : json-data (dict or list object)
-    pref : string (contains prefix for column-header)
-Returns : None
-Updates : __colTree , __colTreeOrd, __reqCols, __reqColsOrd, __reqColsOrdNoPar
-    
-    __colTree : unordered-dict 
-        keys : pref 
-        values : set( [pref + col1, pref+col2, pref+col3, ...] )
-    
-    __colTreeOrd : unordered-dict
-        keys : pref
-        values : list( [pref + col1, pref+col2, pref+col3, ...] )
-
-    __reqCols : unordered-set
-        contains names for column-headers
-    
-    __reqColsOrd : list
-        contains names for column-headers (ordered)
-    
-    __reqColsOrdNoPar : list
-        contains names for column-headers without parent-prefix (ordered)
-"""
+# dfsGenCol(data , pref):
+#     Working:    Generates column-header-names and table-schema using depth-first-search
+#     Parameters: data:   dict    :   json-data
+#                 pref:   str     :   prefix-for-column-headers
+#     Returns:
+#         None
+#     Updates:  __colTree , __colTreeOrd, __reqCols, __reqColsOrd, __reqColsOrdNoPar  
 def dfsGenCol(data, pref):
     global __colTree
     global __colTreeOrd
@@ -97,18 +80,6 @@ def dfsGenCol(data, pref):
 
     # If 'data' is-list-of-dict then we recur 
     # and fill values 'one-below-other'
-    # 
-    # ie. 
-    # [ 
-    #   {"name" : "A", "type" : "x"} , 
-    #   {"name" : "B", "type" : "y"} 
-    # ] 
-    # 
-    # results in 
-    # 
-    # name      type
-    # A         x
-    # B         y
     if isListOfDict(data):
         if __ADD_INDEX_FOR_LIST:
 
@@ -133,18 +104,6 @@ def dfsGenCol(data, pref):
 
     # If 'data' is-dict then we recur 
     # and fill values 'one-beside-other'
-    # 
-    # ie. 
-    # {
-    #   "name" : "A" , 
-    #   "type" : "y" , 
-    #   "row" : 1 
-    # } 
-    # 
-    # results in 
-    # 
-    # name      type    row
-    # A         y       1
     elif type(data) is dict:
         for x in data:
             # Name for column-header
@@ -173,6 +132,13 @@ def dfsGenCol(data, pref):
         print("Something went wrong!!!")
 
 
+# GenTableSchema(data , pref):
+    # Working:    Generates column-header-names and table-schema by calling dfsGenCol
+    # Parameters: data:   dict    :   json-data
+    #             JOINER_CHAR: str 
+    #             ADD_INDEX_FOR_LIST : bool
+    #             INDEX_FOR_LIST_SUFFIX : str
+    # Returns:(__reqCols, __colTree, __reqColsOrd, __colTreeOrd, __reqColsOrdNoPar)
 def GenTableSchema(data, JOINER_CHAR='.',  ADD_INDEX_FOR_LIST=False,
                    INDEX_FOR_LIST_SUFFIX='Index'):
     global __colTree
@@ -196,7 +162,15 @@ def GenTableSchema(data, JOINER_CHAR='.',  ADD_INDEX_FOR_LIST=False,
     dfsGenCol(data, '')
     return (__reqCols, __colTree, __reqColsOrd, __colTreeOrd, __reqColsOrdNoPar)
 
-
+# Write(cdf, row, pref, colTree, data, __NULL='null'):
+#     Working:    Writes data in Pandas-dataframe by performing depth-first-search
+#     Parameters: cdf:    Pandas-dataframe   
+#                 row:    int     :to keep track of row in df 
+#                 pref:   str     :to keep track of column-header
+#                 colTree:dict    :table-schema to perform dfs
+#                 data:   dict    :json-data
+#                 __NULL: str     :used to fill missing-values
+#     Returns:None
 def Write(cdf, row, pref, colTree, data, __NULL='null'):
     if isListOfDict(data):
         for x in data:
@@ -229,11 +203,19 @@ def Write(cdf, row, pref, colTree, data, __NULL='null'):
                 else:
                     Write(cdf, row, colName, colTree, data[noPreCol], __NULL)
 
-
+# WriteToDF(cdf, data, colTree) :
+#     Working:    Writes data in Pandas-dataframe by calling Write
+#     Parameters: cdf:    Pandas-dataframe   
+#                 colTree:dict    :table-schema to perform dfs
+#                 data:   dict    :json-data
+#     Returns: None
 def WriteToDF(cdf, data, colTree):
     Write(cdf, 0, '', colTree, data, __NULL='null')
 
-
+# fillNaN(df) :
+#     Working:    Copies df.iloc[r-1, c] if df.iloc[r, c] is NaN
+#     Parameters: df:    Pandas-dataframe 
+#     Returns: None
 def fillNaN(df):
     R, C = df.shape
     r, c = 1, 0
