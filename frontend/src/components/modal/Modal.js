@@ -98,8 +98,7 @@ const CustomizeModal = (props) => {
     console.log(e.target.value);
     setTablename(e.target.value);
   }
-
-
+  
   const parenthandler = (e) => {
     console.log(e.target.value);
     setParentCol(e.target.value);

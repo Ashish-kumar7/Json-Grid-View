@@ -19,7 +19,6 @@ const override = css`
   border-color: red;
 `;
 
-
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState();
   // to check if file is selected or not
@@ -45,12 +44,6 @@ const FileUpload = () => {
   const showModal = () => {
     setOpen(true);
   };
-
-  // for getting updates regarding progress
-  // socket.on("progress", (val) => {
-  //   setUploadPercentage(val);
-  //   console.log(val);
-  // });
 
   // on selecting file for upload this function is called
   const changeHandler = (e) => {
@@ -121,7 +114,7 @@ const FileUpload = () => {
             icon={faUpload}
           ></FontAwesomeIcon>
         </div>
-      </div>
+      </div> 
       <div>
         {isSelected ? (
           <div>

@@ -29,12 +29,6 @@ const FileUrl = () => {
 
   var validJSON = true;
 
-  // for getting updates regarding progress 
-  // socket.on("progress", (val) => {
-  //   setUploadPercentage(val);
-  //   console.log(val);
-  // });
-
   const changeHandler = (e) => {
     setInputUrl(e.target.value);
   };
