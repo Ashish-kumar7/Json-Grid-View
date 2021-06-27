@@ -66,3 +66,37 @@ __addedColumns :
 Used-for : storing column-headers added when __ADD_INDEX_FOR_LIST == True
 type(__adedColumns) : <class 'set'>
 Value: python-set containing column-headers of type <class 'str'> 
+
+
+Description of functions : 
+
+isScalarData(data):
+    Working:    Checks if data is scalar.
+    Parameters: data: (list, dict, str, int, float, None)
+    Returns:    bool: True or False
+
+isListOfDict(data):
+    Working:    Checks if data is list-of-dict.
+    Parameters: data: (list, dict, str, int, float, None)
+    Returns:    bool: True or False
+
+isScalarList(data):
+    Working:    Checks if data is scalar-list.
+    Parameters: data: (list, dict, str, int, float, None)
+    Returns:    bool: True or False
+    Example : 
+        isScalarList(['a', 'b', 'c'])          -> True
+        isScalarList([{'a' : 'b}, {'c','d'}])  -> False
+
+isScalar(data):
+    Working:    Checks if data is scalar(written-as-it-is in table) 
+                or iterable( recurred further )
+    Parameters: data: (list, dict, str, int, float, None)
+    Returns:    bool: True or False
+    Example : 
+        isScalar(32)            => True
+        isScalar('some-string') => True
+        isScalar(['a','b'])     => True
+        isScalar([ {'a' :'b'} ])=> False
+        isScalar({'a' , 'b'})   => False
+

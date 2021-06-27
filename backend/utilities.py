@@ -23,28 +23,20 @@ __FILL_MISSING_WITH = 'null'
 __ADD_INDEX_FOR_LIST = False
 __INDEX_FOR_LIST_SUFFIX = 'INDEX'
 
-"""
-Parameters : data 
-Returns : True, False
 
-Checks if 'data' is scalar or iterable
-"""
-
-
+# isScalarData(data):
+#     Working:    Checks if data is scalar.
+#     Parameters: data: (list, dict, str, int, float, None)
+#     Returns:    bool: True or False
 def isScalarData(data):
     if data == None:
         return True
     return np.isscalar(data)
 
-
-"""
-Parameters : data
-Returns : True, False
-
-Checks if 'data' is a Python-list of Python-dict objects
-"""
-
-
+# isListOfDict(data):
+#     Working:    Checks if data is list-of-dict.
+#     Parameters: data: (list, dict, str, int, float, None)
+#     Returns:    bool: True or False
 def isListOfDict(data):
     if not type(data) is list:
         return False
@@ -53,18 +45,10 @@ def isListOfDict(data):
             return False
     return True
 
-
-"""
-Parameters : data
-Returns : True, False
-
-Checks if 'data' is a scalar Python-list
-ie : 
-isScalarList(['a', 'b', 'c'])          -> True
-isScalarList([{'a' : 'b}, {'c','d'}])  -> False
-"""
-
-
+# isScalarList(data):
+#     Working:    Checks if data is scalar-list.
+#     Parameters: data: (list, dict, str, int, float, None)
+#     Returns:    bool: True or False
 def isScalarList(data):
     if not type(data) is list:
         return False
@@ -72,13 +56,11 @@ def isScalarList(data):
     return not isListOfDict(data)
 
 
-"""
-Parameters : data
-Returns : True, False
-
-Checks if 'data' is scalar (should be written as it is) 
-or not-scalar(should be recurred)
-"""
+# isScalar(data):
+#     Working:    Checks if data is scalar(written-as-it-is in table) 
+#                 or iterable( recurred further )
+#     Parameters: data: (list, dict, str, int, float, None)
+#     Returns:    bool: True or False
 def isScalar(data):
     return isScalarData(data) or isScalarList(data)
 
