@@ -22,11 +22,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
 // import SelectSearch from 'react-select-search';
 // import 'react-select-search/style.css';
 // import fuzzySearch from 'react-select-search/dist/cjs/fuzzySearch';
@@ -43,7 +43,6 @@ import Select from '@material-ui/core/Select';
 //   TableHeaderRow,
 //   TableFilterRow,
 // } from '@devexpress/dx-react-grid-material-ui';
-
 
 const socket = io("http://localhost:5000/");
 
@@ -67,7 +66,7 @@ const handleFilterChange = (filter) => (filters) => {
   // console.log(filter.filterTerm);
   // initialDataFrame.selectCol = filter.column.key;
   // initialDataFrame.selectSearch = filter.filterTerm;
-  initialDataFrame.searchColauto[filter.column.key]=filter.filterTerm;
+  initialDataFrame.searchColauto[filter.column.key] = filter.filterTerm;
   const newFilters = { ...filters };
   if (filter.filterTerm) {
     newFilters[filter.column.key] = filter;
@@ -115,9 +114,6 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
-    
-    
-    
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -215,9 +211,9 @@ const NewPreviewPage = () => {
   const [disable, setDisable] = useState(false);
   const [buttonId, setButtonId] = useState("uploadButton");
 
-  const [selectedColumn, setSelectedColumn] =  useState("");
+  const [selectedColumn, setSelectedColumn] = useState("");
   const [searchValue, setSearchValue] = useState("");
-  
+
   const [query, setQuery] = useState("");
 
   const filterhandler = () => {
@@ -280,8 +276,7 @@ const NewPreviewPage = () => {
     console.log("handleConversion Ran");
     if (disable) {
       console.log("disable true");
-    }
-    else {
+    } else {
       setDisable(true);
       setButtonId("disableButton");
       setUploadPercentage(10);
@@ -364,58 +359,74 @@ const NewPreviewPage = () => {
     // dictIntermediate[initialDataFrame.cols[i]] = new Set();
     let number = i;
     colList.push(
-      <MenuItem value={initialDataFrame.cols[number]}>{initialDataFrame.cols[number]}</MenuItem>
+      <MenuItem value={initialDataFrame.cols[number]}>
+        {initialDataFrame.cols[number]}
+      </MenuItem>
     );
   }
 
-  const columnnamehandler = (e)=> {
+  const columnnamehandler = (e) => {
     setSelectedColumn(e.target.value);
     console.log(e.target.value);
   };
-  const searchvaluehandler = (e)=> {
+  const searchvaluehandler = (e) => {
     setSearchValue(e.target.value);
     console.log(e.target.value);
   };
+  const resetHandler = () => {
+    const formData = new FormData();
+    formData.set("reset" , "true");
+    axios
+      .post("http://localhost:5000/api/dataReset", formData)
+      .then((response) => {
+        setGridRows(response.data.tableRows);
+        setResultTotalRecords(response.data.total_records);
+        setResultRows(response.data.rows_per_page);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   const searchhandler = () => {
     const formData = new FormData();
     // formData.set("col_name", initialDataFrame.selectCol);
     // formData.set("search_val", initialDataFrame.selectSearch);
     var searchObj = {};
-    try{
-      var list = document.getElementsByClassName("Select has-value is-clearable is-searchable Select--multi");
-      for(var i =0;i<list.length;i++){ 
-          var input = list[i].getElementsByTagName("input");
-          for(var j=0;j<input.length-1;j++)
-          {
-            var columnName = input[j].getAttribute("name").substring(7);
-            if( !(columnName in searchObj) ) 
-                searchObj[columnName] = new Set();
-            searchObj[columnName].add(input[j].getAttribute("value"));
-          }
+    try {
+      var list = document.getElementsByClassName(
+        "Select has-value is-clearable is-searchable Select--multi"
+      );
+      for (var i = 0; i < list.length; i++) {
+        var input = list[i].getElementsByTagName("input");
+        for (var j = 0; j < input.length - 1; j++) {
+          var columnName = input[j].getAttribute("name").substring(7);
+          if (!(columnName in searchObj)) searchObj[columnName] = new Set();
+          searchObj[columnName].add(input[j].getAttribute("value"));
+        }
       }
-      
+
       // sending Set causes problems so convert to array
-      for(let columnName in searchObj)  {
-        searchObj[columnName] = Array.from( searchObj[columnName] );
+      for (let columnName in searchObj) {
+        searchObj[columnName] = Array.from(searchObj[columnName]);
       }
-      
-    }catch(error){
+    } catch (error) {
       console.log(error);
     }
-    if(showFilter){
+    if (showFilter) {
       formData.set("filter_type", "autoComplete");
-      formData.set('search_dict_auto', JSON.stringify(initialDataFrame.searchColauto));
+      formData.set(
+        "search_dict_auto",
+        JSON.stringify(initialDataFrame.searchColauto)
+      );
       // console.log(initialDataFrame.searchColauto);
-    }
-    else{
+    } else {
       formData.set("filter_type", "multiSelect");
-      formData.set('search_dict_multi', JSON.stringify(searchObj));
+      formData.set("search_dict_multi", JSON.stringify(searchObj));
       console.log(searchObj);
       console.log("after stringify " + JSON.stringify(searchObj));
     }
-   
-   
+
     axios
       .post("http://localhost:5000/api/searchRecord", formData)
       .then((response) => {
@@ -426,47 +437,39 @@ const NewPreviewPage = () => {
       .catch((err) => {
         console.log(err);
       });
-      
   };
 
   return (
     <div className="newpreview">
       <Navbar></Navbar>
       <div className="searchmenu">
-        <p>After entering in below search click here to search in all records</p>
+        <p>
+          After entering in below search click here to search in all records
+        </p>
         <Row>
           <Col lg="11" className="left">
             <Row>
-              <Col>
-              <div className="searchall">
-            {/* <FormControl id="searchform" className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Select Column</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={selectedColumn}
-          onChange={columnnamehandler}
-        >
-          {colList}
-        </Select>
-      </FormControl>
-      <input type="text" placeholder="Find" onChange={searchvaluehandler}></input> */}
-      <button onClick={searchhandler}>Search</button>
-            </div>
+              <Col lg="1">
+                <div className="searchall">
+                  <button onClick={searchhandler}>Search</button>
+                </div>
+              </Col>
+              <Col lg="1">
+                <div className="resetall">
+                  <button onClick={resetHandler}>Reset</button>
+                </div>
               </Col>
               <Col>
-              <div className="filterButton">
-              <button onClick={filterhandler}>AutoComplete</button>
-              <button onClick={filter1handler}>MultiSelect</button>
-            </div>
+                <div className="filterButton">
+                  <button onClick={filterhandler}>AutoComplete</button>
+                  <button onClick={filter1handler}>MultiSelect</button>
+                </div>
               </Col>
             </Row>
-            
-           
+
             <div className={classes.root2}>
               {showFilter ? (
                 <ReactDataGrid
-
                   columns={gridCols.map((c) => ({
                     ...c,
                     ...defaultColumnProperties,
@@ -474,18 +477,23 @@ const NewPreviewPage = () => {
                   rowGetter={(i) => filteredRows[i]}
                   rowsCount={filteredRows.length}
                   minHeight={456}
-
                   toolbar={<Toolbar enableFilter={true} />}
-                  onAddFilter={(filter) => setFilters(handleFilterChange(filter))}
+                  onAddFilter={(filter) =>
+                    setFilters(handleFilterChange(filter))
+                  }
                   onClearFilters={() => setFilters({})}
-                  getValidFilterValues={columnKey => getValidFilterValues([], columnKey)}
+                  getValidFilterValues={(columnKey) =>
+                    getValidFilterValues([], columnKey)
+                  }
                   onColumnResize={(idx, width) =>
-                    console.log(`Column ${idx} has been resized to ${width}`)}
+                    console.log(`Column ${idx} has been resized to ${width}`)
+                  }
                 />
-              ) : <></>}
+              ) : (
+                <></>
+              )}
               {showFilter1 ? (
                 <ReactDataGrid
-
                   columns={gridCol1.map((c) => ({
                     ...c,
                     ...defaultColumnProperties,
@@ -493,15 +501,21 @@ const NewPreviewPage = () => {
                   rowGetter={(i) => filteredRows2[i]}
                   rowsCount={filteredRows2.length}
                   minHeight={456}
-
                   toolbar={<Toolbar enableFilter={true} />}
-                  onAddFilter={(filter) => setFilters2(handleFilterChange(filter))}
+                  onAddFilter={(filter) =>
+                    setFilters2(handleFilterChange(filter))
+                  }
                   onClearFilters={() => setFilters2({})}
-                  getValidFilterValues={columnKey => getValidFilterValues(gridRows1, columnKey)}
+                  getValidFilterValues={(columnKey) =>
+                    getValidFilterValues(gridRows1, columnKey)
+                  }
                   onColumnResize={(idx, width) =>
-                    console.log(`Column ${idx} has been resized to ${width}`)}
+                    console.log(`Column ${idx} has been resized to ${width}`)
+                  }
                 />
-              ) : <></>}
+              ) : (
+                <></>
+              )}
             </div>
             <div className={classes.num}>
               <PaginationP
@@ -530,7 +544,11 @@ const NewPreviewPage = () => {
               <Row>
                 <Row className="query">
                   <form>
-                    <input type="text" placeholder="Type your SQL query" onChange={(event) => queryhandler(event)} />
+                    <input
+                      type="text"
+                      placeholder="Type your SQL query"
+                      onChange={(event) => queryhandler(event)}
+                    />
                     <button onClick={onFetchButtonClick}>Fetch</button>
                   </form>
                 </Row>
@@ -539,7 +557,6 @@ const NewPreviewPage = () => {
           </Col>
           <Col lg="1" className="right">
             <Container>
-
               <Row>
                 <Col lg="12">
                   {/* <IconBox iconType={faFileExcel} size={"1x"}></IconBox> */}

@@ -486,3 +486,9 @@ def GenReactDataGridRows(tableRows, df , ROWS_PER_PAGE, SELECTED_PAGE):
     endRow = min(df.shape[0] , startRow + ROWS_PER_PAGE)
     for idx in  range(startRow , endRow) :
         tableRows.append(df.iloc[ idx ][:].to_dict())
+    
+    # Convert data to string since react-data-grid causes problems with other dtypes
+    for tableRow in tableRows : 
+        for colName in tableRow : 
+            tableRow[colName] = str(tableRow[colName])
+    
