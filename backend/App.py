@@ -389,6 +389,26 @@ def searchValueInCol():
         print(e)
         return jsonify({'message:', 'error'})
 
+@app.route('/api/dataReset', methods=['POST'])
+@cross_origin()
+def resetData():
+    global PreviewDF
+    print("Reset data form" , request.form)
+
+    PreviewDF = DF.copy()
+
+    tableCols = []
+    for c in columnListOrd :
+        tableCols.append({'key' : c , 'name' : c})
+
+    tableRows = []
+    utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+    
+    response = jsonify(
+        tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+
+    return response
+
 @app.route('/api/searchRecord', methods=['POST'])
 @cross_origin()
 def searchRecords():
@@ -412,6 +432,7 @@ def searchRecords():
         # html_string = utilities.GenPageHTML(
         #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
 
+        print("shape" , PreviewDF.shape, "\n", PreviewDF.head())
         tableCols = []
         for c in columnListOrd :
             tableCols.append({'key' : c , 'name' : c})
