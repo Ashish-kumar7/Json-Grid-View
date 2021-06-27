@@ -400,6 +400,7 @@ def searchRecords():
     print('form \n\n\n\n\n', request.form)
     try:
         filter_type = request.form['filter_type']
+        PreviewDF = DF.copy()
         if filter_type == "autoComplete" :
             queryDict = dict(json.loads(request.form['search_dict_auto']))
             print("\n\n\n\n\n\n\n", queryDict)

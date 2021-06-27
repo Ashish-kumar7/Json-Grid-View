@@ -381,18 +381,24 @@ const NewPreviewPage = () => {
     const formData = new FormData();
     // formData.set("col_name", initialDataFrame.selectCol);
     // formData.set("search_val", initialDataFrame.selectSearch);
+    var searchObj = {};
     try{
       var list = document.getElementsByClassName("Select has-value is-clearable is-searchable Select--multi");
-      for(var i =0;i<list.length;i++){
+      for(var i =0;i<list.length;i++){ 
           var input = list[i].getElementsByTagName("input");
-         
           for(var j=0;j<input.length-1;j++)
           {
-            initialDataFrame.searchColmulti[input[j].getAttribute("name").substring(7)].add(input[j].getAttribute("value"));
+            var columnName = input[j].getAttribute("name").substring(7);
+            if( !(columnName in searchObj) ) 
+                searchObj[columnName] = new Set();
+            searchObj[columnName].add(input[j].getAttribute("value"));
           }
-          
       }
       
+      // sending Set causes problems so convert to array
+      for(let columnName in searchObj)  {
+        searchObj[columnName] = Array.from( searchObj[columnName] );
+      }
       
     }catch(error){
       console.log(error);
@@ -404,8 +410,9 @@ const NewPreviewPage = () => {
     }
     else{
       formData.set("filter_type", "multiSelect");
-      formData.set('search_dict_multi', JSON.stringify(initialDataFrame.searchColmulti));
-      console.log(initialDataFrame.searchColmulti);
+      formData.set('search_dict_multi', JSON.stringify(searchObj));
+      console.log(searchObj);
+      console.log("after stringify " + JSON.stringify(searchObj));
     }
    
    
