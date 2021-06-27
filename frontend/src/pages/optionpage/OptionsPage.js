@@ -11,14 +11,14 @@ import IconBox from "../../components/iconbox/IconBox";
 const OptionsPage = () => {
   return (
     <div className="optionPage">
-      <Navbar></Navbar>
+      <Navbar />
       <Container>
         <Row>
           <Col lg="4">
             <IconBox iconType={faFileUpload} size={"9x"}></IconBox>
             <Button
               id={"btn1"}
-              title={"Upload A File"}
+              title={"Upload a File"}
               classId={"optionButton"}
               link={"/file-upload"}
             ></Button>
@@ -27,7 +27,7 @@ const OptionsPage = () => {
             <IconBox iconType={faLink} size={"9x"}></IconBox>
             <Button
               id={"btn2"}
-              title={"Provide A URL"}
+              title={"Provide a URL"}
               classId={"optionButton"}
               link={"/file-url"}
             ></Button>
@@ -36,14 +36,14 @@ const OptionsPage = () => {
             <IconBox iconType={faEdit} size={"9x"}></IconBox>
             <Button
               id={"btn3"}
-              title={"Go To Editor"}
+              title={"Go to Editor"}
               classId={"optionButton"}
               link={"/json-input"}
             ></Button>
           </Col>
         </Row>
       </Container>
-      <Footer></Footer>
+      <Footer />
     </div>
   );
 };
