@@ -9,11 +9,6 @@ import { Toolbar, Data, Filters } from "react-data-grid-addons";
 import Navbar from "../../components/navbar/Navbar";
 import { Row, Col, Container } from "react-bootstrap";
 import Button from "../../components/button/Button";
-import {
-  faDatabase,
-  faFileCsv,
-  faFileExcel,
-} from "@fortawesome/free-solid-svg-icons";
 import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
 import InputLabel from '@material-ui/core/InputLabel';
@@ -81,9 +76,6 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(1),
     minWidth: 120,
-    
-    
-    
   },
   selectEmpty: {
     marginTop: theme.spacing(2),
@@ -101,22 +93,16 @@ const useStyles = makeStyles((theme) => ({
       // outlineColor:"yellow",
       color: "white",
       backgroundColor: "#212342",
-      // color: theme.palette.text.color
     },
     "& div.react-grid-Toolbar": {
       backgroundColor: "black",
-      // borderColor: "yellow",
-      // color: theme.palette.text.color
     },
     "& button.btn": {
       backgroundColor: "yellow",
-      // color: theme.palette.text.color
     },
     "& div.react-grid-HeaderCell": {
       color: "white",
       backgroundColor: "#212529",
-
-      // color: theme.palette.text.color
     },
     "& div.react-grid-Cell": {
       backgroundColor: "#2c3034",
@@ -133,16 +119,12 @@ const useStyles = makeStyles((theme) => ({
           cursor: "pointer",
         },
       },
-
-      // color: theme.palette.text.color
     },
   },
 }));
 
 const NewPreviewPage = () => {
-  // console.log("new preview page");
-  // console.log(initialDataFrame.dfrow);
-  
+
   let [, setState] = useState();
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
@@ -177,7 +159,7 @@ const NewPreviewPage = () => {
   const [disable, setDisable] = useState(false);
   const [buttonId, setButtonId] = useState("uploadButton");
 
-  const [selectedColumn, setSelectedColumn] =  useState("");
+  const [selectedColumn, setSelectedColumn] = useState("");
   const [searchValue, setSearchValue] = useState("");
 
   const [query, setQuery] = useState("");
@@ -224,10 +206,6 @@ const NewPreviewPage = () => {
     axios
       .post("http://localhost:50000/api/page", formData)
       .then((response) => {
-        // console.log(response);
-        // console.log("result total records " + resultTotalRecords);
-        // initialDataFrame.dfrow = response.data.tableRows;
-        // initialDataFrame.dfcol = response.data.tableCols;
 
         setGridCols(response.data.tableCols);
         setGridRows(response.data.tableRows);
@@ -330,11 +308,11 @@ const NewPreviewPage = () => {
     );
   }
 
-  const columnnamehandler = (e)=> {
+  const columnnamehandler = (e) => {
     setSelectedColumn(e.target.value);
     console.log(e.target.value);
   };
-  const searchvaluehandler = (e)=> {
+  const searchvaluehandler = (e) => {
     setSearchValue(e.target.value);
     console.log(e.target.value);
   };
@@ -353,7 +331,7 @@ const NewPreviewPage = () => {
       .catch((err) => {
         console.log(err);
       });
-      
+
   };
 
   return (
@@ -365,31 +343,31 @@ const NewPreviewPage = () => {
           <Col lg="11" className="left">
             <Row>
               <Col>
-              <div className="searchall">
-            <FormControl id="searchform" className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Select Column</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={selectedColumn}
-          onChange={columnnamehandler}
-        >
-          {colList}
-        </Select>
-      </FormControl>
-      <input type="text" placeholder="Find" onChange={searchvaluehandler}></input>
-      <button onClick={searchhandler}>Search</button>
-            </div>
+                <div className="searchall">
+                  <FormControl id="searchform" className={classes.formControl}>
+                    <InputLabel id="demo-simple-select-label">Select Column</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={selectedColumn}
+                      onChange={columnnamehandler}
+                    >
+                      {colList}
+                    </Select>
+                  </FormControl>
+                  <input type="text" placeholder="Find" onChange={searchvaluehandler}></input>
+                  <button onClick={searchhandler}>Search</button>
+                </div>
               </Col>
               <Col>
-              <div className="filterButton">
-              <button onClick={filterhandler}>AutoComplete</button>
-              <button onClick={filter1handler}>MultiSelect</button>
-            </div>
+                <div className="filterButton">
+                  <button onClick={filterhandler}>AutoComplete</button>
+                  <button onClick={filter1handler}>MultiSelect</button>
+                </div>
               </Col>
             </Row>
-            
-           
+
+
             <div className={classes.root2}>
               {showFilter ? (
                 <ReactDataGrid
