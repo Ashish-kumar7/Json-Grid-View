@@ -457,7 +457,7 @@ def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_
     return prevQueryCols[selected_col][startIdx:endIdx]
 
 def queryUsingDict(df , queryDict) :
-    print('in queryUsingDict Function ' , queryDict)
+    # print('in queryUsingDict Function ' , queryDict)
     for colName, valList in queryDict.items() : 
         if len(valList) != 0:
             df = df.loc[ df[colName].isin(valList) ]
@@ -466,7 +466,7 @@ def queryUsingDict(df , queryDict) :
     return df
 
 def queryUsingForm(df, queryDict) :
-    print('in queryUsingForm Function ' , queryDict)
+    # print('in queryUsingForm Function ' , queryDict)
     for colName, colVal in queryDict.items() : 
         if colVal != "" :
             df = df.loc[ df[colName].astype(str).str.startswith(colVal, na=False) ]   
