@@ -466,10 +466,10 @@ def queryUsingDict(df , queryDict) :
     return df
 
 def queryUsingForm(df, queryDict) :
-    print(queryDict.items())
+    print('in queryUsingForm Function ' , queryDict)
     for colName, colVal in queryDict.items() : 
         if colVal != "" :
-            df = df.loc[ df[colName].str.startswith(colVal, na=False) ]   
+            df = df.loc[ df[colName].astype(str).str.startswith(colVal, na=False) ]   
     return df
 
 

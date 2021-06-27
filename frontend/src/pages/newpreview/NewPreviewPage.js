@@ -255,7 +255,7 @@ const NewPreviewPage = () => {
   const onPageChanged = (data) => {
     console.log("onPageChanged Ran");
     const { currentPage, totalPages, pageLimit } = data;
-    // console.log(currentPage);
+    console.log("currentPage " + currentPage);
     const offset = (currentPage - 1) * pageLimit;
     const formData = new FormData();
     formData.set("page_number", currentPage);

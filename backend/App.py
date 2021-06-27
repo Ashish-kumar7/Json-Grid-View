@@ -412,6 +412,7 @@ def searchRecords():
         # html_string = utilities.GenPageHTML(
         #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
 
+        print("shape" , PreviewDF.shape, "\n", PreviewDF.head())
         tableCols = []
         for c in columnListOrd :
             tableCols.append({'key' : c , 'name' : c})
