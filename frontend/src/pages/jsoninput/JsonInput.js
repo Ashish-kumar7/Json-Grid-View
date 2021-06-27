@@ -98,6 +98,7 @@ const JsonInput = () => {
               process={true}
               onChange={changeHandler}
               click={() => handleCustomize()}
+              btnid ={buttonId}
             ></Editor>
             <Modal
               show={open}

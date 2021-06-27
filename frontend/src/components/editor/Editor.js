@@ -8,7 +8,7 @@ const Editor = (props) => {
       {props.process ? (
         <Button
           title={"Customize"}
-          classId={"processButton"}
+          classId={props.btnid}
           clickFunc={props.click}
         ></Button>
       ) : (

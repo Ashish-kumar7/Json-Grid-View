@@ -1,56 +1,23 @@
 import "./NewPreviewPage.css";
-import SplitPane, { Pane } from "react-split-pane";
 import initialDataFrame from "../../global_variable";
 import PaginationP from "../../components/pagination/Pagination";
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { Dropdown } from "semantic-ui-react";
 import ReactDataGrid from "react-data-grid";
 import { Toolbar, Data, Filters } from "react-data-grid-addons";
 import Navbar from "../../components/navbar/Navbar";
 import { Row, Col, Container } from "react-bootstrap";
 import Button from "../../components/button/Button";
-import IconBox from "../../components/iconbox/IconBox";
-import {
-  faDatabase,
-  faFileCsv,
-  faFileExcel,
-} from "@fortawesome/free-solid-svg-icons";
 import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import FormControl from "@material-ui/core/FormControl";
-import Select from "@material-ui/core/Select";
-// import SelectSearch from 'react-select-search';
-// import 'react-select-search/style.css';
-// import fuzzySearch from 'react-select-search/dist/cjs/fuzzySearch';
-// import Select from 'react-select';
 
-// import Paper from '@material-ui/core/Paper';
-// import {
-//   FilteringState,
-//   IntegratedFiltering,
-// } from '@devexpress/dx-react-grid';
-// import {
-//   Grid,
-//   Table,
-//   TableHeaderRow,
-//   TableFilterRow,
-// } from '@devexpress/dx-react-grid-material-ui';
-
+// initialization of connection between server and client
 const socket = io("http://localhost:5000/");
-
+//used to download file after conversion
 var FileDownload = require("js-file-download");
 
-// const columns = initialDataFrame.dfcol;
-// const rows = initialDataFrame.dfrow;
-
+// Excel column properties
 const defaultColumnProperties = {
   filterable: true,
   resizable: true,
@@ -59,14 +26,13 @@ const defaultColumnProperties = {
 
 const selectors = Data.Selectors;
 
-const { AutoCompleteFilter, MultiSelectFilter } = Filters;
+//Filter for excel
+const { MultiSelectFilter } = Filters;
 
+// function to handle autocomplete filter -  stores search value to process on whole data
 const handleFilterChange = (filter) => (filters) => {
-  // console.log(filter.column.key);
-  // console.log(filter.filterTerm);
-  // initialDataFrame.selectCol = filter.column.key;
-  // initialDataFrame.selectSearch = filter.filterTerm;
   initialDataFrame.searchColauto[filter.column.key] = filter.filterTerm;
+  console.log(initialDataFrame.searchColauto);
   const newFilters = { ...filters };
   if (filter.filterTerm) {
     newFilters[filter.column.key] = filter;
@@ -76,24 +42,21 @@ const handleFilterChange = (filter) => (filters) => {
   return newFilters;
 };
 
+// function to handle multiselect filter of excel
 function getValidFilterValues(rows, columnId) {
   return rows
     .map((r) => r[columnId])
     .filter((item, i, a) => {
-      console.log(columnId);
-      // initialDataFrame.searchColmulti[columnId].add()
-      // console.log(a[i]);
-      // console.log(a);
-      // console.log(item);
       return i === a.indexOf(item);
     });
 }
 
+// function for rows of excel
 function getRows(rows, filters) {
   return selectors.getRows({ rows, filters });
 }
 
-// style
+// styling of components using makeStyles
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -101,8 +64,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
   },
   num: {
-    // color:'black',
-    // backgroundColor:'#00b0ff',
     marginLeft: "30%",
     marginRight: "30%",
     padding: "1%",
@@ -120,40 +81,30 @@ const useStyles = makeStyles((theme) => ({
   },
   root2: {
     "& div.react-grid-Header": {
-      // borderColor: "white",
       backgroundColor: "#212342",
     },
     "& div.react-grid-Canvas": {
-      // borderColor: "white",
       backgroundColor: "#212342",
     },
     "& div.react-grid-Main": {
-      // outlineColor:"yellow",
       color: "white",
       backgroundColor: "#212342",
-      // color: theme.palette.text.color
     },
     "& div.react-grid-Toolbar": {
       backgroundColor: "black",
-      // borderColor: "yellow",
-      // color: theme.palette.text.color
     },
     "& button.btn": {
       backgroundColor: "yellow",
-      // color: theme.palette.text.color
     },
     "& div.react-grid-HeaderCell": {
       color: "white",
       backgroundColor: "#212529",
-
-      // color: theme.palette.text.color
     },
     "& div.react-grid-Cell": {
       backgroundColor: "#2c3034",
       "&:hover": {
         background: "blue",
       },
-      // color: theme.palette.text.color
     },
     "& div.react-grid-Row": {
       "& div.react-grid-Cell": {
@@ -163,60 +114,58 @@ const useStyles = makeStyles((theme) => ({
           cursor: "pointer",
         },
       },
-
-      // color: theme.palette.text.color
     },
   },
 }));
 
 const NewPreviewPage = () => {
-  // console.log("new preview page");
-  // console.log(initialDataFrame.dfrow);
-
-  // ch.addEventListener(()=>{
-
-  // });
-
+  // for re-rendering react components without reloading the page
   let [, setState] = useState();
+  // store initial total number of records of dataframe
   const [resultTotalRecords, setResultTotalRecords] = useState(
     initialDataFrame.records
   );
-  const [selectedPage, setSelectedPage] = useState(1);
+  //store rows of excel for autocomplete filter
   const [gridRows, setGridRows] = useState(initialDataFrame.dfrow);
+  //store rows of excel multiselect filter
   const [gridRows1, setGridRows1] = useState(initialDataFrame.dfrow);
+  //store columns of excel for autocomplete filter
   const [gridCols, setGridCols] = useState(initialDataFrame.dfcol);
+  //store columns of excel for multiselect filter
   const [gridCol1, setGridCol1] = useState(initialDataFrame.dfcol);
-
+  //boolean variable to decide which filter to show on ui
   const [showFilter, setShowFilter] = useState(true);
   const [showFilter1, setShowFilter1] = useState(false);
-
+  // initialization for using styling made using makeStyles
   const classes = useStyles();
+  // filters for grid for autocomplete filter
   const [filters, setFilters] = useState({});
   const filteredRows = getRows(gridRows, filters);
+  // filters for grid for multiselect filter
   const [filters2, setFilters2] = useState({});
   const filteredRows2 = getRows(gridRows, filters2);
-  // const [table, setTable] = useState(initialDataFrame.df);
-
-  // console.log(resultTotalRecords);
+  // store first 1000 rows of dataframe
   const [resultRows, setResultRows] = useState(initialDataFrame.rows);
-  let colWithIdx = [];
-  const [selectedIndex, setSelectedIndex] = useState(1);
-
+  // store download content of file when received from backend
   const [downloadContent, setDownloadContent] = useState("");
+  // Text to show on download button which changes depending upon the conversion chosen
   const [downloadText, setDownloadText] = useState("Download");
+  // it stores extension of file to download
   const [fileExtension, setFileExtension] = useState("");
+  // used to show and hide download button
   const [showDownload, setShowDownload] = useState(false);
+  // variable to store percentage of progress bar
   const [uploadPercentage, setUploadPercentage] = useState(0);
-
+  // once a button is clicked  it is used to set disable property for button
   const [disable, setDisable] = useState(false);
+  // to change the button id to disableButton when disable variable is set true
   const [buttonId, setButtonId] = useState("uploadButton");
-
-  const [selectedColumn, setSelectedColumn] = useState("");
-  const [searchValue, setSearchValue] = useState("");
-
+  // store query to perform on whole data
   const [query, setQuery] = useState("");
 
+  // function called when autocomplete filter button is clicked
   const filterhandler = () => {
+    // sets the grid according to autocomplete filter
     const newCol2 = gridCols;
     for (var i = 0; i < gridCols.length; i++) {
       delete newCol2[i]["filterRenderer"];
@@ -228,52 +177,47 @@ const NewPreviewPage = () => {
     setState({});
   };
 
+  // function called when multiselect filter button is clicked
   const filter1handler = () => {
+    //sets the grid according to multiselect filter
     const newCol2 = gridCols;
     for (var i = 0; i < gridCols.length; i++) {
       newCol2[i]["filterRenderer"] = MultiSelectFilter;
     }
-
     setGridCol1(newCol2);
     console.log(gridCol1);
     setShowFilter1(true);
     setShowFilter(false);
-
     setState({});
   };
 
+  // listening from backend to update progress bar value
   socket.on("progress", (val) => {
     setUploadPercentage(val);
     console.log(val);
   });
 
-  // page change function for df preview
+  // page change function for df preview , called when page number is clicked from paging tab
   const onPageChanged = (data) => {
-    console.log("onPageChanged Ran");
     const { currentPage, totalPages, pageLimit } = data;
     console.log("currentPage " + currentPage);
-    const offset = (currentPage - 1) * pageLimit;
+    // sends page number to backend
     const formData = new FormData();
     formData.set("page_number", currentPage);
     axios
       .post("http://localhost:5000/api/page", formData)
       .then((response) => {
-        // console.log(response);
-        // console.log("result total records " + resultTotalRecords);
-        // initialDataFrame.dfrow = response.data.tableRows;
-        // initialDataFrame.dfcol = response.data.tableCols;
-
+        // receives 1000 records for the page number which was sent to backend
         setGridCols(response.data.tableCols);
         setGridRows(response.data.tableRows);
-        // setTable(response.data.table);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  // this function is called when any of the convert button is clicked
   const handleConversion = (val) => {
-    console.log("handleConversion Ran");
     if (disable) {
       console.log("disable true");
     } else {
@@ -293,11 +237,13 @@ const NewPreviewPage = () => {
         setFileExtension("output.db");
         setDownloadText("Download DB");
       }
+      // send data according to button clicked
       axios
         .post("http://localhost:5000/api/convert", formData, {
           responseType: "blob",
         })
         .then((response) => {
+          // receives file from backend to download
           setDisable(false);
           setButtonId("uploadButton");
           setUploadPercentage(100);
@@ -317,18 +263,18 @@ const NewPreviewPage = () => {
     }
   };
 
-  // download content
+  // function called when download button is clicked
   const downloadFile = () => {
     FileDownload(downloadContent, fileExtension);
   };
 
+  // stores query when it is typed on input box
   const queryhandler = (e) => {
     setQuery(e.target.value);
   };
 
-  //On fetchButtonClick
+  //function called when fetch button is clicked to get result of query
   const onFetchButtonClick = (e) => {
-    console.log("onFetchButtonClick Ran");
     e.preventDefault();
     const formData = new FormData();
     formData.set("query_text", query);
@@ -353,32 +299,14 @@ const NewPreviewPage = () => {
       });
   };
 
-  let colList = [];
-
-  for (var i = 0; i < initialDataFrame.cols.length; i++) {
-    // dictIntermediate[initialDataFrame.cols[i]] = new Set();
-    let number = i;
-    colList.push(
-      <MenuItem value={initialDataFrame.cols[number]}>
-        {initialDataFrame.cols[number]}
-      </MenuItem>
-    );
-  }
-
-  const columnnamehandler = (e) => {
-    setSelectedColumn(e.target.value);
-    console.log(e.target.value);
-  };
-  const searchvaluehandler = (e) => {
-    setSearchValue(e.target.value);
-    console.log(e.target.value);
-  };
+  // function called when reset button is clicked
   const resetHandler = () => {
     const formData = new FormData();
-    formData.set("reset" , "true");
+    formData.set("reset", "true");
     axios
       .post("http://localhost:5000/api/dataReset", formData)
       .then((response) => {
+        //resets the data in grid to initial dataframe
         setGridRows(response.data.tableRows);
         setResultTotalRecords(response.data.total_records);
         setResultRows(response.data.rows_per_page);
@@ -386,12 +314,11 @@ const NewPreviewPage = () => {
       .catch((err) => {
         console.log(err);
       });
-  }
+  };
 
   const searchhandler = () => {
     const formData = new FormData();
-    // formData.set("col_name", initialDataFrame.selectCol);
-    // formData.set("search_val", initialDataFrame.selectSearch);
+    // storing values selected in multiselect filter and sending it to backend to process on whole data
     var searchObj = {};
     try {
       var list = document.getElementsByClassName(
@@ -406,25 +333,23 @@ const NewPreviewPage = () => {
         }
       }
 
-      // sending Set causes problems so convert to array
+      // converting set to array to avoid problem in processing in backend
       for (let columnName in searchObj) {
         searchObj[columnName] = Array.from(searchObj[columnName]);
       }
     } catch (error) {
       console.log(error);
     }
+    // send data according to filter selected
     if (showFilter) {
       formData.set("filter_type", "autoComplete");
       formData.set(
         "search_dict_auto",
         JSON.stringify(initialDataFrame.searchColauto)
       );
-      // console.log(initialDataFrame.searchColauto);
     } else {
       formData.set("filter_type", "multiSelect");
       formData.set("search_dict_multi", JSON.stringify(searchObj));
-      console.log(searchObj);
-      console.log("after stringify " + JSON.stringify(searchObj));
     }
 
     axios
@@ -444,26 +369,51 @@ const NewPreviewPage = () => {
       <Navbar></Navbar>
       <div className="searchmenu">
         <p>
-          After entering in below search click here to search in all records
+          After selecting the filters click here to search in all records and reset data to initial if needed.
         </p>
         <Row>
           <Col lg="11" className="left">
             <Row>
               <Col lg="1">
-                <div className="searchall">
+                {/* <div className="searchall">
                   <button onClick={searchhandler}>Search</button>
-                </div>
+                </div> */}
+                <Button title={"Search"}
+                    classId={"workButton"}
+                    id={"btn2"}
+                    clickFunc={searchhandler}></Button>
               </Col>
               <Col lg="1">
-                <div className="resetall">
+                {/* <div className="resetall">
                   <button onClick={resetHandler}>Reset</button>
-                </div>
+                </div> */}
+                <Button title={"Reset"}
+                    classId={"workButton"}
+                    id={"btn1"}
+                    clickFunc={resetHandler}></Button>
               </Col>
               <Col>
-                <div className="filterButton">
+                <Row>
+                  <Col lg="8"></Col>
+                  <Col lg="2">
+                  <Button title={"AutoComplete"}
+                    classId={"filterButton"}
+                    id={"btn3"}
+                    clickFunc={filterhandler}></Button>
+                    </Col>
+                  <Col lg="2">
+                  <Button title={"MultiSelect"}
+                    classId={"filterButton"}
+                    id={"btn3"}
+                    clickFunc={filter1handler}></Button>
+                    </Col>
+                </Row>
+                
+                    
+                    {/* <div className="filterButton">
                   <button onClick={filterhandler}>AutoComplete</button>
                   <button onClick={filter1handler}>MultiSelect</button>
-                </div>
+                </div> */}
               </Col>
             </Row>
 
@@ -476,7 +426,7 @@ const NewPreviewPage = () => {
                   }))}
                   rowGetter={(i) => filteredRows[i]}
                   rowsCount={filteredRows.length}
-                  minHeight={456}
+                  minHeight={480}
                   toolbar={<Toolbar enableFilter={true} />}
                   onAddFilter={(filter) =>
                     setFilters(handleFilterChange(filter))
@@ -526,20 +476,7 @@ const NewPreviewPage = () => {
                 onPageChanged={onPageChanged}
               />
             </div>
-            {/* <div>
-            <Paper>
-      <Grid
-        rows={gridRows}
-        columns={gridCols}
-      >
-        <FilteringState defaultFilters={[]} />
-        <IntegratedFiltering />
-        <Table />
-        <TableHeaderRow />
-        <TableFilterRow />
-      </Grid>
-    </Paper>
-            </div> */}
+
             <Container className="queryInside">
               <Row>
                 <Row className="query">
@@ -559,7 +496,6 @@ const NewPreviewPage = () => {
             <Container>
               <Row>
                 <Col lg="12">
-                  {/* <IconBox iconType={faFileExcel} size={"1x"}></IconBox> */}
                   <Button
                     title={"Convert to Excel"}
                     classId={buttonId}
@@ -567,7 +503,6 @@ const NewPreviewPage = () => {
                   ></Button>
                 </Col>
                 <Col lg="12">
-                  {/* <IconBox iconType={faFileCsv} size={"1x"}></IconBox> */}
                   <Button
                     title={"Convert To CSV"}
                     classId={buttonId}
@@ -575,7 +510,6 @@ const NewPreviewPage = () => {
                   ></Button>
                 </Col>
                 <Col lg="12">
-                  {/* <IconBox iconType={faDatabase} size={"1x"}></IconBox> */}
                   <Button
                     title={"Convert To DB"}
                     classId={buttonId}
