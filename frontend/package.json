@@ -7,10 +7,10 @@
       "public/**/*",
       "src/**/*"
     ],
-    "directories":{
+    "directories": {
       "buildResources": "assets"
     }
-  }, 
+  },
   "productName": "Json-Grid-View",
   "name": "frontend",
   "version": "0.1.0",
@@ -56,11 +56,9 @@
     "socket.io-client": "^4.1.2",
     "web-vitals": "^1.1.2"
   },
-  
   "main": "public/electron.js",
-  
   "scripts": {
-    "start":"set BROWSER=none && react-scripts start",
+    "start": "set BROWSER=none && react-scripts start",
     "start-electron": "electron .",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -71,7 +69,6 @@
     "electron-pack": "build public/electron.js=build/electron.js",
     "electron-dev": "concurrently \"SET BROWSER=none&&npm run start\" \"wait-on http://localhost:3000 && electron .\""
   },
-  
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -100,7 +97,7 @@
     "jest-enzyme": "^7.1.2",
     "mock-prop-types": "^2.1.5",
     "wait-on": "^5.3.0"
-  } ,
+  },
   "author": "Abhishek",
   "homepage": "./"
 }
