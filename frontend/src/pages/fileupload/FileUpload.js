@@ -10,10 +10,6 @@ import io from "socket.io-client";
 import Modal from "../../components/modal/Modal";
 import { css } from "@emotion/react";
 import RingLoader from "react-spinners/RingLoader";
-import BounceLoader from "react-spinners/BounceLoader";
-import ClockLoader from "react-spinners/ClockLoader";
-
-
 
 // const socket = io("http://localhost:50000/");
 
@@ -34,8 +30,8 @@ const FileUpload = () => {
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ea80fc");
 
-  const [disable ,setDisable ]= useState(false);
-  const [buttonId,setButtonId] = useState("downloadButton");
+  const [disable, setDisable] = useState(false);
+  const [buttonId, setButtonId] = useState("downloadButton");
 
   // on clicking customize button modal will be shown (show modal variable)
   const [open, setOpen] = useState(false);
@@ -67,44 +63,44 @@ const FileUpload = () => {
 
   // on clicking customize button ,file will be sent to backend, schema will be received and customize modal will be shown
   const handleCustomize = () => {
-    if(disable){
+    if (disable) {
       console.log("disable true");
     }
-    else{
-    setDisable(true);
-    setButtonId("disableButton");
-    setLoading(true);
-    const formData = new FormData();
-    formData.append("File", selectedFile);
-    formData.set("input_type", "file");
+    else {
+      setDisable(true);
+      setButtonId("disableButton");
+      setLoading(true);
+      const formData = new FormData();
+      formData.append("File", selectedFile);
+      formData.set("input_type", "file");
 
-    axios
-      .post("http://localhost:50000/api/upload", formData)
-      .then((res) => {
-        console.log("json loaded and checked");
-        setLoading(false);
-        if (res.data.message.startsWith("Error")) {
+      axios
+        .post("http://localhost:50000/api/upload", formData)
+        .then((res) => {
+          console.log("json loaded and checked");
+          setLoading(false);
+          if (res.data.message.startsWith("Error")) {
+            setDisable(false);
+            setButtonId("downloadButton");
+            alert(res.data.message);
+          }
+          else {
+            setDisable(false);
+            setButtonId("downloadButton");
+            showModal();
+          }
+        })
+        .catch((err) => {
+          // display alert for wrong json
+          setLoading(false);
           setDisable(false);
           setButtonId("downloadButton");
-          alert(res.data.message);
-        }
-        else {
-          setDisable(false);
-          setButtonId("downloadButton");
-          showModal();
-        }
-      })
-      .catch((err) => {
-        // display alert for wrong json
-        setLoading(false);
-        setDisable(false);
-        setButtonId("downloadButton");
-        console.log(err);
-        validJSON = false;
-        setTimeout(() => {
-          alert("Invalid JSON File !!");
-        }, 1000);
-      });
+          console.log(err);
+          validJSON = false;
+          setTimeout(() => {
+            alert("Invalid JSON File !!");
+          }, 1000);
+        });
     }
   };
 
@@ -163,8 +159,6 @@ const FileUpload = () => {
       ) : (
         <p></p>
       )}
-
-
 
     </div>
   );

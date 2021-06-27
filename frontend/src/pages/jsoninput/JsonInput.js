@@ -5,12 +5,9 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { useHistory } from "react-router";
 import RingLoader from "react-spinners/RingLoader";
 import Editor from "../../components/editor/Editor";
-import Footer from "../../components/footer/Footer";
 import Modal from "../../components/modal/Modal";
 import Navbar from "../../components/navbar/Navbar";
 import "./JsonInput.css";
-
-// const socket = io("http://localhost:50000/");
 
 const override = css`
   display: block;
@@ -30,12 +27,6 @@ const JsonInput = () => {
 
   var validJSON = true;
 
-  // for getting updates regarding progress 
-  // socket.on("progress", (val) => {
-  //   setUploadPercentage(val);
-  //   console.log(val);
-  // });
-
   const changeHandler = (e) => {
     setInputJson(e.target.value);
     console.log(typeof JSON.parse(e.target.value));
@@ -49,39 +40,6 @@ const JsonInput = () => {
     setOpen(true);
   };
 
-  // const handleConversion = (val) => {
-  //   const formData = new FormData();
-  //   formData.set("content_type", val);
-  //   console.log(val)
-  //   if (val == "excel") {
-  //     setFileExtension("output.xlsx");
-  //   } else if (val == "csv") {
-  //     setFileExtension("output.csv");
-  //   } else {
-  //     setFileExtension("output.db");
-  //   }
-  //   axios
-  //     .post(
-  //       "http://localhost:50000/api/convert",
-  //       formData,
-  //       { responseType: "blob" }
-  //     )
-  //     .then((response) => {
-  //       setUploadPercentage(100);
-  //       setTimeout(() => {
-  //         setUploadPercentage(0);
-  //       }, 1000);
-  //       setDownloadContent(response.data);
-  //       console.log(response);
-  //       setShowDownload(true);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //       setUploadPercentage(0);
-  //       alert("Oops it breaks " + err);
-  //     });
-  // }
-
   const handleCustomize = () => {
     setLoading(true);
 
@@ -94,9 +52,7 @@ const JsonInput = () => {
         console.log("json loaded and checked");
         setLoading(false);
         if (res.data.message.startsWith("Error")) {
-           alert(res.data.message);
-          // global_var.json = inputJson;
-          // history.push('/jsonchecker');
+          alert(res.data.message);
         }
         else {
           showModal();
@@ -109,16 +65,13 @@ const JsonInput = () => {
         //   history.push('/jsonchecker');
         console.log(err);
         validJSON = false;
-        
-       
+
+
         setTimeout(() => {
           alert("Invalid JSON Input !!");
         }, 1000);
       });
   };
-
-
-
   return (
     <div className="jsonInput">
       <Navbar></Navbar>
@@ -133,17 +86,9 @@ const JsonInput = () => {
             ></Modal>
             <RingLoader color={color} loading={loading} css={override} size={150} />
           </Col>
-          
+
         </Row>
       </Container>
-
-      {/*      
-      <div>
-        <textarea rows="10" cols="10" type="text" onChange={changeHandler} />
-
-        <button onClick={handleSubmission}>Submit</button>
-      </div> */}
-      <Footer />
     </div>
   );
 };
