@@ -137,3 +137,100 @@ fillNaN(df) :
     Working:    Copies df.iloc[r-1, c] if df.iloc[r, c] is NaN
     Parameters: df:    Pandas-dataframe 
     Returns: None
+
+WriteDict_NaN_NoIndex(d, row, pref, data) : 
+    Working:    Writes data in dict by performing depth-first-search
+                fills nan values with __FILL_MISSING_WITH
+                No extra Index columns are added
+    Parameters: d:    Python-dict  
+                row:    int     :to keep track of row in dict
+                pref:   str     :to keep track of column-header
+                data:   dict    :json-data
+    Returns: int : number of rows required to write data
+
+WriteDict_NoIndex(d, row, pref, data) : 
+    Working:    Writes data in dict by performing depth-first-search
+                No extra Index columns are added
+    Parameters: d:    Python-dict  
+                row:    int     :to keep track of row in dict
+                pref:   str     :to keep track of column-header
+                data:   dict    :json-data
+    Returns: int : number of rows required to write data
+
+WriteDict_Index(d, row, pref, data) : 
+    Working:    Writes data in dict by performing depth-first-search
+                Extra Index columns are added
+    Parameters: d:    Python-dict  
+                row:    int     :to keep track of row in dict
+                pref:   str     :to keep track of column-header
+                data:   dict    :json-data
+    Returns: int : number of rows required to write data
+
+GenCrossSchema(pref, prefId, data, schema): 
+    Working:    Generates schema for Cross-product-table by performing depth-first-search
+    Parameters: pref:   str     :to keep track of column-header
+                prefid: str     :to keep track of list-indexes-after-dfs
+                data:   dict    :json-data
+                schema: dict    :cross-product-table schema
+    Returns: int : number of rows required to write data
+
+GenCrossDict(pref, prefId, row, Dict, data, schema): 
+    Working:    Generates data-dict for Cross-product-table by performing depth-first-search
+    Parameters: pref:   str     :to keep track of column-header
+                prefid: str     :to keep track of list-indexes-after-dfs
+                row:    int     :to keep track of row in Dict
+                Dict:   dict    :data-dict for generating dataframe 
+                data:   dict    :json-data
+                schema: dict    :cross-product-table schema
+    Returns: None
+
+WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_FOR_LIST=False,
+              INDEX_FOR_LIST_SUFFIX='INDEX', GEN_CROSS_TABLE=False): 
+    Working:    Fills DataDict by calling appropriate functions depending on parameters
+    Parameters: DataDict:   dict    :to store row-data for generating DataFrame
+                Data:       dict    :json-data
+                tableSchema:dict    :table-schema for performing depth-first-search
+                FILL_MISSING_WITH:      str : value used for filling missing-values
+                ADD_INDEX_FOR_LIST:     bool: if True extra INDEX columns are added to table
+                INDEX_FOR_LIST_SUFFIX:  str : suffix for added-index-columns 
+                GEN_CROSS_TABLE:        bool: if True, cross-product-table is generated
+    Returns: None
+
+Encode(obj): 
+    Working:    Convert numpy data-types to python data-types
+    Parameters: obj:   any-data-type    : data to convert
+    Returns: converted-obj
+
+GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page): 
+    Working:    returns unique values from selected_page for selected_col
+    Parameters: PreviewDF:      dataframe:  dataframe for reading unique values
+                prevQueryCols:  dict:       cache for previous queries      
+                selected_col:   str:        selected column
+                selected_page:  int:        selected page
+                rows_per_page:  int:        number of unique values per page
+    Returns:    list:   list of unique values
+
+queryUsingDict(df, queryDict): 
+    Working:    applies multi-select queries on df
+    Parameters: df:         dataframe:  dataframe for applying queries
+                queryDict:  dict:       contains column-names and selected-values     
+    Returns:    dataframe:   dataframe after applying queries
+
+queryUsingForm(df, queryDict): 
+    Working:    applies auto-complete queries on df
+    Parameters: df:         dataframe:  dataframe for applying queries
+                queryDict:  dict:       contains column-names and text-to-complete    
+    Returns:    dataframe:   dataframe after applying queries
+
+DeleteIfExists(FileName): 
+    Working:    deletes file if it exists
+    Parameters: FileName:         str:  name of the file to delete
+    Returns:    None
+
+GenReactDataGridRows(tableRows, df, ROWS_PER_PAGE, SELECTED_PAGE): 
+    Working:    generate row-dict for React-Data-Grid
+    Parameters: tableRows:      dict:       row-dict for react-data-grid
+                df:             dataframe:  for reading data
+                ROWS_PER_PAGE:  int:        number of rows to display per page
+                SELECTED_PAGE:  int:        selected page
+    Returns:    None
