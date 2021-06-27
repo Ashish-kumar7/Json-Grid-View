@@ -556,7 +556,8 @@ def queryUsingDict(df, queryDict):
 def queryUsingForm(df, queryDict):
     for colName, colVal in queryDict.items():
         if colVal != "":
-            df = df.loc[df[colName].astype(str).str.lower().str.startswith(colVal.lower(), na=False)]
+            # df = df.loc[df[colName].astype(str).str.lower().str.startswith(colVal.lower(), na=False)]
+            df = df.loc[df[colName].astype(str).str.lower().str.contains(colVal.lower(), na=False)]
     return df
 
 # DeleteIfExists(FileName): 
