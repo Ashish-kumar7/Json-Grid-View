@@ -1,0 +1,68 @@
+Description of global Variables
+
+__NULL : 
+Used-for : filling null values
+type(__NULL) : <class 'str'>
+Value : string used to fill missing-data
+
+__JOINER_CHAR : 
+Used-for : generating column-headers
+type(__JOINER_CHAR) : <class 'str'>
+Value : one of ('_' , '.', '-') , used to join child-names to parent-names
+
+__FILL_MISSING_WITH : 
+Used-for : filling null values
+type(__FILL_MISSING_WITH) : <class 'str'>
+Value : string used to fill missing-data
+
+__ADD_INDEX_FOR_LIST : 
+Used-for : if True then extra INDEX columns are added in table
+type(__ADD_INDEX_FOR_LIST) : <class 'bool'>
+Value : True or False
+
+__INDEX_FOR_LIST_SUFFIX : 
+Used-for : generating column-header for added INDEX-column when __ADD_INDEX_FOR_LIST is True
+type(__ADD_INDEX_FOR_LIST) : <class 'str'>
+Value : suffix to add in added-column-header
+
+__reqCols 
+Used-for : storing unordered-column-headers for generating table
+type(__reqCols) : <class 'set'>
+Value: python-set containing column-names of type <class 'str'>    
+
+__reqColsOrd : 
+Used-for : storing ordered column-headers for generating table
+type(__reqCols) : <class 'list'>
+Value: python-list containing column-names of type <class 'str'>
+
+__reqColsOrdNoPar : 
+Used-for : storing ordered-column-headers without parent-prefix for generating table
+type(__reqCols) : <class 'list'>
+Value: python-list containing column-names of type <class 'str'>
+
+
+__colTree :
+Used-for : performing depth-first-search for filling data in table
+type(__colTree) : <class 'dict'>
+Value: python-dict containing 
+    keys   : column-header-prefix of type <class 'str'>
+    values : python-set of column-header-prefixes that are child of current-prefix
+
+__colTreeOrd : 
+Used-for : performing depth-first-search for filling data in table
+type(__colTree) : <class 'dict'>
+Value: python-dict containing 
+    keys   : column-header-prefix of type <class 'str'>
+    values : python-list of column-header-prefixes that are child of current-prefix
+
+__tableSchema : 
+Used-for : performing depth-first-search for filling data in table
+type(__colTree) : <class 'dict'>
+Value: python-dict containing 
+    keys   : column-header-prefix of type <class 'str'>
+    values : python-set of column-header-prefixes that are child of current-prefix
+ 
+__addedColumns : 
+Used-for : storing column-headers added when __ADD_INDEX_FOR_LIST == True
+type(__adedColumns) : <class 'set'>
+Value: python-set containing column-headers of type <class 'str'> 
