@@ -471,12 +471,8 @@ def WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_F
 
     if GEN_CROSS_TABLE:
         crossSchema = {}
-        startTime = time.time()
         GenCrossSchema('', '', Data, crossSchema)
-        print("time to gen cross schema", time.time() - startTime)
-        startTime = time.time()
         GenCrossDict('', '', 0, DataDict, Data, crossSchema)
-        print("time to gen cross schema", time.time() - startTime)
     else:
         if ADD_INDEX_FOR_LIST:
             __addedColumns = set()
@@ -530,7 +526,6 @@ def Encode(obj):
 #                 rows_per_page:  int:        number of unique values per page
 #     Returns:    list:   list of unique values
 def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page):
-    print('in gen page data')
     if not selected_col in prevQueryCols:
         prevQueryCols[selected_col] = list(pd.unique(PreviewDF[selected_col]))
 
@@ -550,7 +545,6 @@ def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_
 def queryUsingDict(df, queryDict):
     for colName, valList in queryDict.items() : 
         if len(valList) != 0:
-            print("/ncolName"+colName)
             df = df.loc[ df[colName].isin(valList) ]
     return df
 
@@ -560,7 +554,6 @@ def queryUsingDict(df, queryDict):
 #                 queryDict:  dict:       contains column-names and text-to-complete    
 #     Returns:    dataframe:   dataframe after applying queries
 def queryUsingForm(df, queryDict):
-    # print('in queryUsingForm Function ' , queryDict)
     for colName, colVal in queryDict.items():
         if colVal != "":
             df = df.loc[df[colName].astype(
