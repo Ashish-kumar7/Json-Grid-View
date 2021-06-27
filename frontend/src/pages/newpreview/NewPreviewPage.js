@@ -1,20 +1,14 @@
 import "./NewPreviewPage.css";
-import SplitPane, { Pane } from "react-split-pane";
 import initialDataFrame from "../../global_variable";
 import PaginationP from "../../components/pagination/Pagination";
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import { Dropdown } from "semantic-ui-react";
 import ReactDataGrid from "react-data-grid";
 import { Toolbar, Data, Filters } from "react-data-grid-addons";
 import Navbar from "../../components/navbar/Navbar";
 import { Row, Col, Container } from "react-bootstrap";
 import Button from "../../components/button/Button";
-import IconBox from "../../components/iconbox/IconBox";
 import {
   faDatabase,
   faFileCsv,
@@ -24,14 +18,8 @@ import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-// import SelectSearch from 'react-select-search';
-// import 'react-select-search/style.css';
-// import fuzzySearch from 'react-select-search/dist/cjs/fuzzySearch';
-// import Select from 'react-select';
-
 
 const socket = io("http://localhost:50000/");
 
