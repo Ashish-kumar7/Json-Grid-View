@@ -491,15 +491,40 @@ def convertFile():
 
         # Generate SQL Database, Table
         if extension == "hive":
+            # startTime = time.time()
+            # sql_engine = sqlalchemy.create_engine(
+            #     'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            # sqlite_connection = sql_engine.connect()
 
+            # print("Conenction Made to SQL")
+
+            # if data_type == 1 :
+            #     DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+            # else :
+            #     PreviewDF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+
+            # print("\n\nTABLE\n")
+            # # print(engine.execute("SELECT * FROM " + tableName).fetchall())
+            # sqlite_connection.close()
+            # print("Time to gen db : ", time.time() - startTime)
+
+            # startTime = time.time()
+            # print("Total time taken : ", startTime - initTime)
             socketio.emit('progress', 80, broadcast=True)
-            
-            if HADOOP_INSTALLED:
-                DF.to_csv('test.csv')
-                hadoopstorage.saveFile(DF)
-                
-            socketio.emit('progress', 80, broadcast=True)
-            return send_file(ELECTRON_PATH + SQL_DB_NAME + '.db')
+            # if HADOOP_INSTALLED:
+            #     if data_type == 1:
+            #         DF.to_csv('test.csv')
+            #         hadoopstorage.saveFile(DF)
+            #     else:
+            #         PreviewDF.to_csv('test.csv')
+            #         hadoopstorage.saveFile(PreviewDF)
+
+                # code to convert csv file and saving it to hdfs
+                # df = pd.read_csv('generatedCsvFile.csv')
+                # df.to_parquet("/test_parquet", compression="GZIP")
+                # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
+                # subprocess.call(hdfs_cmd, shell=True)
+            return send_file(SQL_DB_NAME + '.db')
 
     except Exception as e:
         print(e)
