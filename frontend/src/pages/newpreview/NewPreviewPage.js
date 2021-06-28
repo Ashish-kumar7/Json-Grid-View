@@ -419,7 +419,7 @@ const NewPreviewPage = () => {
                   clickFunc={resetHandler}
                 ></Button>
               </Col>
-              <Col lg="10 "xs="8">
+              <Col lg="10 " xs="8">
                 <Row>
                   <Col lg="8" xs="2"></Col>
                   <Col lg="2" xs="5">
@@ -506,7 +506,7 @@ const NewPreviewPage = () => {
               <Row>
                 <Row className="query">
                   <form>
-                    <label>Table-name: { tableName }</label>
+                    <label>Table-name: {tableName}</label>
                     <input
                       type="text"
                       placeholder="Type your SQL query"

@@ -12,30 +12,36 @@ import IOSwitch from "../../material-styles/IOSwitch";
 const socket = io("http://localhost:5000/");
 
 const CustomizeModal = (props) => {
+  // for rendering page without reloading
   let [, setState] = useState();
+  // store type of table
   const [tableType, setTableType] = useState(1);
+  // store character to use in column name
   const [joinChar, setJoinChar] = useState("_");
+  // store - want nested name of column or not
   const [parentCol, setParentCol] = useState(true);
-  // const [missingVal, setMissingVal] = useState("null");
+  // store name of excel/csv
   const [sheetName, setSheetName] = useState("Sheet1");
+  // store null value name
   const [nullName, setNullName] = useState("null");
+  // store table name used for sql
   const [tableName, setTablename] = useState("table001");
-
+  // store percentage of progress bar
   const [uploadPercentage, setUploadPercentage] = useState(0);
-
+  // used to show disable button
   const [disable, setDisable] = useState(false);
+  // styling id for disable button and download button
   const [buttonId, setButtonId] = useState("downloadButton");
-
-  const [totalRecords, setTotalRecords] = useState(1);
-  const [rows, setRows] = useState(1);
-  const [dataframe, setDataframe] = useState("");
+  // store whether switch is on or not
   const [featureDisplay, setFeatureDisplay] = useState(false);
+  // styling class for cards
   const [card1class, setcard1] = useState("selectlook");
   const [card2class, setcard2] = useState("look");
   const [card3class, setcard3] = useState("look");
+  // for redirecting to another page
   let history = useHistory();
 
-  // for getting updates regarding progress
+  // for getting updates regarding progress from backend
   socket.on("progress", (val) => {
     setUploadPercentage(val);
     console.log(val);
@@ -50,17 +56,8 @@ const CustomizeModal = (props) => {
     }
   };
 
-  // on clicking any process button
+  // on clicking process button this function is called and form data is sent to backend
   const handleSubmission = () => {
-    // const formDataSave = new FormData();
-    // formDataSave.set('tableName', tableName);
-    // axios
-    //   .post("http://localhost:5000/api/check-table", formDataSave)
-    //   .then((response) => {
-    //     if (response.data && response.data.message && response.data.message.startsWith("Error")) {
-    //       alert(response.data.message);
-    //     } else {
-
     if (disable) {
       console.log("disable true");
     } else {
@@ -77,12 +74,9 @@ const CustomizeModal = (props) => {
       axios
         .post("http://localhost:5000/api/process", formData)
         .then((res) => {
-          setDataframe(res);
-          // console.log(typeof res.data.table);
-          console.log("model pageeee");
-          // console.log(dataframe);
-          // response contains top 20 rows and total pages input
+          // dataframe after converson is received and all other required properties are set here to display on preview page
           props.closeFunc();
+          // global variables to use on another page
           initialDF.dfrow = res.data.tableRows;
           initialDF.dfcol = res.data.tableCols;
           initialDF.rows = res.data.rows_per_page;
@@ -95,14 +89,12 @@ const CustomizeModal = (props) => {
             initialDF.searchColauto[initialDF.cols[i]] = "";
             initialDF.searchColmulti[initialDF.cols[i]] = new Set();
           }
-          // console.log(res.data.tableRows);
           setUploadPercentage(100);
           setDisable(false);
           setButtonId("downloadButton");
           setTimeout(() => {
             setUploadPercentage(0);
           }, 1000);
-          // console.log(initialDF.cols.length);
           history.push("/newpreview");
         })
         .catch((err) => {
@@ -113,19 +105,9 @@ const CustomizeModal = (props) => {
           alert("Oops it breaks " + err);
         });
     }
-    //   }
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    //   alert("Oops table-checker breaks " + err);
-    // });
   };
 
-  const tablehandler = (e) => {
-    console.log(e.target.value);
-    setTableType(e.target.value);
-  };
-
+  // handlers to store form values
   const charhandler = (e) => {
     console.log("joiner changed");
     console.log(e.target.value);
@@ -168,9 +150,7 @@ const CustomizeModal = (props) => {
       setcard1("look");
       setcard2("look");
     }
-
     setState();
-    // card.style.border ="10px solid black";
   };
 
   return (
@@ -190,37 +170,19 @@ const CustomizeModal = (props) => {
         </Modal.Header>
         <Modal.Body>
           <Row>
-            {/* <Col lg="3">
-             
-
-              */}
-            {/*  */}
-            {/*  */}
-            {/* 
-              
-              
-            </Col> */}
             <Col lg="12">
               <h4>Select Table Type:</h4>
               <Row>
                 <Col lg="4">
                   <Card onClick={() => tableselect("1")} className={card1class}>
                     <Card.Img variant="top" src={artboard} />
-                    <Card.Body>
-                      {/* <Card.Title>Card Title</Card.Title> */}
+                    <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
-                        <InputGroup>
-                          <InputGroup.Radio
-                            onChange={tablehandler}
-                            name="tableType"
-                            value="1"
-                            aria-label="Radio button for following text input"
-                            defaultChecked
-                          />
-                          <Card.Title>Normal Table</Card.Title>
-                        </InputGroup>
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
+                        <Card.Title style={{ color: "black" }}>
+                          Normal Table
+                        </Card.Title>
+                        Basic table mostly used for data analysis by business
+                        user.
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -228,20 +190,13 @@ const CustomizeModal = (props) => {
                 <Col lg="4">
                   <Card onClick={() => tableselect("2")} className={card2class}>
                     <Card.Img variant="top" src={artboard} />
-                    <Card.Body>
-                      {/* <Card.Title>Card Title</Card.Title> */}
+                    <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
-                        <InputGroup>
-                          <InputGroup.Radio
-                            onChange={tablehandler}
-                            name="tableType"
-                            value="2"
-                            aria-label="Radio button for following text input"
-                          />
-                          <Card.Title>Cross Product Table</Card.Title>
-                        </InputGroup>
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
+                        <Card.Title style={{ color: "black" }}>
+                          Cross Product Table
+                        </Card.Title>
+                        Table suited for technology users for performing sql
+                        queries.
                       </Card.Text>
                     </Card.Body>
                   </Card>
@@ -249,29 +204,20 @@ const CustomizeModal = (props) => {
                 <Col lg="4">
                   <Card onClick={() => tableselect("3")} className={card3class}>
                     <Card.Img variant="top" src={artboard} />
-                    <Card.Body style={{ color: "brown" }}>
-                      {/* <Card.Title>Card Title</Card.Title> */}
+                    <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
-                        <InputGroup>
-                          <InputGroup.Radio
-                            onChange={tablehandler}
-                            name="tableType"
-                            value="3"
-                            aria-label="Radio button for following text input"
-                          />
-                          <Card.Title style={{ color: "black" }}>
-                            Table with added index
-                          </Card.Title>
-                        </InputGroup>
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
+                        <Card.Title style={{ color: "black" }}>
+                          Table with added index
+                        </Card.Title>
+                        Table with additional column of index for multiple
+                        values.
                       </Card.Text>
                     </Card.Body>
                   </Card>
                 </Col>
               </Row>
               <div className="togglediv">
-                <h6>Advance Features</h6>
+                <h6 style={{ fontWeight: "bold" }}>Advance Features</h6>
                 <IOSwitch
                   className="switch"
                   checked={featureDisplay}
