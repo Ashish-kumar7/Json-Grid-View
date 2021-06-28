@@ -16,24 +16,19 @@ public class JsonParser {
 		System.out.println("Start Time:" + String.valueOf(startTime));
 		//Starting to read the file
 		System.out.println("File read starting!");
-		
-		String json_str = new String(Files.readAllBytes(Paths.get(jsonFile)));
+		String str = new String(Files.readAllBytes(Paths.get(jsonFile)));
 		System.out.println("File read completed!");
-		
-		//Object of JFlat class to pass the json_str.
-		JFlat flatMe = new JFlat(json_str);
+
+		JFlat flatMe = new JFlat(str);
 
 		// get the 2D representation of JSON document
-		// use "_" as seperator between names.
 		flatMe.json2Sheet().headerSeparator("_").getJsonAsSheet();
 	
 		System.out.println("Writing now!");
 		// write the 2D representation in csv format
-		// Name of csv file whch would be generated.
 		String csvFileName = "E:\\DBInternProject\\testing\\test1.csv";
 		flatMe.write2csv(csvFileName);
 		//End Time
-		
 		long endTime = System.currentTimeMillis();
 		System.out.println("Time Taken:" + String.valueOf(endTime - startTime));
 

@@ -1,24 +1,3 @@
-### using this branch to test electron js
-**to run electron server** - uses backend/dist/App/App.exe for backend
-- cd frontend
-- npm start
-- npm run start-electron
-
-If you update backend and want to generate prouction exe for backend
-- this generates App.exe in  backend/dist/App/
-**to generate backend production** 
-- cd backend
-- pip install pyinstaller  
-- pyinstaller App.spec
-
-
-
-refs 
-- pyinstaller https://pyinstaller.readthedocs.io/en/stable/operating-mode.html
-- generating production https://medium.com/@johndyer24/building-a-production-electron-create-react-app-application-with-shared-code-using-electron-builder-c1f70f0e2649
-- electron production https://medium.com/@kitze/%EF%B8%8F-from-react-to-an-electron-app-ready-for-production-a0468ecb1da3
-- integrating backend with electron https://medium.com/red-buffer/integrating-python-flask-backend-with-electron-nodejs-frontend-8ac621d13f72
-- shipping backend exe with electron https://medium.com/red-buffer/electron-builder-packaging-electron-nodejs-application-along-with-flask-app-for-windows-fc26f5a29870 
 # Json-Grid-View
 
 This project fetches the JSON in different ways and parses it into tabular form and saves it into HDFS.
@@ -256,16 +235,13 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 # Features
 
-### Excel Functionality
-![Gif](Screenshots/excel.gif)
-	
 ### Homepage
 ![Screenshot](Screenshots/homepage.png)
 
 ### Upload Json
 **There are three different ways to parse the JSON**
 
-![Screenshot](Screenshots/optionspage.PNG)
+![Screenshot](Screenshots/uploadJson.png)
 	
 - via URL
 - via JSON in text box
@@ -282,16 +258,14 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 ![Screenshot](Screenshots/customizeTable.png)
 
-### New Preview Page
-![Screenshot](Screenshots/newPreviewPage.png)
-<!-- ### Preview of the table generated 
+### Preview of the table generated 
 - implemented paging for large files
 <p float="left">
   <img src="Screenshots/tablePreviewPage1.png" width="49%" />
   <img src="Screenshots/tablePreviewPage2.png" width="49%" /> 
-</p> -->
+</p>
 
-<!-- ### Perform Queries using UI
+### Perform Queries using UI
 - Select columns to load unique values of selected column
 - Select from unique values (implemented paging)
 - Enter text in SearchBox to perform a StartsWith search on selected column
@@ -306,42 +280,22 @@ This project fetches the JSON in different ways and parses it into tabular form 
 <p float="left">
   <img src="Screenshots/clickUiQuery.png" width="49%" />
   <img src="Screenshots/uiQueryResults.png" width="49%" /> 
-</p> -->
+</p>
 	
 ### Perform Queries using SQL
+- Click 'Go to query page' button to perform sql queries
 - Enter Sql and click fetch
 
-<!-- <p float="left">
+<p float="left">
   <img src="Screenshots/sqlQueryPage.png" width="49%" />
   <img src="Screenshots/sqlQueryResult.png" width="49%" /> 
-</p> -->
+</p>
 
 ### Validate and Download corrected json
 - Click 'Json Checker' in the nav-bar
 
 ![Screenshot](Screenshots/jsonValidator.png)
-	
-### Invalid Json Check
-- Shows the error in Json linewise
-	
-![Screenshot](Screenshots/errorjson.PNG)
 
-	
-### Invalid Json File Check
-- Shows the error in Json File linewise
-	
-![Screenshot](Screenshots/invalidjsonfile.png)
-
-### Invalid URL Check
-- Shows the error in URL
-	
-![Screenshot](Screenshots/invalidurl.png)
-	
-### Invalid Raw JSON Check
-- Shows the error in JSON
-	
-![Screenshot](Screenshots/invalidrawjson.png)
-	
 ### Download Options
 - User can download 
 	- Normal Data, data as it is
@@ -353,29 +307,18 @@ This project fetches the JSON in different ways and parses it into tabular form 
 - Save to Hadoop and Download Sql Db file
 	
 
-<!-- ![Screenshot](Screenshots/downloadOptions.png)
+![Screenshot](Screenshots/downloadOptions.png)
 	
 ### Example download : Download without query, download after query
 
 <p float="left">
   <img src="Screenshots/fullDataXlsx.png" width="49%" />
   <img src="Screenshots/queryDataXlsx.png" width="49%" /> 
-</p> -->
+</p>
 	
 ### SQL table
 	
 ![Screenshot](Screenshots/sqlData.png)
 	
-### Hadoop Storage
 
-![Screenshot](Screenshots/Hadoop.PNG)
-	
-### Terminals running
-	--namenode
-	--datanode
-	--nodemanager
-	--resourcemanager
-
-
-![Screenshot](Screenshots/hadoop-all_terminals.PNG)
 <!-- ![Finished App](UI.gif) -->

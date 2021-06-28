@@ -1,6 +1,5 @@
 # Imports
 import numpy as np
-from numpy.lib.function_base import select
 import pandas as pd
 from collections import OrderedDict
 import time
@@ -314,8 +313,12 @@ def GenCrossSchema(pref,prefId, data, schema):
             colName = x 
             noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
             newPrefId = prefId + __JOINER_CHAR + noPreCol if prefId !='' else noPreCol
+            if prefId == 'features.45503.geometry' :
+                print(pref , prefId, colName, noPreCol, newPrefId)
             if x in __tableSchema:
                 # Recur further
+                if prefId == 'features.45503.geometry' :
+                    print("x " , x)
                 if noPreCol in data:
                     reqRows *= GenCrossSchema(colName,newPrefId, data[noPreCol], schema)
                 else:
@@ -464,13 +467,6 @@ def queryUsingDict(df , queryDict) :
         # print(df)
     return df
 
-def queryUsingForm(df, colName, select_val ) :
-    print(type(df))
-    df = df.loc[ df[colName].str.match(select_val) ]
-    print(df)
-       
-    return df
-
 
 
 def DeleteIfExists(FileName) :
@@ -479,9 +475,3 @@ def DeleteIfExists(FileName) :
         print('deleted ' , FileName)
     else :
         print(FileName , 'not found')
-
-def GenReactDataGridRows(tableRows, df , ROWS_PER_PAGE, SELECTED_PAGE):
-    startRow = (SELECTED_PAGE - 1) * ROWS_PER_PAGE
-    endRow = min(df.shape[0] , startRow + ROWS_PER_PAGE)
-    for idx in  range(startRow , endRow) :
-        tableRows.append(df.iloc[ idx ][:].to_dict())
