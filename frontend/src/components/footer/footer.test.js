@@ -49,4 +49,3 @@ it('able to find the <p> element', () => {
 it('able to find the count of <p> element', () => {
     expect(shallowWrapper.find('p').length).toBe(1);
 });
-

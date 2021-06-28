@@ -2,14 +2,15 @@ ul.pagination {
     margin-top: 0;
     margin-bottom: 0;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    
   }
   ul.pagination li.page-item.active a.page-link {
-    color: #445565 !important;
-    background-color: #e3e7eb !important;
+    color: rgba(0, 0, 0, 0.782) !important;
+    background-color: #0cc3df !important;
     border-color: #ced4da !important;
   }
   ul.pagination a.page-link {
-    padding: 0.75rem 1rem;
+    padding: 0.25rem 0.5rem;
     min-width: 3.5rem;
     text-align: center;
     box-shadow: none !important;
@@ -17,8 +18,9 @@ ul.pagination {
     color: #6b88a4;
     font-weight: 900;
     font-size: 1rem;
+    
   }
   ul.pagination a.page-link:hover {
-    background-color: #f4f4f4;
+    background-color: #80e5f5;
   }
   

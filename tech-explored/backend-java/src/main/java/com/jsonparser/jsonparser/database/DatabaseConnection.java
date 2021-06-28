@@ -9,9 +9,11 @@ public class DatabaseConnection {
 		Connection conn = null;
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-
+//			database URL for connection
 			String url = "jdbc:mysql://localhost:3306/ashishdb";
+//			UserName of the database
 			String name = "root";
+//			Password of the database
 			String pass = "root";
 			conn = DriverManager.getConnection(url, name, pass);
 		} catch (ClassNotFoundException e) {
