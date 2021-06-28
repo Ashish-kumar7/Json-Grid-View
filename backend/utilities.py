@@ -13,7 +13,6 @@ __colTree = {"": set()}
 __colTreeOrd = OrderedDict()
 __reqColsOrd = []
 __reqColsOrdNoPar = []
-__NULL = 'null'
 
 __JOINER_CHAR = '.'
 
