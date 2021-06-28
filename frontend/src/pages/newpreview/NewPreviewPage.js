@@ -1,7 +1,7 @@
 import "./NewPreviewPage.css";
 import initialDataFrame from "../../global_variable";
 import PaginationP from "../../components/pagination/Pagination";
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import ReactDataGrid from "react-data-grid";
@@ -11,11 +11,15 @@ import { Row, Col, Container } from "react-bootstrap";
 import Button from "../../components/button/Button";
 import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
+import { useHistory } from "react-router";
 
 // initialization of connection between server and client
 const socket = io("http://localhost:5000/");
 //used to download file after conversion
 var FileDownload = require("js-file-download");
+
+
+
 
 // Excel column properties
 const defaultColumnProperties = {
@@ -162,6 +166,29 @@ const NewPreviewPage = () => {
   const [buttonId, setButtonId] = useState("uploadButton");
   // store query to perform on whole data
   const [query, setQuery] = useState("");
+  let history = useHistory();
+  if(gridCols==undefined){
+      window.location.reload();
+      history.push("/");
+  }
+
+  useEffect(() => {
+    
+    window.addEventListener("beforeunload", alertUser);
+    return () => {
+      window.removeEventListener("beforeunload", alertUser);
+    };
+    
+  }, []);
+  const alertUser = (e) => {
+   
+    console.log("I am here");
+    
+    e.preventDefault();
+    e.returnValue = "";
+    
+   
+  };
 
   // function called when autocomplete filter button is clicked
   const filterhandler = () => {
@@ -481,6 +508,7 @@ const NewPreviewPage = () => {
               <Row>
                 <Row className="query">
                   <form>
+                    <label>Use "table001" for query</label>
                     <input
                       type="text"
                       placeholder="Type your SQL query"

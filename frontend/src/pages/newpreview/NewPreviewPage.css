@@ -195,6 +195,9 @@
   margin-bottom: 1px;
 }
 
+.query label {
+  color: bisque;
+}
 .method2 {
   max-height: 50vh;
   overflow-y: scroll;
