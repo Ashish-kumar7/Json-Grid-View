@@ -293,94 +293,94 @@ def returnDataFrame():
         return jsonify({'message:', 'error'})
 
 
-@app.route('/api/uniqueValues', methods=['POST'])
-@cross_origin()
-def returnQueryData():
-    global prevQueryCols
+# @app.route('/api/uniqueValues', methods=['POST'])
+# @cross_origin()
+# def returnQueryData():
+#     global prevQueryCols
 
-    print('page ui query')
-    print()
-    print('form\n\n\n\n\n', request.form)
-    try:
-        q_selected_column = request.form['col_name']
-        q_selected_page = int(
-            request.form['page_number']) if 'page_number' in request.form else 1
-        # q_rows_per_page = int(request.form['rows_per_page'])
-        unique_data = utilities.GenPageData(prevQueryCols=prevQueryCols, PreviewDF=PreviewDF,
-                                            selected_col=q_selected_column, selected_page=q_selected_page, rows_per_page=10)
-        print("unique_data", unique_data)
-        for i in unique_data:
-            print(i, type(i))
-        response = jsonify(total_unique=len(
-            prevQueryCols[q_selected_column]), rows_per_page=10, unique_data=unique_data)
-        print(response)
-        return response
-    except Exception as e:
-        print(e)
-        return jsonify({'message:', 'error'})
+#     print('page ui query')
+#     print()
+#     print('form\n\n\n\n\n', request.form)
+#     try:
+#         q_selected_column = request.form['col_name']
+#         q_selected_page = int(
+#             request.form['page_number']) if 'page_number' in request.form else 1
+#         # q_rows_per_page = int(request.form['rows_per_page'])
+#         unique_data = utilities.GenPageData(prevQueryCols=prevQueryCols, PreviewDF=PreviewDF,
+#                                             selected_col=q_selected_column, selected_page=q_selected_page, rows_per_page=10)
+#         print("unique_data", unique_data)
+#         for i in unique_data:
+#             print(i, type(i))
+#         response = jsonify(total_unique=len(
+#             prevQueryCols[q_selected_column]), rows_per_page=10, unique_data=unique_data)
+#         print(response)
+#         return response
+#     except Exception as e:
+#         print(e)
+#         return jsonify({'message:', 'error'})
 
 
-@app.route('/api/queryForm', methods=['POST'])
-@cross_origin()
-def queryUsingDict():
-    global prevQueryCols
-    global PreviewDF
+# @app.route('/api/queryForm', methods=['POST'])
+# @cross_origin()
+# def queryUsingDict():
+#     global prevQueryCols
+#     global PreviewDF
 
-    print('page queryForm')
-    print()
-    print('queryDict \n\n\n\n\n', json.loads(request.form['dict']))
-    try:
-        queryDict = json.loads(request.form['dict'])
-        PreviewDF = utilities.queryUsingDict(df=DF, queryDict=queryDict)
+#     print('page queryForm')
+#     print()
+#     print('queryDict \n\n\n\n\n', json.loads(request.form['dict']))
+#     try:
+#         queryDict = json.loads(request.form['dict'])
+#         PreviewDF = utilities.queryUsingDict(df=DF, queryDict=queryDict)
 
-        # html_string = utilities.GenPageHTML(
-        #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
+#         # html_string = utilities.GenPageHTML(
+#         #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
 
-        tableCols = []
-        for c in columnListOrd :
-            tableCols.append({'key' : c , 'name' : c})
+#         tableCols = []
+#         for c in columnListOrd :
+#             tableCols.append({'key' : c , 'name' : c})
 
-        tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+#         tableRows = []
+#         utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
         
 
-        response = jsonify(
-            tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+#         response = jsonify(
+#             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
 
-        return response
-    except Exception as e:
-        print(e)
-        return jsonify({'message:', 'error'})
+#         return response
+#     except Exception as e:
+#         print(e)
+#         return jsonify({'message:', 'error'})
 
 
-@app.route('/api/searchValues', methods=['POST'])
-@cross_origin()
-def searchValueInCol():
-    global prevQueryCols
-    global PreviewDF
+# @app.route('/api/searchValues', methods=['POST'])
+# @cross_origin()
+# def searchValueInCol():
+#     global prevQueryCols
+#     global PreviewDF
 
-    print('search Value Form')
-    print()
-    print('form \n\n\n\n\n', request.form)
-    try:
-        SEARCH_TOTAL_RECORDS = 20
-        SEARCH_ROWS_PER_PAGE = 20
-        s_selected_col = request.form['col_name']
-        s_search_val = request.form['search_val']
+#     print('search Value Form')
+#     print()
+#     print('form \n\n\n\n\n', request.form)
+#     try:
+#         SEARCH_TOTAL_RECORDS = 20
+#         SEARCH_ROWS_PER_PAGE = 20
+#         s_selected_col = request.form['col_name']
+#         s_search_val = request.form['search_val']
 
-        # Load Data here
-        if not s_selected_col in prevQueryCols:
-            prevQueryCols[s_selected_col] = list(pd.unique(DF[s_selected_col]))
+#         # Load Data here
+#         if not s_selected_col in prevQueryCols:
+#             prevQueryCols[s_selected_col] = list(pd.unique(DF[s_selected_col]))
 
-        s_res_set = set([val for val in prevQueryCols[s_selected_col] if str(
-            val).startswith(s_search_val)])
-        print("result set", s_res_set)
+#         s_res_set = set([val for val in prevQueryCols[s_selected_col] if str(
+#             val).startswith(s_search_val)])
+#         print("result set", s_res_set)
 
-        SEARCH_TOTAL_RECORDS = len(s_res_set)
-        return jsonify(unique_data=list(s_res_set), total_unique=SEARCH_TOTAL_RECORDS, rows_per_page=SEARCH_ROWS_PER_PAGE)
-    except Exception as e:
-        print(e)
-        return jsonify({'message:', 'error'})
+#         SEARCH_TOTAL_RECORDS = len(s_res_set)
+#         return jsonify(unique_data=list(s_res_set), total_unique=SEARCH_TOTAL_RECORDS, rows_per_page=SEARCH_ROWS_PER_PAGE)
+#     except Exception as e:
+#         print(e)
+#         return jsonify({'message:', 'error'})
 
 @app.route('/api/searchRecord', methods=['POST'])
 @cross_origin()
