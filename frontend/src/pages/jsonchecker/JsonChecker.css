@@ -41,3 +41,19 @@
     text-align: center;
     margin-top: 2%;
 }
+.checked{
+    height: 418px;
+    width:120vh;
+}
+@media (max-width: 567.98px) {
+.checked{
+    height: 418px;
+    width:10vh;
+}
+.jsonchecker .checker {
+    margin-left: 0%;
+    margin-right: 5%;
+    margin-top: 2%;
+    
+}
+}

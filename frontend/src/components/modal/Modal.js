@@ -8,9 +8,11 @@ import Button from "../button/Button";
 import "./Modal.css";
 import { ProgressBar } from "react-bootstrap";
 import io from 'socket.io-client'
+import IOSwitch from '../../material-styles/IOSwitch'
 const socket = io("http://localhost:5000/");
 
 const CustomizeModal = (props) => {
+  let [, setState] = useState();
   const [tableType, setTableType] = useState(1);
   const [joinChar, setJoinChar] = useState("_");
   const [parentCol, setParentCol] = useState(true);
@@ -27,6 +29,10 @@ const CustomizeModal = (props) => {
   const [totalRecords, setTotalRecords] = useState(1);
   const [rows, setRows] = useState(1);
   const [dataframe, setDataframe] = useState("");
+  const [featureDisplay, setFeatureDisplay] = useState(false);
+  const [card1class, setcard1] = useState("selectlook");
+  const [card2class, setcard2] = useState("look");
+  const [card3class, setcard3] = useState("look");
   let history = useHistory();
 
   // for getting updates regarding progress
@@ -34,6 +40,15 @@ const CustomizeModal = (props) => {
     setUploadPercentage(val);
     console.log(val);
   });
+
+    // toggle switch for showing form
+    const switchhandler = () => {
+      if (featureDisplay) {
+        setFeatureDisplay(false);
+      } else {
+        setFeatureDisplay(true);
+      }
+    };
 
 
 
@@ -141,6 +156,29 @@ const CustomizeModal = (props) => {
     setParentCol(e.target.value);
   }
 
+  const tableselect = (val)=>{
+    setTableType(val);
+    console.log("look"+val);
+    if(val == "1"){
+      setcard1("selectlook");
+      setcard2("look");
+      setcard3("look");
+    }
+    else if(val == "2"){
+      setcard2("selectlook");
+      setcard1("look");
+      setcard3("look");
+    }
+    else{
+      setcard3("selectlook");
+      setcard1("look");
+      setcard2("look");
+    }
+    
+    setState();
+    // card.style.border ="10px solid black";
+  };
+
   return (
     <>
       <Modal
@@ -158,10 +196,25 @@ const CustomizeModal = (props) => {
         </Modal.Header>
         <Modal.Body>
           <Row>
-            <Col>
-              <Row className="entry" >
-                <h6>Select Table Type: </h6>
-                <Col>
+            {/* <Col lg="3">
+             
+
+              */}
+              {/*  */}
+              {/*  */}
+              {/* 
+              
+              
+            </Col> */}
+            <Col lg="12">
+            <h4>Select Table Type:</h4>
+              <Row>
+                <Col lg="4">
+                <Card onClick={()=>tableselect("1")} className={card1class} >
+                <Card.Img variant="top" src={artboard} />
+                <Card.Body>
+                  {/* <Card.Title>Card Title</Card.Title> */}
+                  <Card.Text>
                   <InputGroup>
                     <InputGroup.Radio
                       onChange={tablehandler}
@@ -170,10 +223,20 @@ const CustomizeModal = (props) => {
                       aria-label="Radio button for following text input"
                       defaultChecked
                     />
-                    <label>Normal Table</label>
+                    <Card.Title>Normal Table</Card.Title>
                   </InputGroup>
+                    Some quick example text to build on the card title and make up
+                    the bulk of the card's content.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
                 </Col>
-                <Col>
+                <Col lg="4">
+                <Card onClick={()=>tableselect("2")} className={card2class} >
+                <Card.Img variant="top" src={artboard} />
+                <Card.Body>
+                  {/* <Card.Title>Card Title</Card.Title> */}
+                  <Card.Text>
                   <InputGroup>
                     <InputGroup.Radio
                       onChange={tablehandler}
@@ -181,10 +244,20 @@ const CustomizeModal = (props) => {
                       value="2"
                       aria-label="Radio button for following text input"
                     />
-                    Cross Product Table
+                    <Card.Title>Cross Product Table</Card.Title>
                   </InputGroup>
+                    Some quick example text to build on the card title and make up
+                    the bulk of the card's content.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
                 </Col>
-                <Col>
+                <Col lg="4">
+                <Card onClick={()=>tableselect("3")} className={card3class} >
+                <Card.Img variant="top" src={artboard} />
+                <Card.Body style={{color:"brown"}}>
+                  {/* <Card.Title>Card Title</Card.Title> */}
+                  <Card.Text>
                   <InputGroup>
                     <InputGroup.Radio
                       onChange={tablehandler}
@@ -192,11 +265,26 @@ const CustomizeModal = (props) => {
                       value="3"
                       aria-label="Radio button for following text input"
                     />
-                    <label>Table with added index</label>
+                    <Card.Title style={{color:"black"}}>Table with added index</Card.Title>
                   </InputGroup>
+                    Some quick example text to build on the card title and make up
+                    the bulk of the card's content.
+                  </Card.Text>
+                </Card.Body>
+              </Card>
                 </Col>
               </Row>
-
+              <div className="togglediv">
+                <h6>Advance Features</h6>
+              <IOSwitch
+                  className="switch"
+                  checked={featureDisplay}
+                  onChange={switchhandler}
+                  name="checked"
+                />
+              </div>
+              {featureDisplay?(
+                <div className="switchForm">
               <Row className="entry" onChange={parenthandler}>
                 <h6>Do you want parent names in column? </h6>
                 <Col>
@@ -264,21 +352,7 @@ const CustomizeModal = (props) => {
                   </Row>
                 </Col>
               </Row>
-
-
-            </Col>
-            <Col>
-              <h4>Preview of how sheet will look</h4>
-              <Card className="look" >
-                <Card.Img variant="top" src={artboard} />
-                <Card.Body>
-                  <Card.Title>Card Title</Card.Title>
-                  <Card.Text>
-                    Some quick example text to build on the card title and make up
-                    the bulk of the card's content.
-                  </Card.Text>
-                </Card.Body>
-              </Card>
+              </div>):<></>}
             </Col>
           </Row>
           {uploadPercentage > 0 && (

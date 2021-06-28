@@ -62,7 +62,7 @@ const JsonChecker = () => {
       <h2>Correct Your JSON & Save and Download it into a new file</h2>
       <div className="checker">
         <JSONInput
-
+          className="checkedit"
           id="a_unique_id"
           placeholder={sampleObject}
           onChange={(event) => valuehandler(event)}
