@@ -90,6 +90,7 @@ const CustomizeModal = (props) => {
           initialDF.cols = res.data.columns;
           initialDF.searchColauto = {};
           initialDF.searchColmulti = {};
+          initialDF.tableName = tableName;
           for (var i = 0; i < initialDF.cols.length; i++) {
             initialDF.searchColauto[initialDF.cols[i]] = "";
             initialDF.searchColmulti[initialDF.cols[i]] = new Set();

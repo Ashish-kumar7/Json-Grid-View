@@ -166,6 +166,8 @@ const NewPreviewPage = () => {
   const [buttonId, setButtonId] = useState("uploadButton");
   // store query to perform on whole data
   const [query, setQuery] = useState("");
+
+  const [tableName, setTableName] = useState(initialDataFrame.tableName);
   let history = useHistory();
   if(gridCols==undefined){
       window.location.reload();
@@ -512,7 +514,7 @@ const NewPreviewPage = () => {
               <Row>
                 <Row className="query">
                   <form>
-                    <label>Use "table001" for query</label>
+                    <label>Table-name: { tableName }</label>
                     <input
                       type="text"
                       placeholder="Type your SQL query"
