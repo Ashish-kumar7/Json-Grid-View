@@ -19,12 +19,9 @@ from logging import exception
 from enum import unique
 HADOOP_INSTALLED = True
 
-
 if HADOOP_INSTALLED:
     import hadoopstorage
 
-# import numpy as np
-# from fastparquet import write, ParquetFile
 app = Flask(__name__)
 CORS(app)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -50,6 +47,7 @@ GEN_CROSS_TABLE = False
 FILL_NA = ''
 TABLE_TYPE = '1'
 
+#Pagination constants
 ROWS_PER_PAGE = 20
 CURRENT_PAGE = 1
 TOTAL_PAGES = 1
@@ -71,8 +69,6 @@ def connected():
     print('connected with socketio')
 
 # Custom JSON Encoder for Numpy data types
-
-
 class NumpyEncoder(json.JSONEncoder):
     """ Custom encoder for numpy data types """
 
@@ -103,12 +99,10 @@ class NumpyEncoder(json.JSONEncoder):
 
 app.json_encoder = NumpyEncoder
 
-
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
 def uploadFile():
     global jsonData
-
     # Delete the existing files
     try : 
         utilities.DeleteIfExists(ELECTRON_PATH + SQL_DB_NAME + '.db')
@@ -204,8 +198,6 @@ def processFile():
         # Generated columnList and schemaTree
         # print("columns : ", columnList)
         print("schema Tree: ", tableSchema)
-        # print("ord cols :" , columnListOrd)
-        # print("schema Tree Ord: ", tableSchemaOrd)
 
         DataDict = {}
         startTime = time.time()
@@ -283,8 +275,6 @@ def returnDataFrame():
     print('form\n\n\n\n\n', request.form)
     try:
         page = int(request.form['page_number'])
-        # html_string = utilities.GenPageHTML(
-        #     df=PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
 
         tableCols = []
         for c in columnListOrd :
@@ -470,44 +460,19 @@ def convertFile():
 
         # Generate SQL Database, Table
         if extension == "hive":
-
-            # startTime = time.time()
-            # sql_engine = sqlalchemy.create_engine(
-            #     'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
-            # sqlite_connection = sql_engine.connect()
-
-            # print("Conenction Made to SQL")
-
-            # if data_type == 1 :
-            #     DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
-            # else :
-            #     PreviewDF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
-
-            # print("\n\nTABLE\n")
-            # # print(engine.execute("SELECT * FROM " + tableName).fetchall())
-            # sqlite_connection.close()
-            # print("Time to gen db : ", time.time() - startTime)
-
-            # startTime = time.time()
-            # print("Total time taken : ", startTime - initTime)
+            
             socketio.emit('progress', 80, broadcast=True)
             
             if HADOOP_INSTALLED:
                 DF.to_csv('test.csv')
                 hadoopstorage.saveFile(DF)
-
-                # code to convert csv file and saving it to hdfs
-                # df = pd.read_csv('generatedCsvFile.csv')
-                # df.to_parquet("/test_parquet", compression="GZIP")
-                # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
-                # subprocess.call(hdfs_cmd, shell=True)
+                
             socketio.emit('progress', 80, broadcast=True)
             return send_file(ELECTRON_PATH + SQL_DB_NAME + '.db')
 
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
-
 
 @app.route('/api/query', methods=['POST'])
 @cross_origin()
@@ -521,24 +486,16 @@ def fetchQueryData():
         sql_engine = sqlalchemy.create_engine(
             'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
-        # DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
-        # print("\n\nTABLE\n")
-        # print(engine.execute("SELECT * FROM " + tableName).fetchall())
 
         PreviewDF = pd.read_sql_query(queryText, sqlite_connection)
-        # PreviewDF = DF.copy()
-
-        # print(DF.head())
+        
         print(PreviewDF.head())
 
         sqlite_connection.close()
         print("Time to gen db : ", time.time() - startTime)
 
         page = 1
-        # html_string = utilities.GenPageHTML(
-        #     df=PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
-        # response = jsonify(
-        #     table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+        
         tableCols = []
         for c in columnListOrd :
             tableCols.append({'key' : c , 'name' : c})

@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import time
 
-
 # Add the appropriate locations of the Hadoop and Java.
 
 # os.environ["JAVA_HOME"] = "C:\Progra~1\Java\jdk-12.0.1"
@@ -51,10 +50,3 @@ def saveFile(DF):
     df.write.format("parquet").mode("overwrite").save(param)
     df_load = spark.read.load(param)
     df_load.show()
-
-# string - long data type error
-# def sqlQuery(query,DF):
-#     PDF =spark.createDataFrame(DF)
-#     PDF.createOrReplaceTempView("table1")
-#     PDF = spark.sql(query)
-#     return PDF.toPandas()
