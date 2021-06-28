@@ -162,102 +162,7 @@ def GenTableSchema(data, JOINER_CHAR='.',  ADD_INDEX_FOR_LIST=False,
     dfsGenCol(data, '')
     return (__reqCols, __colTree, __reqColsOrd, __colTreeOrd, __reqColsOrdNoPar)
 
-# Write(cdf, row, pref, colTree, data, __NULL='null'):
-#     Working:    Writes data in Pandas-dataframe by performing depth-first-search
-#     Parameters: cdf:    Pandas-dataframe   
-#                 row:    int     :to keep track of row in df 
-#                 pref:   str     :to keep track of column-header
-#                 colTree:dict    :table-schema to perform dfs
-#                 data:   dict    :json-data
-#                 __NULL: str     :used to fill missing-values
-#     Returns:None
-def Write(cdf, row, pref, colTree, data, __NULL='null'):
-    if isListOfDict(data):
-        for x in data:
-            Write(cdf, row, pref, colTree, x, __NULL)
-            row = len(cdf)
 
-    elif type(data) is dict:
-        for x in colTree[pref]:
-            colName = str(x)  # if (pref=="")  else (pref + '.' + str(x) )
-            # Name of col without prefix
-            noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
-            # Available cols
-            if not colName in colTree:
-                if not noPreCol in data:
-                    cdf.loc[row, colName] = __NULL
-                    continue
-
-                towrt = str(data[noPreCol])
-                if towrt.isnumeric():
-                    cdf.at[row, colName] = data[noPreCol]
-                else:
-                    cdf.at[row, colName] = towrt
-            else:
-                if not noPreCol in data:
-                    Write(cdf, row, colName, colTree, {}, __NULL)
-                else:
-                    Write(cdf, row, colName, colTree, data[noPreCol], __NULL)
-
-# WriteToDF(cdf, data, colTree) :
-#     Working:    Writes data in Pandas-dataframe by calling Write
-#     Parameters: cdf:    Pandas-dataframe   
-#                 colTree:dict    :table-schema to perform dfs
-#                 data:   dict    :json-data
-#     Returns: None
-def WriteToDF(cdf, data, colTree):
-    Write(cdf, 0, '', colTree, data, __NULL='null')
-
-# fillNaN(df) :
-#     Working:    Copies df.iloc[r-1, c] if df.iloc[r, c] is NaN
-#     Parameters: df:    Pandas-dataframe 
-#     Returns: None
-def fillNaN(df):
-    R, C = df.shape
-    r, c = 1, 0
-    while r < R:
-        c = 0
-        while c < C:
-            if pd.isnull(df.iloc[r, c]):
-                df.iloc[r, c] = df.iloc[r-1, c]
-            c += 1
-        r += 1
-
-# WriteDict_NaN_NoIndex(d, row, pref, data) : 
-#     Working:    Writes data in dict by performing depth-first-search
-#                 fills nan values with __FILL_MISSING_WITH
-#                 No extra Index columns are added
-#     Parameters: d:    Python-dict  
-#                 row:    int     :to keep track of row in dict
-#                 pref:   str     :to keep track of column-header
-#                 data:   dict    :json-data
-#     Returns: int : number of rows required to write data
-def WriteDict_NaN_NoIndex(d, row, pref, data):
-    reqRows = 0
-    if isListOfDict(data):
-        for x in data:
-            curRows = WriteDict_NaN_NoIndex(d, row, pref, x)
-            reqRows += curRows
-            row += curRows
-
-    elif type(data) is dict:
-
-        for x in data:
-            colName = str(x) if (pref == "") else (
-                pref + __JOINER_CHAR + str(x))
-            if isScalar(data[x]):
-                reqRows = max(reqRows, 1)
-                towrt = str(data[x])
-                if row not in d:
-                    d[row] = {}
-                if towrt.isnumeric():
-                    d[row][colName] = data[x]
-                else:
-                    d[row][colName] = towrt
-            else:
-                reqRows = max(reqRows, WriteDict_NaN_NoIndex(
-                    d, row, colName, data[x]))
-    return reqRows
 
 # WriteDict_NoIndex(d, row, pref, data) : 
 #     Working:    Writes data in dict by performing depth-first-search
@@ -480,63 +385,6 @@ def WriteData(DataDict, Data, tableSchema, FILL_MISSING_WITH='null', ADD_INDEX_F
         else:
             WriteDict_NoIndex(DataDict, 0, '', Data)
 
-
-def GenPageHTML(df, Page, ROWS_PER_PAGE):
-    if Page > np.ceil(df.shape[0]/ROWS_PER_PAGE):
-        return ''
-    startRow = (Page-1) * ROWS_PER_PAGE
-    endRow = min(df.shape[0], startRow + ROWS_PER_PAGE)
-    return df.iloc[startRow: endRow][:].to_html(classes='mystyle')
-
-# Encode(obj): 
-#     Working:    Convert numpy data-types to python data-types
-#     Parameters: obj:   any-data-type    : data to convert
-#     Returns: converted-obj
-def Encode(obj):
-    if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
-                        np.int16, np.int32, np.int64, np.uint8,
-                        np.uint16, np.uint32, np.uint64)):
-
-        return int(obj)
-
-    elif isinstance(obj, (np.float_, np.float16, np.float32, np.float64)):
-        return float(obj)
-
-    elif isinstance(obj, (np.complex_, np.complex64, np.complex128)):
-        return {'real': obj.real, 'imag': obj.imag}
-
-    elif isinstance(obj, (np.ndarray,)):
-        return obj.tolist()
-
-    elif isinstance(obj, (np.bool_)):
-        return bool(obj)
-
-    elif isinstance(obj, (np.void)):
-        return None
-
-    else:
-        return obj
-
-# GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page): 
-#     Working:    returns unique values from selected_page for selected_col
-#     Parameters: PreviewDF:      dataframe:  dataframe for reading unique values
-#                 prevQueryCols:  dict:       cache for previous queries      
-#                 selected_col:   str:        selected column
-#                 selected_page:  int:        selected page
-#                 rows_per_page:  int:        number of unique values per page
-#     Returns:    list:   list of unique values
-def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page):
-    if not selected_col in prevQueryCols:
-        prevQueryCols[selected_col] = list(pd.unique(PreviewDF[selected_col]))
-
-    total_records = len(prevQueryCols[selected_col])
-    total_pages = int(np.ceil(total_records/rows_per_page))
-    if selected_page > total_pages:
-        return []
-    startIdx = (selected_page - 1) * rows_per_page
-    endIdx = min(total_records, startIdx + rows_per_page)
-    return prevQueryCols[selected_col][startIdx:endIdx]
-
 # queryUsingDict(df, queryDict): 
 #     Working:    applies multi-select queries on df
 #     Parameters: df:         dataframe:  dataframe for applying queries
@@ -585,3 +433,180 @@ def GenReactDataGridRows(tableRows, df, ROWS_PER_PAGE, SELECTED_PAGE):
     for tableRow in tableRows:
         for colName in tableRow:
             tableRow[colName] = str(tableRow[colName])
+
+
+
+# ------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------
+# --------------- Unused Functions----------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------
+
+# GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page): 
+#     Working:    returns unique values from selected_page for selected_col
+#     Parameters: PreviewDF:      dataframe:  dataframe for reading unique values
+#                 prevQueryCols:  dict:       cache for previous queries      
+#                 selected_col:   str:        selected column
+#                 selected_page:  int:        selected page
+#                 rows_per_page:  int:        number of unique values per page
+#     Returns:    list:   list of unique values
+# def GenPageData(PreviewDF, prevQueryCols, selected_col, selected_page, rows_per_page):
+#     if not selected_col in prevQueryCols:
+#         prevQueryCols[selected_col] = list(pd.unique(PreviewDF[selected_col]))
+
+#     total_records = len(prevQueryCols[selected_col])
+#     total_pages = int(np.ceil(total_records/rows_per_page))
+#     if selected_page > total_pages:
+#         return []
+#     startIdx = (selected_page - 1) * rows_per_page
+#     endIdx = min(total_records, startIdx + rows_per_page)
+#     return prevQueryCols[selected_col][startIdx:endIdx]
+
+# ------------------------------------------------------------------------------------------------------------------
+
+# Encode(obj): 
+#     Working:    Convert numpy data-types to python data-types
+#     Parameters: obj:   any-data-type    : data to convert
+#     Returns: converted-obj
+# def Encode(obj):
+#     if isinstance(obj, (np.int_, np.intc, np.intp, np.int8,
+#                         np.int16, np.int32, np.int64, np.uint8,
+#                         np.uint16, np.uint32, np.uint64)):
+
+#         return int(obj)
+
+#     elif isinstance(obj, (np.float_, np.float16, np.float32, np.float64)):
+#         return float(obj)
+
+#     elif isinstance(obj, (np.complex_, np.complex64, np.complex128)):
+#         return {'real': obj.real, 'imag': obj.imag}
+
+#     elif isinstance(obj, (np.ndarray,)):
+#         return obj.tolist()
+
+#     elif isinstance(obj, (np.bool_)):
+#         return bool(obj)
+
+#     elif isinstance(obj, (np.void)):
+#         return None
+
+#     else:
+#         return obj
+
+# ------------------------------------------------------------------------------------------------------------------
+
+# GenPageHTML(df, Page, ROWS_PER_PAGE): 
+#     Working:    Convert data-frame to html
+#     Parameters:   df  :   dataframe   : data to convert
+#                   Page:   int         : page number
+#                   ROWS_PER_PAGE: int  : number of rows on each page  
+#     Returns: converted-obj
+# def GenPageHTML(df, Page, ROWS_PER_PAGE):
+#     if Page > np.ceil(df.shape[0]/ROWS_PER_PAGE):
+#         return ''
+#     startRow = (Page-1) * ROWS_PER_PAGE
+#     endRow = min(df.shape[0], startRow + ROWS_PER_PAGE)
+#     return df.iloc[startRow: endRow][:].to_html(classes='mystyle')
+
+# ------------------------------------------------------------------------------------------------------------------
+
+# WriteDict_NaN_NoIndex(d, row, pref, data) : 
+#     Working:    Writes data in dict by performing depth-first-search
+#                 fills nan values with __FILL_MISSING_WITH
+#                 No extra Index columns are added
+#     Parameters: d:    Python-dict  
+#                 row:    int     :to keep track of row in dict
+#                 pref:   str     :to keep track of column-header
+#                 data:   dict    :json-data
+#     Returns: int : number of rows required to write data
+# def WriteDict_NaN_NoIndex(d, row, pref, data):
+#     reqRows = 0
+#     if isListOfDict(data):
+#         for x in data:
+#             curRows = WriteDict_NaN_NoIndex(d, row, pref, x)
+#             reqRows += curRows
+#             row += curRows
+
+#     elif type(data) is dict:
+
+#         for x in data:
+#             colName = str(x) if (pref == "") else (
+#                 pref + __JOINER_CHAR + str(x))
+#             if isScalar(data[x]):
+#                 reqRows = max(reqRows, 1)
+#                 towrt = str(data[x])
+#                 if row not in d:
+#                     d[row] = {}
+#                 if towrt.isnumeric():
+#                     d[row][colName] = data[x]
+#                 else:
+#                     d[row][colName] = towrt
+#             else:
+#                 reqRows = max(reqRows, WriteDict_NaN_NoIndex(
+#                     d, row, colName, data[x]))
+#     return reqRows
+
+# ------------------------------------------------------------------------------------------------------------------
+
+# fillNaN(df) :
+#     Working:    Copies df.iloc[r-1, c] if df.iloc[r, c] is NaN
+#     Parameters: df:    Pandas-dataframe 
+#     Returns: None
+# def fillNaN(df):
+#     R, C = df.shape
+#     r, c = 1, 0
+#     while r < R:
+#         c = 0
+#         while c < C:
+#             if pd.isnull(df.iloc[r, c]):
+#                 df.iloc[r, c] = df.iloc[r-1, c]
+#             c += 1
+#         r += 1
+
+# ------------------------------------------------------------------------------------------------------------------
+
+# Write(cdf, row, pref, colTree, data, __NULL='null'):
+#     Working:    Writes data in Pandas-dataframe by performing depth-first-search
+#     Parameters: cdf:    Pandas-dataframe   
+#                 row:    int     :to keep track of row in df 
+#                 pref:   str     :to keep track of column-header
+#                 colTree:dict    :table-schema to perform dfs
+#                 data:   dict    :json-data
+#                 __NULL: str     :used to fill missing-values
+#     Returns:None
+# def Write(cdf, row, pref, colTree, data, __NULL='null'):
+#     if isListOfDict(data):
+#         for x in data:
+#             Write(cdf, row, pref, colTree, x, __NULL)
+#             row = len(cdf)
+
+#     elif type(data) is dict:
+#         for x in colTree[pref]:
+#             colName = str(x)  # if (pref=="")  else (pref + '.' + str(x) )
+#             # Name of col without prefix
+#             noPreCol = x[1 + len(pref) if pref != "" else len(pref):]
+#             # Available cols
+#             if not colName in colTree:
+#                 if not noPreCol in data:
+#                     cdf.loc[row, colName] = __NULL
+#                     continue
+
+#                 towrt = str(data[noPreCol])
+#                 if towrt.isnumeric():
+#                     cdf.at[row, colName] = data[noPreCol]
+#                 else:
+#                     cdf.at[row, colName] = towrt
+#             else:
+#                 if not noPreCol in data:
+#                     Write(cdf, row, colName, colTree, {}, __NULL)
+#                 else:
+#                     Write(cdf, row, colName, colTree, data[noPreCol], __NULL)
+
+# WriteToDF(cdf, data, colTree) :
+#     Working:    Writes data in Pandas-dataframe by calling Write
+#     Parameters: cdf:    Pandas-dataframe   
+#                 colTree:dict    :table-schema to perform dfs
+#                 data:   dict    :json-data
+#     Returns: None
+# def WriteToDF(cdf, data, colTree):
+#     Write(cdf, 0, '', colTree, data, __NULL='null')
