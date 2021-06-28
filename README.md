@@ -1,106 +1,3 @@
-### using this branch to test electron js
-**to run electron server** - uses backend/dist/App/App.exe for backend
-- cd frontend
-- npm start
-- npm run start-electron
-
-If you update backend and want to generate prouction exe for backend
-- this generates App.exe in  backend/dist/App/
-**to generate backend production** 
-- cd backend
-- pip install pyinstaller  
-- pyinstaller App.spec
-
-
-
-refs 
-- pyinstaller https://pyinstaller.readthedocs.io/en/stable/operating-mode.html
-- generating production https://medium.com/@johndyer24/building-a-production-electron-create-react-app-application-with-shared-code-using-electron-builder-c1f70f0e2649
-- electron production https://medium.com/@kitze/%EF%B8%8F-from-react-to-an-electron-app-ready-for-production-a0468ecb1da3
-- integrating backend with electron https://medium.com/red-buffer/integrating-python-flask-backend-with-electron-nodejs-frontend-8ac621d13f72
-
-<details>
-	<summary>Steps to generate production backend [req- python3,pip]</summary>
-	open a new cmd
-	cd <your backend directory>
-
-	Make sure your main flask application is named  App.py
-
-	pip install pyinstaller
-
-	pyinstaller App.py
-
-	this generates App.exe inside ./dist/App/ directory
-	and App.spec inside  ./ 
-
-	Open App.spec file and add following hidden imports if not already present
-
-	hiddenimports=['engineio.async_drivers.threading', 
-		     'engineio.async_drivers.aiohttp', 'engineio.async_aiohttp'],
-
-	pyinstaller App.spec
-
-	Now your App.exe has been generated inside ./dist/App/ 
-
-	Paste the contents of this directory inside backend/dist/App/ when generating production electron application
-
-</details>
-<details>
-	<summary>Steps to create production electron app[req-node npm]</summary>
-	open a new cmd 
-	cd <location-where-you-want-to-build-jsonGridView>
-
-	mkdir json-grid-view
-	cd json-grid-view
-
-	npm init -y
-
-	npm install -g electron --allow-root
-
-	paste index.js in <json-grid-view> directory
-
-	npx create-react-app src
-
-	in json-grid-view/package.json 
-	add 
-	"scripts": {
-	    "start": "set BROWSER=none && react-scripts start",
-	    "test": "echo \"Error: no test specified\" && exit 1",
-	    "dev": "concurrently \"electron .\" \"cd src && npm start\"",
-	    "build": "cd src && npm run build && cd .. && electron-builder"
-	  }
-
-
-	npm install -g electron-builder
-	npm install -D electron --allow-root              < --unsafe-perm=true , add if u get errors>
-
-	npm install electron-is-dev
-
-	Pasting production-backend inside backend directory
-	mkdir backend
-	cd backend 
-	mkdir dist
-	cd dist
-	mkdir App
-	cd App
-	<paste the contents of your backend/dist/App/ > 
-	cd .. 
-	cd ..
-	cd .. 
-
-	Pasting frontend inside src directory
-	delete the contents of src directory and paste contents of your react application
-
-
-	npm run build
-
-	setup and production application will be generated inside json-grid-view/dist/ directory
-
-
-</details>
-
-
-
 # Json-Grid-View
 
 This project fetches the JSON in different ways and parses it into tabular form and saves it into HDFS.
@@ -347,7 +244,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 ### Upload Json
 **There are three different ways to parse the JSON**
 
-![Screenshot](Screenshots/optionspage.PNG)
+![Screenshot](Screenshots/uploadJson.png)
 	
 - via URL
 - via JSON in text box
@@ -402,28 +299,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 - Click 'Json Checker' in the nav-bar
 
 ![Screenshot](Screenshots/jsonValidator.png)
-	
-### Invalid Json Check
-- Shows the error in Json linewise
-	
-![Screenshot](Screenshots/errorjson.PNG)
 
-	
-### Invalid Json File Check
-- Shows the error in Json File linewise
-	
-![Screenshot](Screenshots/invalidjsonfile.png)
-
-### Invalid URL Check
-- Shows the error in URL
-	
-![Screenshot](Screenshots/invalidurl.png)
-	
-### Invalid Raw JSON Check
-- Shows the error in JSON
-	
-![Screenshot](Screenshots/invalidrawjson.png)
-	
 ### Download Options
 - User can download 
 	- Normal Data, data as it is
@@ -448,16 +324,5 @@ This project fetches the JSON in different ways and parses it into tabular form 
 	
 ![Screenshot](Screenshots/sqlData.png)
 	
-### Hadoop Storage
 
-![Screenshot](Screenshots/Hadoop.PNG)
-	
-### Terminals running
-	--namenode
-	--datanode
-	--nodemanager
-	--resourcemanager
-
-
-![Screenshot](Screenshots/hadoop-all_terminals.PNG)
 <!-- ![Finished App](UI.gif) -->
