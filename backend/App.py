@@ -384,7 +384,7 @@ def fetchQueryData():
         queryText = request.form['query_text']
         startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
-            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
 
         PreviewDF = pd.read_sql_query(queryText, sqlite_connection)
