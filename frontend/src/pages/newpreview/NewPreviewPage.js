@@ -539,7 +539,7 @@ const NewPreviewPage = () => {
                 </Col>
                 <Col lg="12">
                   <Button
-                    title={"Convert To DB"}
+                    title={"Save to Hadoop"}
                     classId={buttonId}
                     clickFunc={() => handleConversion("hive")}
                   ></Button>
