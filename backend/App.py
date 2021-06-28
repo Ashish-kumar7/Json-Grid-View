@@ -219,7 +219,7 @@ def processFile():
         # table = PreviewDF.iloc[startRow : endRow][:].to_dict()
 
         tableCols = []
-        for c in columnListOrd :
+        for c in PreviewDF.columns :
             tableCols.append({'key' : c , 'name' : c})
         
         tableRows = []
@@ -245,7 +245,7 @@ def returnDataFrame():
         page = max(page, 1)
 
         tableCols = []
-        for c in columnListOrd :
+        for c in PreviewDF.columns :
             tableCols.append({'key' : c , 'name' : c})
 
         tableRows = []
@@ -268,7 +268,7 @@ def resetData():
     PreviewDF = DF.copy()
 
     tableCols = []
-    for c in columnListOrd :
+    for c in PreviewDF.columns :
         tableCols.append({'key' : c , 'name' : c})
 
     tableRows = []
@@ -299,7 +299,7 @@ def searchRecords():
             PreviewDF = utilities.queryUsingDict(PreviewDF, queryDict)
 
         tableCols = []
-        for c in columnListOrd :
+        for c in PreviewDF.columns :
             tableCols.append({'key' : c , 'name' : c})
 
         tableRows = []
