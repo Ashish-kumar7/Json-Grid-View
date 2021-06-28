@@ -198,6 +198,7 @@ const NewPreviewPage = () => {
       delete newCol2[i]["filterRenderer"];
     }
     setGridCols(newCol2);
+    setGridCol1(newCol2);
     console.log(gridCols);
     setShowFilter(true);
     setShowFilter1(false);
@@ -236,6 +237,7 @@ const NewPreviewPage = () => {
       .then((response) => {
         // receives 1000 records for the page number which was sent to backend
         setGridCols(response.data.tableCols);
+        setGridCol1(response.data.tableCols);
         setGridRows(response.data.tableRows);
       })
       .catch((err) => {
@@ -317,6 +319,8 @@ const NewPreviewPage = () => {
           alert(response.data.message);
         } else {
           setGridRows(response.data.tableRows);
+          setGridCols(response.data.tableCols);
+          setGridCol1(response.data.tableCols);
           setResultTotalRecords(response.data.total_records);
           setResultRows(response.data.rows_per_page);
         }
