@@ -275,8 +275,9 @@ const NewPreviewPage = () => {
           setTimeout(() => {
             setUploadPercentage(0);
           }, 1000);
+          
+          console.log(response.data);
           setDownloadContent(response.data);
-          console.log(response);
           setShowDownload(true);
         })
         .catch((err) => {
