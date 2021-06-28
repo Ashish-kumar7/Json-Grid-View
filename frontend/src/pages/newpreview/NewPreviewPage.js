@@ -1,7 +1,7 @@
 import "./NewPreviewPage.css";
 import initialDataFrame from "../../global_variable";
 import PaginationP from "../../components/pagination/Pagination";
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import ReactDataGrid from "react-data-grid";
@@ -17,9 +17,6 @@ import { useHistory } from "react-router";
 const socket = io("http://localhost:5000/");
 //used to download file after conversion
 var FileDownload = require("js-file-download");
-
-
-
 
 // Excel column properties
 const defaultColumnProperties = {
@@ -166,28 +163,25 @@ const NewPreviewPage = () => {
   const [buttonId, setButtonId] = useState("uploadButton");
   // store query to perform on whole data
   const [query, setQuery] = useState("");
+  // for redirecting to another page
   let history = useHistory();
-  if(gridCols==undefined){
-      window.location.reload();
-      history.push("/");
+
+  // checks if data is undefined (after reloading), it redirects to home page
+  if (gridCols == undefined) {
+    window.location.reload();
+    history.push("/");
   }
 
+  // for checking if page is reloaded or not - if reloaded display an alert
   useEffect(() => {
-    
     window.addEventListener("beforeunload", alertUser);
     return () => {
       window.removeEventListener("beforeunload", alertUser);
     };
-    
   }, []);
   const alertUser = (e) => {
-   
-    console.log("I am here");
-    
     e.preventDefault();
     e.returnValue = "";
-    
-   
   };
 
   // function called when autocomplete filter button is clicked
@@ -347,6 +341,7 @@ const NewPreviewPage = () => {
       });
   };
 
+  // function for searching in whole data
   const searchhandler = () => {
     const formData = new FormData();
     // storing values selected in multiselect filter and sending it to backend to process on whole data
@@ -400,51 +395,48 @@ const NewPreviewPage = () => {
       <Navbar></Navbar>
       <div className="searchmenu">
         <p>
-          After selecting the filters click here to search in all records and reset data to initial if needed.
+          After selecting the filters click here to search in all records and
+          reset data to initial if needed.
         </p>
         <Row>
           <Col lg="11" className="left">
             <Row>
-              <Col lg="1">
-                {/* <div className="searchall">
-                  <button onClick={searchhandler}>Search</button>
-                </div> */}
-                <Button title={"Search"}
-                    classId={"workButton"}
-                    id={"btn2"}
-                    clickFunc={searchhandler}></Button>
+              <Col lg="1" xs="2">
+                <Button
+                  title={"Search"}
+                  classId={"workButton"}
+                  id={"btn2"}
+                  clickFunc={searchhandler}
+                ></Button>
               </Col>
-              <Col lg="1">
-                {/* <div className="resetall">
-                  <button onClick={resetHandler}>Reset</button>
-                </div> */}
-                <Button title={"Reset"}
-                    classId={"workButton"}
-                    id={"btn1"}
-                    clickFunc={resetHandler}></Button>
+              <Col lg="1" xs="2">
+                <Button
+                  title={"Reset"}
+                  classId={"workButton"}
+                  id={"btn1"}
+                  clickFunc={resetHandler}
+                ></Button>
               </Col>
-              <Col>
+              <Col lg="10 "xs="8">
                 <Row>
-                  <Col lg="8"></Col>
-                  <Col lg="2">
-                  <Button title={"AutoComplete"}
-                    classId={"filterButton"}
-                    id={"btn3"}
-                    clickFunc={filterhandler}></Button>
-                    </Col>
-                  <Col lg="2">
-                  <Button title={"MultiSelect"}
-                    classId={"filterButton"}
-                    id={"btn3"}
-                    clickFunc={filter1handler}></Button>
-                    </Col>
+                  <Col lg="8" xs="2"></Col>
+                  <Col lg="2" xs="5">
+                    <Button
+                      title={"AutoComplete"}
+                      classId={"filterButton"}
+                      id={"btn3"}
+                      clickFunc={filterhandler}
+                    ></Button>
+                  </Col>
+                  <Col lg="2" xs="5">
+                    <Button
+                      title={"MultiSelect"}
+                      classId={"filterButton"}
+                      id={"btn3"}
+                      clickFunc={filter1handler}
+                    ></Button>
+                  </Col>
                 </Row>
-                
-                    
-                    {/* <div className="filterButton">
-                  <button onClick={filterhandler}>AutoComplete</button>
-                  <button onClick={filter1handler}>MultiSelect</button>
-                </div> */}
               </Col>
             </Row>
 
@@ -527,21 +519,21 @@ const NewPreviewPage = () => {
           <Col lg="1" className="right">
             <Container>
               <Row>
-                <Col lg="12">
+                <Col lg="12" sm="4" xs="4">
                   <Button
                     title={"Convert to Excel"}
                     classId={buttonId}
                     clickFunc={() => handleConversion("excel")}
                   ></Button>
                 </Col>
-                <Col lg="12">
+                <Col lg="12" sm="4" xs="4">
                   <Button
                     title={"Convert To CSV"}
                     classId={buttonId}
                     clickFunc={() => handleConversion("csv")}
                   ></Button>
                 </Col>
-                <Col lg="12">
+                <Col lg="12" sm="4" xs="4">
                   <Button
                     title={"Convert To DB"}
                     classId={buttonId}

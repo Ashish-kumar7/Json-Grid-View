@@ -12,7 +12,7 @@
 }
 
 .newpreview button {
-  margin: 0 ;
+  margin: 0;
   padding: 4px;
 }
 
@@ -63,7 +63,6 @@
 }
 .newpreview #btn3 {
   background-color: rgb(139, 61, 213);
-  
 }
 .newpreview .nav-item .disableButton {
   background-color: #000000;
@@ -79,7 +78,7 @@
   box-shadow: 5px 10px rgba(255, 255, 255, 0.15);
 }
 
- .newpreview .navbar-nav .nav-link {
+.newpreview .navbar-nav .nav-link {
   text-align: center;
   color: rgb(255, 255, 255);
   font-weight: 500;
@@ -167,8 +166,6 @@
   width: 9%;
   margin-left: 1%;
 }
-
-
 
 .filterButton button {
   background-color: blueviolet;
