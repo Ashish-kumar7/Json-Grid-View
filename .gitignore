@@ -8,8 +8,5 @@
 /backend-java/.classpath
 /backend-aditi
 /node_modules/
-/backend/generatedDB.db
-/backend/generatedCsvFile.csv
-/backend/generatedXlsxFile.xlsx
-
+/backend/generatedDB.*
 

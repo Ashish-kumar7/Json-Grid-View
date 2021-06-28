@@ -1,11 +1,10 @@
 @echo off
 title Starting Json-Grid-View/backend
+color 1b
 
 echo Starting backend ...
-
-cd E:\DBInternProject\InternProject\Json-Grid-View\backend
+echo #################################
 echo The current directory is %CD%
 
-call python "App.py"
-
+python "App.py"
 pause

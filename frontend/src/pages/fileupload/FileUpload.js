@@ -10,14 +10,19 @@ import io from "socket.io-client";
 import Modal from "../../components/modal/Modal";
 import { css } from "@emotion/react";
 import RingLoader from "react-spinners/RingLoader";
+import BounceLoader from "react-spinners/BounceLoader";
+import ClockLoader from "react-spinners/ClockLoader";
 
-// const socket = io("http://localhost:50000/");
+
+
+// const socket = io("http://localhost:5000/");
 
 const override = css`
   display: block;
   margin: 0 auto;
   border-color: red;
 `;
+
 
 const FileUpload = () => {
   const [selectedFile, setSelectedFile] = useState();
@@ -28,9 +33,6 @@ const FileUpload = () => {
 
   let [loading, setLoading] = useState(false);
   let [color, setColor] = useState("#ea80fc");
-
-  const [disable, setDisable] = useState(false);
-  const [buttonId, setButtonId] = useState("downloadButton");
 
   // on clicking customize button modal will be shown (show modal variable)
   const [open, setOpen] = useState(false);
@@ -45,6 +47,12 @@ const FileUpload = () => {
     setOpen(true);
   };
 
+  // for getting updates regarding progress
+  // socket.on("progress", (val) => {
+  //   setUploadPercentage(val);
+  //   console.log(val);
+  // });
+
   // on selecting file for upload this function is called
   const changeHandler = (e) => {
     if (e.target.files[0]) {
@@ -56,46 +64,53 @@ const FileUpload = () => {
 
   // on clicking customize button ,file will be sent to backend, schema will be received and customize modal will be shown
   const handleCustomize = () => {
-    if (disable) {
-      console.log("disable true");
-    }
-    else {
-      setDisable(true);
-      setButtonId("disableButton");
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("File", selectedFile);
-      formData.set("input_type", "file");
+    setShowCustomizeButton(false);
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("File", selectedFile);
+    formData.set("input_type", "file");
 
-      axios
-        .post("http://localhost:50000/api/upload", formData)
-        .then((res) => {
-          console.log("json loaded and checked");
-          setLoading(false);
-          if (res.data.message.startsWith("Error")) {
-            setDisable(false);
-            setButtonId("downloadButton");
-            alert(res.data.message);
-          }
-          else {
-            setDisable(false);
-            setButtonId("downloadButton");
-            showModal();
-          }
-        })
-        .catch((err) => {
-          // display alert for wrong json
-          setLoading(false);
-          setDisable(false);
-          setButtonId("downloadButton");
-          console.log(err);
-          validJSON = false;
-          setTimeout(() => {
-            alert("Invalid JSON File !!");
-          }, 1000);
-        });
-    }
+    axios
+      .post("http://localhost:5000/api/upload", formData)
+      .then((res) => {
+        console.log("json loaded and checked");
+        setLoading(false);
+        if (res.data.message.startsWith("Error")) {
+          alert(res.data.message);
+        }
+        else {
+          setShowCustomizeButton(true);
+          showModal();
+        }
+      })
+      .catch((err) => {
+        // display alert for wrong json
+        setLoading(false);
+
+        console.log(err);
+        validJSON = false;
+        setTimeout(() => {
+          alert("Invalid JSON File !!");
+        }, 1000);
+      });
   };
+  //   axios
+  //     .post("http://localhost:5000/api/convert", formData, {
+  //       responseType: "blob",
+  //     })
+  //     .then((response) => {
+  //       setUploadPercentage(100);
+  //       setTimeout(() => {
+  //         setUploadPercentage(0);
+  //       }, 1000);
+  //       setDownloadContent(response.data);
+  //       console.log(response);
+  //       setShowDownload(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       setUploadPercentage(0);
+  //     });
 
   return (
     <div className="fileUpload">
@@ -114,14 +129,13 @@ const FileUpload = () => {
             icon={faUpload}
           ></FontAwesomeIcon>
         </div>
-      </div> 
+      </div>
       <div>
         {isSelected ? (
           <div>
             <pre>
-              Filename: {selectedFile.name} <br></br>
-              Filetype: {selectedFile.type} <br></br>
-              Size: {selectedFile.size} bytes
+              Filename: {selectedFile.name} Filetype: {selectedFile.type} Size
+              in bytes: {selectedFile.size}
             </pre>
           </div>
         ) : (
@@ -135,7 +149,7 @@ const FileUpload = () => {
         <>
           {showCustomizeButton ? (<Button
             title={"Customize"}
-            classId={buttonId}
+            classId={"downloadButton"}
             clickFunc={() => handleCustomize()}
           ></Button>) : ""}
 
@@ -152,6 +166,8 @@ const FileUpload = () => {
       ) : (
         <p></p>
       )}
+
+
 
     </div>
   );
