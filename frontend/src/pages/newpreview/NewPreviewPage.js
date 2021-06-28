@@ -163,7 +163,9 @@ const NewPreviewPage = () => {
   const [buttonId, setButtonId] = useState("uploadButton");
   // store query to perform on whole data
   const [query, setQuery] = useState("");
-  // for redirecting to another page
+  // display table name for performing sql query
+  const [tableName, setTableName] = useState(initialDataFrame.tableName);
+  // to redirect to another page
   let history = useHistory();
 
   // checks if data is undefined (after reloading), it redirects to home page
@@ -504,7 +506,7 @@ const NewPreviewPage = () => {
               <Row>
                 <Row className="query">
                   <form>
-                    <label>Use "table001" for query</label>
+                    <label>Table-name: { tableName }</label>
                     <input
                       type="text"
                       placeholder="Type your SQL query"
