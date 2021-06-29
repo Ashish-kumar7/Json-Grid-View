@@ -18,3 +18,11 @@
 
 	Json-Grid-View should automatically open in your browser, if it doesn't enter http://localhost:3000/ in your browser!!!
 </details>
+<details>
+	<summary>Production</summary>
+
+	> 1. Folllow [steps to generate roduction](./electronProduction.md)
+
+	Json-Grid-View should automatically open in your browser, if it doesn't enter http://localhost:3000/ in your browser!!!
+</details>
+
