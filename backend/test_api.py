@@ -6,7 +6,7 @@ import json
 from requests.api import head
 
 class ApiTest(unittest.TestCase):
-    API_URL = "http://127.0.0.1:5000/api/upload"
+    API_URL = "http://127.0.0.1:50000/api/upload"
 
     STR_CONTENT_TYPE_EXCEL = "excel"
     STR_CONTENT_TYPE_CSV = "csv"
