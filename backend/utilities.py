@@ -464,11 +464,11 @@ def queryUsingDict(df , queryDict) :
         # print(df)
     return df
 
-def queryUsingForm(df, colName, select_val ) :
-    print(type(df))
-    df = df.loc[ df[colName].str.match(select_val) ]
-    print(df)
-       
+def queryUsingForm(df, queryDict):
+    for colName, colVal in queryDict.items():
+        if colVal != "":
+            # df = df.loc[df[colName].astype(str).str.lower().str.startswith(colVal.lower(), na=False)]
+            df = df.loc[df[colName].astype(str).str.lower().str.contains(colVal.lower(), na=False)]
     return df
 
 
