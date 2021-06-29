@@ -2,7 +2,8 @@ import { Row, Col, Container } from "react-bootstrap";
 import gif from "../../assets/homegif.gif";
 import "./HomePage.css";
 import Button from "../../components/button/Button";
-
+// The home page contains a button which will redirect to options page where 
+// you can select a file or give a url or write your own json to convert it into Excel/CSV or DB file.
 const HomePage = () => {
   return (
     <div className="homepage">
