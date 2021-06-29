@@ -1,7 +1,7 @@
 # How to Run
 ### Please follow [Installation Steps](./installation.md) before running
 <details>
-	<summary>Devlopment</summary>
+	<summary>Development</summary>
 
 	**Run Backend**
 	> 1. Open a new cmd window
