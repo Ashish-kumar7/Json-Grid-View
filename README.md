@@ -3,37 +3,35 @@
 This project fetches the JSON in different ways and parses it into tabular form and saves it into HDFS.
 
 ### Steps to generate production application
-<details>
-	<summary>Click to open</summary>
-	
-	> 1. Clone or download-zip for : https://github.com/notabhishek/Json-Grid-View/tree/electronProd
-	> 2. Extract Json-Grid-View-electronProd.zip
-	> 3. Open a new cmd window 
-	
-	```
-	cd <path-to-Json-Grid-View-electronProd directory>
-	```
-	
-	> 4. Now we will generate .exe for backend
-	```
-	cd backend
-	
-	pip install -r requirements.txt
-	
-	pip install pyinstaller
-	
-	pyinstaller App.py
-	```
-	
-	At this point App.spec should be generated inside 'backend' directory
-	Edit App.spec and replace 'hiddenimports' at line 11 with
-	
-	```
-	hiddenimports=['engineio.async_drivers.threading', 
-             'engineio.async_drivers.aiohttp', 'engineio.async_aiohttp']
 
-	```
-</details>
+> 1. Clone or download-zip for : https://github.com/notabhishek/Json-Grid-View/tree/electronProd
+> 2. Extract Json-Grid-View-electronProd.zip
+> 3. Open a new cmd window 
+
+```
+cd <path-to-Json-Grid-View-electronProd directory>
+```
+
+> 4. Now we will generate .exe for backend
+```
+cd backend
+
+pip install -r requirements.txt
+
+pip install pyinstaller
+
+pyinstaller App.py
+```
+
+At this point App.spec should be generated inside 'backend' directory
+Edit App.spec and replace 'hiddenimports' at line 11 with
+
+```
+hiddenimports=['engineio.async_drivers.threading', 
+     'engineio.async_drivers.aiohttp', 'engineio.async_aiohttp']
+
+```
+
 
 <details>
 	  <summary>Requirements to run the project</summary>
