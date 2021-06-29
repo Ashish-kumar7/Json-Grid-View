@@ -13,6 +13,7 @@ cd <path-to-Json-Grid-View-electronProd directory>
 ```
 
 > 4. Now we will generate .exe for backend
+> Run the following commands in cmd
 ```
 cd backend
 
@@ -23,14 +24,48 @@ pip install pyinstaller
 pyinstaller App.py
 ```
 
-At this point App.spec should be generated inside 'backend' directory
-Edit App.spec and replace 'hiddenimports' at line 11 with
+> 5. At this point App.spec should be generated inside 'backend' directory
+> Edit App.spec and replace 'hiddenimports' at line 11 with
 
 ```
 hiddenimports=['engineio.async_drivers.threading', 
      'engineio.async_drivers.aiohttp', 'engineio.async_aiohttp']
 
 ```
+
+> save the file and close it.
+> Now run 
+```
+pyinstaller App.spec
+```
+> Wait for .exe to generate, if it asks permission to delete files say - y
+> After App.exe is generated at ./backend/dist/App/App.exe run
+```
+cd ..
+```
+
+> 6. Now we will install packages for frontend
+> Run the following commands
+```
+cd frontend 
+npm install
+cd ..
+```
+
+> 7. Time to install electron
+> Run the following commands
+```
+npm install -g electron --allow-root
+npm install -g electron-builder
+npm install -D electron --allow-root  
+npm install electron-is-dev
+```
+> If u get permission errors at any command add  '--unsafe-perm=true' at the end without the '' 
+> And finally to build our application, run
+```
+npm run build
+```
+> The application is generated inside ./dist/ directory
 
 
 <details>
