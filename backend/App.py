@@ -292,6 +292,26 @@ def returnDataFrame():
         print(e)
         return jsonify({'message:', 'error'})
 
+# API to reset Preview-Table to Json-Table
+@app.route('/api/dataReset', methods=['POST'])
+@cross_origin()
+def resetData():
+    global PreviewDF
+
+    PreviewDF = DF.copy()
+
+    tableCols = []
+    for c in PreviewDF.columns :
+        tableCols.append({'key' : c , 'name' : c})
+
+    tableRows = []
+    utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+    
+    response = jsonify(
+        tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+
+    return response
+
 
 # @app.route('/api/uniqueValues', methods=['POST'])
 # @cross_origin()
