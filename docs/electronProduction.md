@@ -1,7 +1,7 @@
 ### Steps to generate production application
 
 > Requirements - python3 and Node.js.
-> If you don't have python or Node.js installed follow [Installation steps](docs/installation.md) 
+> If you don't have python or Node.js installed follow [Installation steps](./installation.md) 
 > 1. Clone or download-zip from : [Json-Grid-View](https://github.com/notabhishek/Json-Grid-View/tree/electronProd)
 > 2. Extract Json-Grid-View-electronProd.zip
 > 3. Open a new cmd window 
