@@ -15,7 +15,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 ### Installation Steps: [Link](docs/installation.md)
 
-### How to run: [Link][(docs/howToRun.md)
+### How to run: [Link](docs/howToRun.md)
 
 # Features
 
