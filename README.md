@@ -25,7 +25,7 @@ pyinstaller App.py
 ```
 
 > 5. At this point App.spec should be generated inside 'backend' directory
-> Edit App.spec and replace 'hiddenimports' at line 11 with
+> 6. Edit App.spec and replace 'hiddenimports' at line 11 with
 
 ```
 hiddenimports=['engineio.async_drivers.threading', 
@@ -33,35 +33,34 @@ hiddenimports=['engineio.async_drivers.threading',
 
 ```
 
-> save the file and close it.
-> Now run 
+> 7. save the file and close it. Now run,
 ```
 pyinstaller App.spec
 ```
-> Wait for .exe to generate, if it asks permission to delete files say - y
-> After App.exe is generated at ./backend/dist/App/App.exe run
+> 8. Wait for .exe to generate, if it asks permission to delete files say - y
+> 9. After App.exe is generated at ./backend/dist/App/App.exe run
 ```
 cd ..
 ```
 
-> 6. Now we will install packages for frontend
-> Run the following commands
+> 10. Now we will install packages for frontend
+> 11. Run the following commands
 ```
 cd frontend 
 npm install
 cd ..
 ```
 
-> 7. Time to install electron
-> Run the following commands
+> 12. Time to install electron
+> 13. Run the following commands
 ```
 npm install -g electron --allow-root
 npm install -g electron-builder
 npm install -D electron --allow-root  
 npm install electron-is-dev
 ```
-> If u get permission errors at any command add  '--unsafe-perm=true' at the end without the '' 
-> And finally to build our application, run
+> 14. If u get permission errors at any command add  '--unsafe-perm=true' at the end without the '' 
+> 15. And finally to build our application, run
 ```
 npm run build
 ```
