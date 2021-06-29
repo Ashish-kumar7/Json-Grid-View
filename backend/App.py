@@ -249,7 +249,7 @@ def processFile():
         # table = PreviewDF.iloc[startRow : endRow][:].to_dict()
 
         tableCols = []
-        for c in columnListOrd :
+        for c in PreviewDF.columns :
             tableCols.append({'key' : c , 'name' : c})
         
         tableRows = []
@@ -275,9 +275,10 @@ def returnDataFrame():
     print('form\n\n\n\n\n', request.form)
     try:
         page = int(request.form['page_number'])
+        page = max(page, 1)
 
         tableCols = []
-        for c in columnListOrd :
+        for c in PreviewDF.columns :
             tableCols.append({'key' : c , 'name' : c})
 
         tableRows = []
@@ -291,6 +292,27 @@ def returnDataFrame():
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
+
+# API to reset Preview-Table to Json-Table
+@app.route('/api/dataReset', methods=['POST'])
+@cross_origin()
+def resetData():
+    global PreviewDF
+    print("Reset..............................")
+
+    PreviewDF = DF.copy()
+
+    tableCols = []
+    for c in PreviewDF.columns :
+        tableCols.append({'key' : c , 'name' : c})
+
+    tableRows = []
+    utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+    
+    response = jsonify(
+        tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+
+    return response
 
 
 # @app.route('/api/uniqueValues', methods=['POST'])
@@ -385,6 +407,7 @@ def returnDataFrame():
 @app.route('/api/searchRecord', methods=['POST'])
 @cross_origin()
 def searchRecords():
+    print("Search...................................")
     global prevQueryCols
     global PreviewDF
 
@@ -392,16 +415,17 @@ def searchRecords():
     print()
     print('form \n\n\n\n\n', request.form)
     try:
-        s_selected_col = request.form['col_name']
-        s_search_val = request.form['search_val']
+        filter_type = request.form['filter_type']
+        if filter_type == "autoComplete" :
+            queryDict = dict(json.loads(request.form['search_dict_auto']))
+            PreviewDF = utilities.queryUsingForm(PreviewDF, queryDict)
 
-        PreviewDF = utilities.queryUsingForm(df=DF, colName =s_selected_col, select_val =s_search_val )
-
-        # html_string = utilities.GenPageHTML(
-        #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
+        elif filter_type == "multiSelect" :
+            queryDict = dict(json.loads(request.form['search_dict_multi']))
+            PreviewDF = utilities.queryUsingDict(PreviewDF, queryDict)
 
         tableCols = []
-        for c in columnListOrd :
+        for c in PreviewDF.columns :
             tableCols.append({'key' : c , 'name' : c})
 
         tableRows = []
