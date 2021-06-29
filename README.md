@@ -4,7 +4,7 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 ### Steps to generate production application
 
-> 1. Clone or download-zip for : https://github.com/notabhishek/Json-Grid-View/tree/electronProd
+> 1. Clone or download-zip for : [Json-Grid-View](https://github.com/notabhishek/Json-Grid-View/tree/electronProd)
 > 2. Extract Json-Grid-View-electronProd.zip
 > 3. Open a new cmd window 
 
