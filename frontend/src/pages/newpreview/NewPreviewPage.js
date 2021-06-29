@@ -169,22 +169,22 @@ const NewPreviewPage = () => {
   let history = useHistory();
 
   // checks if data is undefined (after reloading), it redirects to home page
-  if (gridCols == undefined) {
-    window.location.reload();
-    history.push("/");
-  }
+  // if (gridCols == undefined) {
+  //   window.location.reload();
+  //   history.push("/");
+  // }
 
   // for checking if page is reloaded or not - if reloaded display an alert
-  useEffect(() => {
-    window.addEventListener("beforeunload", alertUser);
-    return () => {
-      window.removeEventListener("beforeunload", alertUser);
-    };
-  }, []);
-  const alertUser = (e) => {
-    e.preventDefault();
-    e.returnValue = "";
-  };
+  // useEffect(() => {
+  //   window.addEventListener("beforeunload", alertUser);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", alertUser);
+  //   };
+  // }, []);
+  // const alertUser = (e) => {
+  //   e.preventDefault();
+  //   e.returnValue = "";
+  // };
 
   // function called when autocomplete filter button is clicked
   const filterhandler = () => {
