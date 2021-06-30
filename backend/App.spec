@@ -5,7 +5,7 @@ block_cipher = None
 
 
 a = Analysis(['App.py'],
-             pathex=['C:\\Users\\Abhishek\\Desktop\\JsonGrid\\Json-Grid-View\\backend'],
+             pathex=['./'],
              binaries=[],
              datas=[],
              hiddenimports=['engineio.async_drivers.threading', 
