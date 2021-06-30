@@ -1,18 +1,3 @@
-### using this branch to test electron js
-**to run electron server** - uses backend/dist/App/App.exe for backend
-- cd frontend
-- npm start
-- npm run start-electron
-
-If you update backend and want to generate prouction exe for backend
-- this generates App.exe in  backend/dist/App/
-**to generate backend production** 
-- cd backend
-- pip install pyinstaller  
-- pyinstaller App.spec
-
-
-
 refs 
 - pyinstaller https://pyinstaller.readthedocs.io/en/stable/operating-mode.html
 - generating production https://medium.com/@johndyer24/building-a-production-electron-create-react-app-application-with-shared-code-using-electron-builder-c1f70f0e2649
