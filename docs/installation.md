@@ -173,7 +173,7 @@
 
 		      File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hadoop-env.cmd
 		      set HADOOP_IDENT_STRING="The name of your PC without Spacebar"
-
+		  Open the cmd in administrative mode only.
 		  Step 11.Node formatting
 		  To format the node, open the cmd and execute the below command:
 		      --hadoop namenode -format
