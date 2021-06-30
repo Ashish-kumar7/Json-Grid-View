@@ -28,7 +28,7 @@
     "build": "cd frontend && npm run build && cd .. && electron-builder"
   },
   "keywords": [],
-  "author": "Abhishek",
+  "author": "Abhishek Tiwari",
   "license": "ISC",
   "devDependencies": {
     "electron": "^13.1.4"

@@ -1,4 +1,4 @@
-import { Route , HashRouter } from "react-router-dom";
+import { Route, HashRouter } from "react-router-dom";
 import HomePage from "./pages/homepage/HomePage";
 import OptionsPage from "./pages/optionpage/OptionsPage";
 import FileUpload from "./pages/fileupload/FileUpload";

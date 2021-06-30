@@ -232,11 +232,17 @@ const NewPreviewPage = () => {
       .post("http://localhost:5000/api/page", formData)
       .then((response) => {
         // receives 1000 records for the page number which was sent to backend
+        if(response.status == 200){
         setGridCols(response.data.tableCols);
         setGridCol1(response.data.tableCols);
         setGridRows(response.data.tableRows);
+      }
+      else{
+        alert("Records not received from backend");
+      }
       })
       .catch((err) => {
+        alert("Server is not started");
         console.log(err);
       });
   };
@@ -246,6 +252,7 @@ const NewPreviewPage = () => {
     if (disable) {
       console.log("disable true");
     } else {
+      setShowDownload(false);
       setDisable(true);
       setButtonId("disableButton");
       setUploadPercentage(10);
@@ -253,13 +260,13 @@ const NewPreviewPage = () => {
       formData.set("content_type", val);
       // formData.set("data_type" , dataType);
       if (val == "excel") {
-        setFileExtension("output.xlsx");
+        setFileExtension("generated_Excel.xlsx");
         setDownloadText("Download Excel");
       } else if (val == "csv") {
-        setFileExtension("output.csv");
+        setFileExtension("generated_CSV.csv");
         setDownloadText("Download CSV");
       } else {
-        setFileExtension("output.db");
+        setFileExtension(tableName+"_DB_File.db");
         setDownloadText("Download DB");
       }
       // send data according to button clicked
@@ -274,13 +281,18 @@ const NewPreviewPage = () => {
           setUploadPercentage(100);
           setTimeout(() => {
             setUploadPercentage(0);
+            setShowDownload(true);
           }, 1000);
-          
-          console.log(response.data);
+          if(response.status == 200){
           setDownloadContent(response.data);
-          setShowDownload(true);
+          
+        }
+        else{
+          alert("Generated file not received from backend");
+        }
         })
         .catch((err) => {
+          alert("Server is not started");
           setDisable(false);
           setButtonId("uploadButton");
           console.log(err);
@@ -335,11 +347,19 @@ const NewPreviewPage = () => {
       .post("http://localhost:5000/api/dataReset", formData)
       .then((response) => {
         //resets the data in grid to initial dataframe
+        if(response.status == 200){
         setGridRows(response.data.tableRows);
+        setGridCols(response.data.tableCols);
+        setGridCol1(response.data.tableCols);
         setResultTotalRecords(response.data.total_records);
         setResultRows(response.data.rows_per_page);
+      }
+      else{
+        alert("Reset not performed");
+      }
       })
       .catch((err) => {
+        alert("Server not started");
         console.log(err);
       });
   };
@@ -384,11 +404,17 @@ const NewPreviewPage = () => {
     axios
       .post("http://localhost:5000/api/searchRecord", formData)
       .then((response) => {
+        if(response.status == 200){
         setGridRows(response.data.tableRows);
         setResultTotalRecords(response.data.total_records);
         setResultRows(response.data.rows_per_page);
+      }
+      else{
+        alert("Search not performed on whole data. Something went wrong");
+      }
       })
       .catch((err) => {
+        alert("Server not running");
         console.log(err);
       });
   };

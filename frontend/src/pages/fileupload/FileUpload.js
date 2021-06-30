@@ -102,7 +102,7 @@ const FileUpload = () => {
 
   return (
     <div className="fileUpload">
-      <Navbar/>
+      <Navbar />
       <div class="wrapper">
         <div className="file-upload">
           <input
@@ -121,10 +121,9 @@ const FileUpload = () => {
       <div>
         {isSelected ? (
           <div>
-            <pre>
-              Filename: {selectedFile.name} Filetype: {selectedFile.type} Size
-              in bytes: {selectedFile.size}
-            </pre>
+            <p>Filename: {selectedFile.name}</p>
+            <p> Filetype: {selectedFile.type}</p>
+            <p> Size : {selectedFile.size} bytes</p>
           </div>
         ) : (
           <p className="text-center"> Upload A JSON File</p>

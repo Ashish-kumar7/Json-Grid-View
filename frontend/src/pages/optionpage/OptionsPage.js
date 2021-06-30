@@ -5,7 +5,6 @@ import { faEdit } from "@fortawesome/free-solid-svg-icons";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import { faLink } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../../components/navbar/Navbar";
-import Footer from "../../components/footer/Footer";
 import IconBox from "../../components/iconbox/IconBox";
 
 const OptionsPage = () => {
@@ -43,7 +42,6 @@ const OptionsPage = () => {
           </Col>
         </Row>
       </Container>
-      <Footer></Footer>
     </div>
   );
 };

@@ -14,5 +14,8 @@
 /backend/dist/
 /backend/build/
 /frontend/node_modules/
-/dist/
+/frontend/build/
 /src/node_modules/
+/dist/
+/build/
+
