@@ -13,3 +13,4 @@
 /backend/generatedXlsxFile.xlsx
 /dist/
 /src/node_modules/
+/frontend/node_modules
