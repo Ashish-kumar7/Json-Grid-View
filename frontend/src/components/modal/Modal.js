@@ -94,7 +94,7 @@ const CustomizeModal = (props) => {
           setButtonId("downloadButton");
           setTimeout(() => {
             setUploadPercentage(0);
-          }, 1000);
+          }, 1);
           history.push("/newpreview");
         })
         .catch((err) => {

@@ -252,6 +252,7 @@ const NewPreviewPage = () => {
     if (disable) {
       console.log("disable true");
     } else {
+      setShowDownload(false);
       setDisable(true);
       setButtonId("disableButton");
       setUploadPercentage(10);
@@ -280,10 +281,11 @@ const NewPreviewPage = () => {
           setUploadPercentage(100);
           setTimeout(() => {
             setUploadPercentage(0);
+            setShowDownload(true);
           }, 1000);
           if(response.status == 200){
           setDownloadContent(response.data);
-          setShowDownload(true);
+          
         }
         else{
           alert("Generated file not received from backend");
