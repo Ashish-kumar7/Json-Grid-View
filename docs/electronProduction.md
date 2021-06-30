@@ -52,6 +52,7 @@ cd ..
 > 12. Time to install electron
 > 13. Run the following commands
 ```
+npm install -g concurrently
 npm install -g electron --allow-root
 npm install -g electron-builder
 npm install -D electron --allow-root  
