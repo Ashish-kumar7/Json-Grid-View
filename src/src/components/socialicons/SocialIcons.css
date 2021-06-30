@@ -1,0 +1,8 @@
+.iconf {
+    color: #fff4e3;
+    margin-left: 20px;
+  }
+  
+  .iconf:hover {
+    color: tomato;
+  }
