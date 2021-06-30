@@ -1,0 +1,50 @@
+.homepage {
+  background-color: #000a29;
+  height: auto;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.jumbotron {
+  color: white;
+}
+
+.jumbotron h1 {
+  font-family: "Playfair Display", serif;
+  margin-top: 25vh;
+}
+.jumbotron p {
+  padding: 10px;
+}
+
+.homepage .nav-item .startButton {
+  background-image: linear-gradient(#b2fefa, #0ed2f7);
+  margin: 40px 10px 20px 10px;
+  width: 35vh;
+  margin-left: 22%;
+  padding: 10px;
+  border-radius: 40px;
+  box-shadow: 5px 10px rgba(255, 255, 255, 0.15);
+}
+.homepage .nav-link {
+  text-align: center;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  font-size: x-large;
+}
+#gif {
+  width: 110vh;
+  height: 90vh;
+  float: left;
+  margin-top: 5vh;
+}
+
+@media (max-width: 991.98px) {
+  #gif {
+    width: 95vh;
+    height: 75vh;
+    float: left;
+    margin-top: 5vh;
+    margin-left: -15vh;
+  }
+}

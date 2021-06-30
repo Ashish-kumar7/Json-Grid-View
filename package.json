@@ -11,7 +11,7 @@
         "filter": [
           "**/*"
         ]
-      },
+      } , 
       {
         "from": "./GeneratedFiles",
         "to": "GeneratedFiles",
@@ -24,8 +24,8 @@
   "scripts": {
     "start": "set BROWSER=none && react-scripts start",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"electron .\" \"cd frontend && npm start\"",
-    "build": "cd frontend && npm run build && cd .. && electron-builder"
+    "dev": "concurrently \"electron .\" \"cd src && npm start\"",
+    "build": "cd src && npm run build && cd .. && electron-builder"
   },
   "keywords": [],
   "author": "Abhishek Tiwari",
