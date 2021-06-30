@@ -11,6 +11,9 @@
 /backend/generatedDB.db
 /backend/generatedCsvFile.csv
 /backend/generatedXlsxFile.xlsx
+/backend/dist/
+/backend/build/
+/frontend/node_modules/
 /dist/
 /src/node_modules/
 /frontend/node_modules

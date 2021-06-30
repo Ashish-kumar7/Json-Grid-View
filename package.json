@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
@@ -48,6 +49,41 @@
       "react-app",
       "react-app/jest"
     ]
+=======
+  "name": "Json-Grid-View",
+  "version": "1.0.0",
+  "description": "Convert json data to .xlsx, .csv, .db easily!",
+  "main": "index.js",
+  "build": {
+    "extraFiles": [
+      {
+        "from": "./backend/dist/App",
+        "to": "backend/dist/App/",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "./GeneratedFiles",
+        "to": "GeneratedFiles",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "start": "set BROWSER=none && react-scripts start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"electron .\" \"cd frontend && npm start\"",
+    "build": "cd frontend && npm run build && cd .. && electron-builder"
+  },
+  "keywords": [],
+  "author": "Abhishek",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^13.1.4"
+>>>>>>> 633e813e76f6837a21701f67b2fed37d035b2d89
   },
   "browserslist": {
     "production": [

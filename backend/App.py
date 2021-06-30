@@ -1,7 +1,7 @@
-from flask.helpers import send_from_directory
 from flask_socketio import *
 import subprocess
 import time
+from numpy.lib.function_base import select
 from pandas.core.base import SelectionMixin
 import sqlalchemy
 import pandas as pd
@@ -32,96 +32,42 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Constants
 
 # File Constants
+# ELECTRON_PATH = ""                      # Use for dev 
+ELECTRON_PATH = os.path.abspath(os.getcwd()) + "\\GeneratedFiles\\"   # Use for production
 
-# Relative path from electron-directory to where Generated-files should be stored 
-ELECTRON_PATH = ("..//backend//dist//App//", "..//backend//",
-                 "backend//dist//App//" , "./GeneratedFiles/")[3]  # path for prod, dev
-
-# Filename for generated .csv 
 CSV_FILENAME = 'generatedCsvFile'
-
-# Filename for generated .xlsx 
 XLSX_FILENAME = 'generatedXlsxFile'
-
-# Filename for generated .db 
 SQL_DB_NAME = 'generatedDB'
-
-# Tablename for table created inside .db file
 SQL_TAB_NAME = 'table001'
-
-# Sheet name for .xlsx file
 SHEET_NAME = 'Sheet1'
 
 # Generation constants
-
-# Charachter used to join parent-names to child-names for generating column-headers
 JOINER_CHAR = '_'
-
-"""
-Join parent-names to child-names for generating column-headers
-
-example data : {
-    "A" : {
-        "b" : "c" , 
-        "d" : "e"  
-    }
-}
-
-JOIN_PAR_IN_COLS = True  --- headers : A_b , A_d
-JOIN_PAR_IN_COLS = False --- headers : b , d
-"""
 JOIN_PAR_IN_COLS = True
-
-# If set True adds extra column for Index
+REPEAT_IN_COL = True
 ADD_INDEX_FOR_LIST = False
-
-# The name of Index column if ADD_INDEX_FOR_LIST == True
 INDEX_FOR_LIST_SUFFIX = '_INDEX'  # Index colname = par + joiner + index_suffix
-
-# Value used to fill missing data
 FILL_MISSING_WITH = 'null'
-
-# If set True Cross Product Table is generated, has no missing values
 GEN_CROSS_TABLE = False
-
-# Value used to fill NA data
 FILL_NA = ''
-
-"""
-TABLE_TYPE  : (1,2,3)
-1 : Normal table
-2 : Cross-product table
-3 : Table with added index columns
-"""
 TABLE_TYPE = '1'
 
-# Number of rows per page for pagination in TablePreview
 ROWS_PER_PAGE = 20
-# Selected page for pagination in TablePreview
 CURRENT_PAGE = 1
-# Total pages for pagination in TablePreview
 TOTAL_PAGES = 1
 
-# DataFrame used to convert tables
 DF = ''
-# DataFrame used to handle Preview,Queries
 PreviewDF = ''
-# Used to Cache previous queries for faster queries
 prevQueryCols = {}
-# contains (columnName : [filterList]) to query on PreviewDF
 queryDict = {}
 
 HTML_PREV_STR = ''
-
-# Used to store loaded json data
 jsonData = {}
-# Used to store schema to table
 tableSchema = ''
-# Ordered list of column-headers
 columnListOrd = ''
+initTime = ''
 
-
-# Using SocketIO to update progress-bar
+# Using SocketIO for updating progress-bar
 @socketio.on('connect')
 def connected():
     print('connected with socketio')
@@ -154,29 +100,24 @@ class NumpyEncoder(json.JSONEncoder):
 
         return json.JSONEncoder.default(self, obj)
 
-
-# Set json-decoder to NumpyEncoder for handling Numpy data types
+# Set default json_encoder to NumpyEncoder
 app.json_encoder = NumpyEncoder
 
-# Route to load Json-Data
+# Route for loading Json-data
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
 def uploadFile():
     global jsonData
 
-    # Delete the existing files
-    try:
+    # Delete existing files
+    try : 
         utilities.DeleteIfExists(ELECTRON_PATH + SQL_DB_NAME + '.db')
         utilities.DeleteIfExists(ELECTRON_PATH + CSV_FILENAME + '.csv')
         utilities.DeleteIfExists(ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
-    except Exception as e:
-        print("Exception while deleting ", e)
+    except Exception as e :
+        print("Exception while deleting " , e)
 
-    # print("All files deleted !!!")
-    # print("\n\n\n\nForm Data in /api/upload\n", request.form)
     try:
-        # print("form  : ", request.form)
-
         type = request.form['input_type']
         if type == "file":
             file = request.files['File']
@@ -189,7 +130,6 @@ def uploadFile():
         if type == "text":
             jsonData = json.loads(request.form['Json'])
 
-        # Json Loaded Successfully!
         response = jsonify(message="File processed")
         return response
 
@@ -198,12 +138,11 @@ def uploadFile():
         response = jsonify(message="Error: " + str(e))
         return response
 
-# Route to process json and create table inside pandas DataFrame
+# Process json-data and generate schema, data-dict, pandas-dataframe
 @app.route('/api/process', methods=['POST'])
 @cross_origin()
 def processFile():
-    # print("process")
-    # print("\n\n\n\nForm Data in /api/process\n", request.form)
+
     try:
         # Assign global variables based on received
         socketio.emit('progress', 10, broadcast=True)
@@ -237,31 +176,25 @@ def processFile():
             ADD_INDEX_FOR_LIST = True
             GEN_CROSS_TABLE = False
 
+        startTime = time.time()
         socketio.emit('progress', 20, broadcast=True)
         global tableSchema, columnListOrd
         columnList, tableSchema, columnListOrd, tableSchemaOrd, columnListOrdNoPar = utilities.GenTableSchema(
             jsonData, JOINER_CHAR=JOINER_CHAR,  ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
             INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX)
 
-        print("\n\n\n\nNoParCols", columnListOrdNoPar)
         socketio.emit('progress', 30, broadcast=True)
-        # Generated columnList and schemaTree
-        # print("columns : ", columnList)
-        print("schema Tree: ", tableSchema)
-        # print("ord cols :" , columnListOrd)
-        # print("schema Tree Ord: ", tableSchemaOrd)
 
         DataDict = {}
+
         socketio.emit('progress', 40, broadcast=True)
-        # utilities.WriteDict(DataDict, 0, '', jsonData)
         utilities.WriteData(DataDict, jsonData, tableSchema, FILL_MISSING_WITH=FILL_MISSING_WITH, ADD_INDEX_FOR_LIST=ADD_INDEX_FOR_LIST,
                             INDEX_FOR_LIST_SUFFIX=INDEX_FOR_LIST_SUFFIX, GEN_CROSS_TABLE=GEN_CROSS_TABLE)
-        # print(DataDict)
+
         socketio.emit('progress', 60, broadcast=True)
-        print(60)
 
+        startTime = time.time()
 
-        # DF = pd.DataFrame.from_dict(DataDict, "index")
         columnsOrder = columnListOrd
 
         DF = pd.DataFrame(list(DataDict.values()), columns=columnsOrder)
@@ -271,33 +204,29 @@ def processFile():
             DF.columns = columnListOrdNoPar
 
         socketio.emit('progress', 80, broadcast=True)
-        print(80)
         PreviewDF = DF.copy()
 
+        startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
             'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
 
-        print("Conenction Made to SQL")
         DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
 
-        print("\n\nData Saved in TABLE!! \n")
-        # print(engine.execute("SELECT * FROM " + tableName).fetchall())
         sqlite_connection.close()
 
         socketio.emit('progress', 90, broadcast=True)
-
+        
         # html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
         # table = PreviewDF.iloc[startRow : endRow][:].to_dict()
 
         tableCols = []
-        for c in columnListOrd:
-            tableCols.append({'key': c, 'name': c})
-
+        for c in PreviewDF.columns :
+            tableCols.append({'key' : c , 'name' : c})
+        
         tableRows = []
-        utilities.GenReactDataGridRows(
-            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
         # print(tableRows)
 
         response = jsonify(tableRows=tableRows, tableCols=tableCols,
@@ -310,26 +239,20 @@ def processFile():
         print(e)
         return jsonify({'message:', 'error'})
 
-
+# Returns data for selected_page in preview-page
 @app.route('/api/page', methods=['POST'])
 @cross_origin()
 def returnDataFrame():
-    print('page number')
-    print()
-    print('form\n\n\n\n\n', request.form)
     try:
         page = int(request.form['page_number'])
-        # html_string = utilities.GenPageHTML(
-        #     df=PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
+        page = max(page, 1)
 
         tableCols = []
-        for c in columnListOrd:
-            tableCols.append({'key': c, 'name': c})
+        for c in PreviewDF.columns :
+            tableCols.append({'key' : c , 'name' : c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(
-            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=page)
-        # print(tableRows)
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = page)
 
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
@@ -339,58 +262,52 @@ def returnDataFrame():
         print(e)
         return jsonify({'message:', 'error'})
 
-
-@app.route('/api/uniqueValues', methods=['POST'])
+# API to reset Preview-Table to Json-Table
+@app.route('/api/dataReset', methods=['POST'])
 @cross_origin()
-def returnQueryData():
-    global prevQueryCols
+def resetData():
+    global PreviewDF
 
-    print('page ui query')
-    print()
-    print('form\n\n\n\n\n', request.form)
-    try:
-        q_selected_column = request.form['col_name']
-        q_selected_page = int(
-            request.form['page_number']) if 'page_number' in request.form else 1
-        # q_rows_per_page = int(request.form['rows_per_page'])
-        unique_data = utilities.GenPageData(prevQueryCols=prevQueryCols, PreviewDF=PreviewDF,
-                                            selected_col=q_selected_column, selected_page=q_selected_page, rows_per_page=10)
-        print("unique_data", unique_data)
-        for i in unique_data:
-            print(i, type(i))
-        response = jsonify(total_unique=len(
-            prevQueryCols[q_selected_column]), rows_per_page=10, unique_data=unique_data)
-        print(response)
-        return response
-    except Exception as e:
-        print(e)
-        return jsonify({'message:', 'error'})
+    PreviewDF = DF.copy()
 
+    tableCols = []
+    for c in PreviewDF.columns :
+        tableCols.append({'key' : c , 'name' : c})
 
-@app.route('/api/queryForm', methods=['POST'])
+    tableRows = []
+    utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+    
+    response = jsonify(
+        tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+
+    return response
+
+# API to query on full data 
+# Supports :    auto-complete filter
+#               multi-select filter
+@app.route('/api/searchRecord', methods=['POST'])
 @cross_origin()
-def queryUsingDict():
+def searchRecords():
     global prevQueryCols
     global PreviewDF
 
-    print('page queryForm')
-    print()
-    print('queryDict \n\n\n\n\n', json.loads(request.form['dict']))
     try:
-        queryDict = json.loads(request.form['dict'])
-        PreviewDF = utilities.queryUsingDict(df=DF, queryDict=queryDict)
+        filter_type = request.form['filter_type']
+        if filter_type == "autoComplete" :
+            queryDict = dict(json.loads(request.form['search_dict_auto']))
+            PreviewDF = utilities.queryUsingForm(PreviewDF, queryDict)
 
-        # html_string = utilities.GenPageHTML(
-        #     df=PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
+        elif filter_type == "multiSelect" :
+            queryDict = dict(json.loads(request.form['search_dict_multi']))
+            PreviewDF = utilities.queryUsingDict(PreviewDF, queryDict)
 
         tableCols = []
-        for c in columnListOrd:
-            tableCols.append({'key': c, 'name': c})
+        for c in PreviewDF.columns :
+            tableCols.append({'key' : c , 'name' : c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(
-            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
-
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+        
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
 
@@ -399,94 +316,29 @@ def queryUsingDict():
         print(e)
         return jsonify({'message:', 'error'})
 
-
-@app.route('/api/searchValues', methods=['POST'])
-@cross_origin()
-def searchValueInCol():
-    global prevQueryCols
-    global PreviewDF
-
-    print('search Value Form')
-    print()
-    print('form \n\n\n\n\n', request.form)
-    try:
-        SEARCH_TOTAL_RECORDS = 20
-        SEARCH_ROWS_PER_PAGE = 20
-        s_selected_col = request.form['col_name']
-        s_search_val = request.form['search_val']
-
-        # Load Data here
-        if not s_selected_col in prevQueryCols:
-            prevQueryCols[s_selected_col] = list(pd.unique(DF[s_selected_col]))
-
-        s_res_set = set([val for val in prevQueryCols[s_selected_col] if str(
-            val).startswith(s_search_val)])
-        print("result set", s_res_set)
-
-        SEARCH_TOTAL_RECORDS = len(s_res_set)
-        return jsonify(unique_data=list(s_res_set), total_unique=SEARCH_TOTAL_RECORDS, rows_per_page=SEARCH_ROWS_PER_PAGE)
-    except Exception as e:
-        print(e)
-        return jsonify({'message:', 'error'})
-
-
+# API to generate csv, xlsx, db files and save data to hadoop
 @app.route('/api/convert', methods=['POST'])
 @cross_origin()
 def convertFile():
-    print("convert")
-    print(type(DF))
-    print("\n\n\n\nForm Data in /api/convert\n", request.form)
-    useDF = ''
     try:
         extension = request.form['content_type']
-        # data_type = int(request.form['data_type'])
-
-        print(extension)
         # Generate CSV
         if extension == "csv":
-
-            # if data_type == 1:
             DF.to_csv(ELECTRON_PATH + CSV_FILENAME + '.csv')
-            # else:
-            #     PreviewDF.to_csv(CSV_FILENAME + '.csv')
-
             socketio.emit('progress', 80, broadcast=True)
-
-            res = {
-                'status' : 'success' , 
-                'filename' : CSV_FILENAME,
-                'extension' : '.csv',
-                'directory' : ELECTRON_PATH
-            }
-            return jsonify(res)
-            # return send_file(ELECTRON_PATH + CSV_FILENAME + '.csv')
+            return send_file(ELECTRON_PATH + CSV_FILENAME + '.csv')
 
         # Generate XLSX
         if extension == "excel":
-
-            # if data_type == 1:
             DF.to_excel(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
-            # else:
-            #     PreviewDF.to_excel(XLSX_FILENAME + '.xlsx',
-            #                        sheet_name=SHEET_NAME)
-
             socketio.emit('progress', 80, broadcast=True)
-            print("generated path = ", ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
+            return send_file(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
 
-            res = {
-                'status' : 'success' , 
-                'filename' : XLSX_FILENAME,
-                'extension' : '.xlsx',
-                'directory' : ELECTRON_PATH
-            }
-            return jsonify(res)
-            # os.chmod(ELECTRON_DIR + XLSX_FILENAME + '.xlsx' , 0o777)
-            # return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
-            # return send_from_directory(ELECTRON_PATH, XLSX_FILENAME, as_attachment=True, mimetype='application/EXCELMIME', attachment_filename=(XLSX_FILENAME + '.xlsx'))
         # Generate SQL Database, Table
         if extension == "hive":
+            # startTime = time.time()
             # sql_engine = sqlalchemy.create_engine(
-            #     'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
+            #     'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
             # sqlite_connection = sql_engine.connect()
 
             # print("Conenction Made to SQL")
@@ -499,68 +351,52 @@ def convertFile():
             # print("\n\nTABLE\n")
             # # print(engine.execute("SELECT * FROM " + tableName).fetchall())
             # sqlite_connection.close()
-            socketio.emit('progress', 80, broadcast=True)
+            # print("Time to gen db : ", time.time() - startTime)
 
-            if HADOOP_INSTALLED:
-                DF.to_csv('test.csv')
-                hadoopstorage.saveFile(DF)
+            # startTime = time.time()
+            # print("Total time taken : ", startTime - initTime)
+            socketio.emit('progress', 80, broadcast=True)
+            # if HADOOP_INSTALLED:
+            #     if data_type == 1:
+            #         DF.to_csv('test.csv')
+            #         hadoopstorage.saveFile(DF)
+            #     else:
+            #         PreviewDF.to_csv('test.csv')
+            #         hadoopstorage.saveFile(PreviewDF)
 
                 # code to convert csv file and saving it to hdfs
                 # df = pd.read_csv('generatedCsvFile.csv')
                 # df.to_parquet("/test_parquet", compression="GZIP")
                 # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
                 # subprocess.call(hdfs_cmd, shell=True)
-            socketio.emit('progress', 80, broadcast=True)
-
-            res = {
-                'status' : 'success' , 
-                'filename' : SQL_DB_NAME,
-                'extension' : '.db',
-                'directory' : ELECTRON_PATH
-            }
-            return jsonify(res)
-            # return send_file(ELECTRON_PATH + SQL_DB_NAME + '.db')
+            return send_file(ELECTRON_PATH + SQL_DB_NAME + '.db')
 
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
 
-
+# API to run sql-query on data
 @app.route('/api/query', methods=['POST'])
 @cross_origin()
 def fetchQueryData():
-    print("fetch")
-    print("\n\n\n\nForm Data in /api/convert\n", request.form['query_text'])
     global PreviewDF
     try:
         queryText = request.form['query_text']
+        startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
             'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
-        # DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
-        # print("\n\nTABLE\n")
-        # print(engine.execute("SELECT * FROM " + tableName).fetchall())
 
         PreviewDF = pd.read_sql_query(queryText, sqlite_connection)
-        # PreviewDF = DF.copy()
-
-        # print(DF.head())
-        # print(PreviewDF.head())
-
         sqlite_connection.close()
 
         page = 1
-        # html_string = utilities.GenPageHTML(
-        #     df=PreviewDF, Page=page, ROWS_PER_PAGE=ROWS_PER_PAGE)
-        # response = jsonify(
-        #     table=html_string, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
         tableCols = []
-        for c in columnListOrd:
-            tableCols.append({'key': c, 'name': c})
+        for c in PreviewDF.columns :
+            tableCols.append({'key' : c , 'name' : c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(
-            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=page)
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = page)
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
 
@@ -570,6 +406,96 @@ def fetchQueryData():
         print(e)
         return jsonify(message="Error: " + str(e))
 
+# Main
+if __name__ == "__main__":
+    socketio.run(app, debug=True)
+
+# ------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------
+# --------------- Unused API----------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------
+
+
+# API to load unique values for selected column
+# @app.route('/api/uniqueValues', methods=['POST'])
+# @cross_origin()
+# def returnQueryData():
+#     global prevQueryCols
+
+#     print('page ui query')
+#     print()
+#     print('form\n\n\n\n\n', request.form)
+#     try:
+#         q_selected_column = request.form['col_name']
+#         q_selected_page = int(
+#             request.form['page_number']) if 'page_number' in request.form else 1
+#         # q_rows_per_page = int(request.form['rows_per_page'])
+#         unique_data = utilities.GenPageData(prevQueryCols=prevQueryCols, PreviewDF=PreviewDF,
+#                                             selected_col=q_selected_column, selected_page=q_selected_page, rows_per_page=10)
+#         print("unique_data", unique_data)
+#         for i in unique_data:
+#             print(i, type(i))
+#         response = jsonify(total_unique=len(
+#             prevQueryCols[q_selected_column]), rows_per_page=10, unique_data=unique_data)
+#         print(response)
+#         return response
+#     except Exception as e:
+#         print(e)
+#         return jsonify({'message:', 'error'})
+
+
+
+# API to perform multi-select query on full-data
+# @app.route('/api/queryForm', methods=['POST'])
+# @cross_origin()
+# def queryUsingDict():
+#     global prevQueryCols
+#     global PreviewDF
+
+#     try:
+#         queryDict = json.loads(request.form['dict'])
+#         PreviewDF = utilities.queryUsingDict(df=DF, queryDict=queryDict)
+
+#         tableCols = []
+#         for c in PreviewDF.columns :
+#             tableCols.append({'key' : c , 'name' : c})
+
+#         tableRows = []
+#         utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+#         response = jsonify(
+#             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+
+#         return response
+#     except Exception as e:
+#         print(e)
+#         return jsonify({'message:', 'error'})
+
+# API to perform startswith search on full-data
+# @app.route('/api/searchValues', methods=['POST'])
+# @cross_origin()
+# def searchValueInCol():
+#     global prevQueryCols
+#     global PreviewDF
+#     try:
+#         SEARCH_TOTAL_RECORDS = 20
+#         SEARCH_ROWS_PER_PAGE = 20
+#         s_selected_col = request.form['col_name']
+#         s_search_val = request.form['search_val']
+
+#         # Load Data here
+#         if not s_selected_col in prevQueryCols:
+#             prevQueryCols[s_selected_col] = list(pd.unique(DF[s_selected_col]))
+
+#         s_res_set = set([val for val in prevQueryCols[s_selected_col] if str(
+#             val).startswith(s_search_val)])
+#         SEARCH_TOTAL_RECORDS = len(s_res_set)
+#         return jsonify(unique_data=list(s_res_set), total_unique=SEARCH_TOTAL_RECORDS, rows_per_page=SEARCH_ROWS_PER_PAGE)
+#     except Exception as e:
+#         print(e)
+#         return jsonify({'message:', 'error'})
+
+
 # API to check if the table already existed in the db.Would be useful while storing all the tables without deleting.
 # @app.route('/api/check-table', methods=['POST'])
 # @cross_origin()
@@ -578,8 +504,9 @@ def fetchQueryData():
 #     print("\n\n\n\nForm Data in /api/check-table\n" , request.form)
 #     try:
 #         tableNameInput = request.form['tableName']
+#         startTime = time.time()
 #         sql_engine = sqlalchemy.create_engine(
-#             'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
+#             'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
 #         sqlite_connection = sql_engine.connect()
 #         print("Conenction Made to SQL")
 
@@ -600,5 +527,3 @@ def fetchQueryData():
 #         return response
 
 
-if __name__ == "__main__":
-    app.run(debug=True, port=50000)

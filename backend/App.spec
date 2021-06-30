@@ -5,11 +5,12 @@ block_cipher = None
 
 
 a = Analysis(['App.py'],
-             pathex=['C:\\Users\\Abhishek\\Desktop\\JsonGrid\\Json-Grid-View\\backend'],
+             pathex=['C:\\Users\\Abhishek\\Desktop\\Json-Grid-View-version3\\backend'],
              binaries=[],
              datas=[],
              hiddenimports=['engineio.async_drivers.threading', 
-             'engineio.async_drivers.aiohttp', 'engineio.async_aiohttp'],
+             'engineio.async_drivers.aiohttp', 'engineio.async_aiohttp'
+],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],

@@ -20,7 +20,7 @@ function createWindow() {
     mainWindow.loadURL("http://localhost:3000");
   } else {
     // production Files
-    mainWindow.loadFile("src/build/index.html");
+    mainWindow.loadFile("frontend/build/index.html");
   }
 
   // Production Backend Server------------------starts here
