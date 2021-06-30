@@ -123,7 +123,7 @@ const FileUpload = () => {
           <div>
             <p>Filename: {selectedFile.name}</p>
             <p> Filetype: {selectedFile.type}</p>
-            <p> Size in bytes: {selectedFile.size}</p>
+            <p> Size : {selectedFile.size} bytes</p>
           </div>
         ) : (
           <p className="text-center"> Upload A JSON File</p>
