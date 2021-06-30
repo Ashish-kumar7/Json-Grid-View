@@ -58,6 +58,7 @@ npm install -g electron-builder
 npm install -D electron --allow-root  
 npm install electron-is-dev
 ```
+ #### Note: If you get any error message, please make sure you have latest node and npm installed [Install Node](./installation.md) 
 > 14. If u get permission errors at any command add  '--unsafe-perm=true' at the end without the '' 
 > 15. And finally to build our application, run
 ```
