@@ -3,7 +3,8 @@
 > Requirements - python3 and Node.js.
 > If you don't have python or Node.js installed follow [Installation steps](./installation.md) 
 > 1. Clone or download-zip from : [Json-Grid-View](https://github.com/notabhishek/Json-Grid-View/tree/electronProd)
-> 2. Extract Json-Grid-View-electronProd.zip
+> 2. Extract Json-Grid-View-electronProd.zip inside OS drive (usually C drive).
+ #### You can execute this [Batch File](../genProd-RunAsAdmin.bat) as administrator or you can follow the instructions given below.
 > 3. Open a new cmd window 
 
 ```
@@ -58,7 +59,7 @@ npm install -g electron-builder
 npm install -D electron --allow-root  
 npm install electron-is-dev
 ```
- #### Note: If you get any error message, please make sure you have latest node and npm installed [Install Node](./installation.md) 
+ #### Note: If you get any error message, please make sure you have latest node and npm installed [Installation Instructions](./installation.md) 
 > 14. If u get permission errors at any command add  '--unsafe-perm=true' at the end without the '' 
 > 15. And finally to build our application, run
 ```
