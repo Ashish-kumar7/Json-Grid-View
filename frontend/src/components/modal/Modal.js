@@ -15,7 +15,7 @@ const CustomizeModal = (props) => {
   // for rendering page without reloading
   let [, setState] = useState();
   // store type of table
-  const [tableType, setTableType] = useState(1);
+  const [tableType, setTableType] = useState(2);
   // store character to use in column name
   const [joinChar, setJoinChar] = useState("_");
   // store - want nested name of column or not
@@ -35,8 +35,8 @@ const CustomizeModal = (props) => {
   // store whether switch is on or not
   const [featureDisplay, setFeatureDisplay] = useState(false);
   // styling class for cards
-  const [card1class, setcard1] = useState("selectlook");
-  const [card2class, setcard2] = useState("look");
+  const [card1class, setcard1] = useState("look");
+  const [card2class, setcard2] = useState("selectlook");
   const [card3class, setcard3] = useState("look");
   // for redirecting to another page
   let history = useHistory();
@@ -173,43 +173,45 @@ const CustomizeModal = (props) => {
             <Col lg="12">
               <h4>Select Table Type:</h4>
               <Row>
+              <Col lg="4">
+                  <Card onClick={() => tableselect("2")} className={card2class}>
+                    <Card.Img variant="top" src={artboard} />
+                    <Card.Body style={{ color: "grey" }}>
+                      <Card.Text>
+                        <Card.Title style={{ color: "black" }}>
+                          Default View
+                        </Card.Title>
+                          Best suited for data-analysis and performing sql
+                        queries.
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+
                 <Col lg="4">
                   <Card onClick={() => tableselect("1")} className={card1class}>
                     <Card.Img variant="top" src={artboard} />
                     <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
                         <Card.Title style={{ color: "black" }}>
-                          Normal Table
+                          Normalized View
                         </Card.Title>
-                        Basic table mostly used for data analysis by business
+                        Best suited for viewing/presenting data by business
                         user.
                       </Card.Text>
                     </Card.Body>
                   </Card>
                 </Col>
-                <Col lg="4">
-                  <Card onClick={() => tableselect("2")} className={card2class}>
-                    <Card.Img variant="top" src={artboard} />
-                    <Card.Body style={{ color: "grey" }}>
-                      <Card.Text>
-                        <Card.Title style={{ color: "black" }}>
-                          Cross Product Table
-                        </Card.Title>
-                        Table suited for technology users for performing sql
-                        queries.
-                      </Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
+                
                 <Col lg="4">
                   <Card onClick={() => tableselect("3")} className={card3class}>
                     <Card.Img variant="top" src={artboard} />
                     <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
                         <Card.Title style={{ color: "black" }}>
-                          Table with added index
+                          Normalized Indexed Table
                         </Card.Title>
-                        Table with additional column of index for multiple
+                        Normalized table with additional column of index for multiple
                         values.
                       </Card.Text>
                     </Card.Body>
