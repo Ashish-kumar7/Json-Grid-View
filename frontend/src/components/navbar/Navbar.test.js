@@ -69,4 +69,3 @@ it('able to find the <form> element', () => {
 it('able to find the count of <form> element', () => {
     expect(shallowWrapper.find('form').length).toBe(1);
 });
-
