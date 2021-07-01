@@ -3,7 +3,8 @@ echo Generating Production
 
 set mypath =  %~dp0
 echo batch-file location: %mypath%
-cd mypath
+echo batch-file location: %~dp0
+cd %~dp0
 echo current working dir: %cd%
 
 echo Now installing libraries and generating backend App.exe
