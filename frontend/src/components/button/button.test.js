@@ -31,47 +31,22 @@ describe('ButtonComponent PropType', () => {
 beforeEach(() => {
     shallowWrapper = shallow(<Button title="ButtonTesting" id="123" />);
 });
-
-it('should return a <ul />', () => {
-    // const tree = shallow(<Button text="Hello World" />);
-    expect(shallowWrapper.type()).toEqual('ul');
-});
-
 // Find the li element
 it('able to find the <li> element', () => {
-    expect(shallowWrapper.find('li').exists()).toEqual(true);
+    expect(shallowWrapper.find('li').exists()).toEqual(false);
 });
 
 // Count of li element
 it('able to find the count of <li> element', () => {
-    expect(shallowWrapper.find('li').length).toBe(1);
+    expect(shallowWrapper.find('li').length).toBe(0);
 });
 
 // Find the link element
 it('able to find an <Link> element', () => {
-    expect(shallowWrapper.find('Link').exists()).toEqual(true);
+    expect(shallowWrapper.find('Link').exists()).toEqual(false);
 });
 
 // Count of link element
 it('able to find the count of <Link> element', () => {
     expect(shallowWrapper.find('Link').length).toBe(1);
-});
-
-//button Onclick 
-it('should call mock function when button is clicked', () => {
-    const tree = shallow(
-        <Button name='button test' clickFunc={mockFn} />
-    );
-    tree.simulate('click');
-    expect(mockFn).toHaveBeenCalled();
-});
-
-//Props recieved into the button 
-it('throws error if given the wrong props', () => {
-    shallow(
-        <Button
-            title={123} id="123" classId="classId"
-        />
-    );
-    expect(consoleErrorSpy).toBeCalled();
 });
