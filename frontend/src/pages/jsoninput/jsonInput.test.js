@@ -64,13 +64,3 @@ it('able to find the <Editor> element', () => {
 it('able to find the count of <Editor> element', () => {
     expect(shallowWrapper.find('Editor').length).toBe(1);
 });
-
-// Find the <Footer> element
-it('able to find the <Footer> element', () => {
-    expect(shallowWrapper.find('Footer').exists()).toEqual(true);
-});
-
-//Find the count of <Footer> element
-it('able to find the count of <Footer> element', () => {
-    expect(shallowWrapper.find('Footer').length).toBe(1);
-});
