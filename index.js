@@ -18,33 +18,44 @@ function createWindow() {
   if (isDev) {
     // developement URL
     mainWindow.loadURL("http://localhost:3000");
+    var python = require('child_process').spawn('py', ['./backend/app.py']);
+    python.stdout.on('data', function (data) {
+      console.log("data: ", data.toString('utf8'));
+    });
+    python.stderr.on('data', (data) => {
+      console.log(`stderr: ${data}`); // when error
+    });
+
   } else {
     // production Files
     mainWindow.loadFile("frontend/build/index.html");
+
+    // Production Backend Server------------------starts here
+    let backend;
+    backend = path.join(process.cwd(), "./backend/dist/App/App.exe");
+    var execfile = require("child_process").execFile;
+    execfile(
+      backend,
+      {
+        windowsHide: false,
+      },
+      (err, stdout, stderr) => {
+        if (err) {
+          console.log(err);
+        }
+        if (stdout) {
+          console.log(stdout);
+        }
+        if (stderr) {
+          console.log(stderr);
+        }
+      }
+    );
+    // -------------------------------------------ends here
+
   }
 
-  // Production Backend Server------------------starts here
-  let backend;
-  backend = path.join(process.cwd(), "./backend/dist/App/App.exe");
-  var execfile = require("child_process").execFile;
-  execfile(
-    backend,
-    {
-      windowsHide: false,
-    },
-    (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-      }
-      if (stdout) {
-        console.log(stdout);
-      }
-      if (stderr) {
-        console.log(stderr);
-      }
-    }
-  );
-  // -------------------------------------------ends here
+  
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -66,20 +77,22 @@ app.whenReady().then(() => {
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
+
 app.on("window-all-closed", function () {
   if (process.platform !== "darwin") {
-    // Kill backend here
-    const { exec } = require("child_process");
-    exec("taskkill /f /t /im App.exe", (err, stdout, stderr) => {
-      if (err) {
-        console.log(err);
-        return;
-      }
-      console.log(`stdout: ${stdout}`);
-      console.log(`stderr: ${stderr}`);
-    });
-
-    // ------------------------------------------------- ends here
+    if(isDev == false) {
+      // Kill backend here
+      const { exec } = require("child_process");
+      exec("taskkill /f /t /im App.exe", (err, stdout, stderr) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+      });
+      // ------------------------------------------------- ends here
+    }
     app.quit();
   }
 });

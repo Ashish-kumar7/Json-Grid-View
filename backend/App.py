@@ -230,7 +230,7 @@ def processFile():
         # print(tableRows)
 
         response = jsonify(tableRows=tableRows, tableCols=tableCols,
-                           total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=columnListOrd)
+                           total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=list(PreviewDF.columns))
         socketio.emit('progress', 0, broadcast=True)
         print(response)
         return response
