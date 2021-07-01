@@ -2,7 +2,10 @@ import axios from "axios";
 import { useState } from "react";
 import { Card, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
 import { useHistory } from "react-router";
-import artboard from "../../assets/table.png";
+// import artboard from "../../assets/table.png";
+import tab001 from "../../assets/tab001.PNG";
+import tab002 from "../../assets/tab002.PNG";
+import tab003 from "../../assets/tab003.PNG";
 import initialDF from "../../global_variable";
 import Button from "../button/Button";
 import "./Modal.css";
@@ -175,7 +178,7 @@ const CustomizeModal = (props) => {
               <Row>
               <Col lg="4">
                   <Card onClick={() => tableselect("2")} className={card2class}>
-                    <Card.Img variant="top" src={artboard} />
+                    <Card.Img variant="top" src={tab001} />
                     <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
                         <Card.Title style={{ color: "black" }}>
@@ -190,7 +193,7 @@ const CustomizeModal = (props) => {
 
                 <Col lg="4">
                   <Card onClick={() => tableselect("1")} className={card1class}>
-                    <Card.Img variant="top" src={artboard} />
+                    <Card.Img variant="top" src={tab002} />
                     <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
                         <Card.Title style={{ color: "black" }}>
@@ -205,7 +208,7 @@ const CustomizeModal = (props) => {
                 
                 <Col lg="4">
                   <Card onClick={() => tableselect("3")} className={card3class}>
-                    <Card.Img variant="top" src={artboard} />
+                    <Card.Img variant="top" src={tab003} />
                     <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
                         <Card.Title style={{ color: "black" }}>
