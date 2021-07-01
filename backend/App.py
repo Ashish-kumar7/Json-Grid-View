@@ -316,6 +316,40 @@ def searchRecords():
         print(e)
         return jsonify({'message:', 'error'})
 
+
+# API to split columns  
+@app.route('/api//splitQuery', methods=['POST'])
+@cross_origin()
+def splitColumns():
+    global prevQueryCols
+    global PreviewDF
+
+    try:
+        queryDict = dict(json.loads(request.form['split_dict']))
+
+        for colName in queryDict : 
+            delim = queryDict[colName]['delimiter']
+            splitColList = queryDict[colName]['splitColList']
+            splits = queryDict[colName]['splits']
+
+            PreviewDF[splitColList] = PreviewDF[colName].str.split(delim, n = splits-1, expand = True)
+            PreviewDF.drop([colName], axis =1 , inplace = True)
+        
+        tableCols = []
+        for c in PreviewDF.columns :
+            tableCols.append({'key' : c , 'name' : c})
+
+        tableRows = []
+        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
+        
+        response = jsonify(
+            tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+
+        return response
+    except Exception as e:
+        print(e)
+        return jsonify({'message:', 'error'})
+
 # API to generate csv, xlsx, db files and save data to hadoop
 @app.route('/api/convert', methods=['POST'])
 @cross_origin()
