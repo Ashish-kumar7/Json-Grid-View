@@ -85,6 +85,53 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 	
 </details>
+
+<details>
+	<summary>Install JAVA</summary>
+		  Check whether Java is already installed on the system or not. 
+		  Use the command javac in cmd.
+		  If not installed it will show unknown command.
+
+ 		  Step 1: Download JDK
+
+		    Click the below link to download jdk 1.8 for you windows 64 bit system.
+
+			Download JDK Link For Windows : http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-windows-x64.exe
+
+			Congratulations !! You have succesfully downloaded the JDK  in the machine.
+
+		  Step 2: Install JDK
+		  	  
+			  1. Open the executable file which you have just downloaded and follow the steps:
+
+			  (i).On the first page Click Next to continue
+			  (ii). Now chose Just Choose Development Tools and click Next.
+			  (iii). Set up is being ready.
+			  (iv). Now Choose the Destination folder in which you want to install JDK. 
+			  	Click Next to continue with the installation.
+			  (v). Set up is installing Java to the computer.
+			  (vi). Congratulations!!! We have successfully installed Java SE development kit 8. 
+			  	Close the installation set up.
+
+		  Step 3: Now set up the Environment variables for JAVA.
+			  
+			To set up the Environment variables follow the following steps:
+		  	(i). Go to My computer 
+		  	(ii). Right Click
+		  	(iii). Properties
+		  	(iv). Advanced System settings
+		  	(v). Environment variables
+		  	(vi). Now Click New to create a new environment variables.
+
+			Enter "path" in variable name and enter the path to the bin folder inside your JDK in the variable value.
+			Click OK.
+			Set up:
+
+			JAVA_HOME=<JDK installation location>”
+
+			Congratulations !! You have succesfully set up the environment varibale.
+			
+</details>
 	
 	
 <details>
