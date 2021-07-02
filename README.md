@@ -5,10 +5,10 @@ This project fetches the JSON in different ways and parses it into tabular form 
 <details>
 	  <summary>Requirements to run the project</summary>
 
-	  > 1. node
-	  > 2. python
-	  > 3. java(Optional)
-	  > 4. hadoop(Optional)
+	  1. Node
+	  2. Python
+	  3. JAVA(Only if the user wants to store data to Hadoop.)
+	  4. Hadoop(Only if the user wants to store data to Hadoop.)
 </details>
 
 
@@ -19,15 +19,14 @@ This project fetches the JSON in different ways and parses it into tabular form 
 	
 <details>
 	<summary>Install Python Libraries</summary>
-
+	
 		 1. Open new cmd window
-
+	
 		 2. cd *path to extracted Json-Grid-View folder*
-
+	
 		 3. cd backend 
-
+	
 		 4. pip install -r requirements.txt
-
 </details>
 	
 <details>
