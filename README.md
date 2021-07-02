@@ -90,6 +90,185 @@ This project fetches the JSON in different ways and parses it into tabular form 
 <details>
 	  <summary>Install Hadoop</summary>
 	
+	  Installing  Hadoop 2.9.1 on Windows 10 platform. 
+		  (Here we are Setting up for Single Node Hadoop Cluster).
+
+		  Step 1 : You can Download the hadoop version 2.9.1 from the link provided below:
+
+		  Download Link: https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
+
+		  Step 2 : Create a folder path as given below and copy the downloaded msi into this folder.
+		  (User can also create folders with different name. Here we will follow ‘C:/Hadoop/hadoop-2.9.1’).
+
+		  Path: ‘C:/Hadoop/hadoop-2.9.1’
+
+		  Step 3: The user then needs to download the windows compatible binaries .
+		  These files can be also downloaded from other sources just keep a check of the version of binary files.
+		  The user can download these files from under given links.
+
+		  Link: https://github.com/ParixitOdedara/Hadoop
+
+		  Step 4: Extract the downloaded zip using 7-zip or any unzipping tool
+		  and copy all the files present under bin folder to C:\Hadoop\hadoop-2.9.1\bin.
+		  If conflict arises Replace the existing files as well.
+
+		  Step 5: Go inside C:/Hadoop/hadoop-2.9.1 and create a folder with name ‘data’. 
+		  Inside the ‘data’ folder create two other folders namely: ‘datanode’ and ‘namenode’.
+
+		  Step 6: Now the user needs to set up the Environment Variables for the Machine.
+	
+		  To set up the Environment variables follow the following steps:
+		  (i). Go to My computer 
+		  (ii). Right Click
+		  (iii). Properties
+		  (iv). Advanced System settings
+		  (v). Environment variables
+		  (vi). Now Click New to create a new environment variables.
+
+		  The Environment variables to be set:
+		  For hadoop we need to set up HADOOP_HOME and HADOOP_BIN.
+
+		  HADOOP_HOME=”C:\Hadoop\hadoop-2.9.1″
+		  HADOOP_BIN=”C:\Hadoop\hadoop-2.9.1\bin”
+
+		  Just to validate if the environment variable were succesfully set, open new cmd and try the following commands:
+		  
+		  -- echo %HADOOP_HOME%
+		      This should return "C:\Hadoop\hadoop-2.9.1".
+			  If it is not the try case try the above steps again.
+
+		  -- echo %HADOOP_BIN%
+		      This should return "C:\Hadoop\hadoop-2.9.1\bin".
+			  If it is not the try case try the above steps again.
+
+		  Now in order to configure the hadoop on Windows10 we have to edit below mention files in their respective loactions.
+			  The files are:
+
+		      1. hadoop-env.cmd
+		      2. core-site.xml
+		      3. hdfs-site.xml
+		      4. mapred-site.xml
+
+		  Step 7: Edit the hadoop-env.cmd 
+		
+		  File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hadoop-env.cmd
+
+		  Need to add:-
+		      set HADOOP_PREFIX=%HADOOP_HOME%
+		      set HADOOP_CONF_DIR=%HADOOP_PREFIX%\etc\hadoop
+		      set YARN_CONF_DIR=%HADOOP_CONF_DIR%
+		      set PATH=%PATH%;%HADOOP_PREFIX%\bin
+
+		  Step 8: Edit core-site.xml
+
+		  File Location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\core-site.xml 
+
+		  Need to add:-
+
+		  ( content to written within <configuration> </configuration> tags.)
+		   <configuration>
+		     <property>
+		       <name>fs.default.name</name>
+		       <value>hdfs://0.0.0.0:19000</value>
+		     </property>
+		  </configuration>
+
+		  Step 9: Edit hdfs-site.xml 
+
+		  File Location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hdfs-site.xml.
+
+		  Need to add:- 
+
+		      (below content within <configuration> </configuration> tags.)
+		   <configuration>
+		     <property>
+			<name>dfs.replication</name>
+			<value>1</value>
+		     </property>
+		     <property>
+			<name>dfs.namenode.name.dir</name>
+			<value>C:\Hadoop\hadoop-2.9.1\data\namenode</value>
+		     </property>
+		     <property>
+			<name>dfs.datanode.data.dir</name>
+			<value>C:\Hadoop\hadoop-2.9.1\data\datanode</value>
+		     </property>
+		  </configuration>
+
+		  Step 10: Edit mapred-site.xml
+
+		  File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\mapred-site.xml.
+
+		  Need to add:- 
+
+		      (below content within <configuration> </configuration> tags. 
+		      If you don’t see mapred-site.xml then open mapred-site.xml.template file and rename it to mapred-site.xml )
+
+		   <configuration>
+		     <property>
+			<name>mapreduce.job.user.name</name>
+			<value>%USERNAME%</value>
+		     </property>
+		     <property>
+			<name>mapreduce.framework.name</name>
+			<value>yarn</value>
+		     </property>
+		     <property>
+			<name>yarn.apps.stagingDir</name>
+			<value>/user/%USERNAME%/staging</value>
+		     </property>
+		     <property>
+			<name>mapreduce.jobtracker.address</name>
+			<value>local</value>
+		     </property>
+		  </configuration>
+
+		Step 11: Additional Configuration:- 
+
+		  Check if:
+
+		      C:\Hadoop\hadoop-2.9.1\etc\hadoop\slaves file is present, 
+		      if that file not available create the file with name slave.txt and write localhost inside it.
+
+
+		  Note:
+		      One most common issue one can get is illegal character Exception.
+		      This generally occurs when someone has a space in the name of their PC.
+		      In this we need to open the hadoop-env.cmd file .
+			  	
+		      File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hadoop-env.cmd
+			   Do the following changes.
+
+		      set HADOOP_IDENT_STRING="The name of your PC without Spacebar"
+			  This removes the extra character and resolves the issue.
+
+		  Step 12: Node formatting
+
+		  To format the node, open the cmd in Administrator and execute the below command:
+
+		      --hadoop namenode -format
+
+		  Step 13: To start the hadoop open the cmd as Administrator and type below command. 
+
+		      -- start-all.cmd
+
+		      It will open 4 new windows cmd terminals for 4 daemon processes, namely :
+	
+		      --nodemanager
+		      --resourcemanager
+		      --namenode
+		      --datanode
+
+		  -- To access Resource Manager go to http://localhost:8088 from your web browser.
+
+		  -- To access Node Manager go to http://localhost:8042 from your web browser.
+
+		  -- To access Name Node go to  http://localhost:50070 from your web browser.
+
+		  -- To access Data Node go to http://localhost:50075 from your web browser.
+
+
+		  Reference :- https://hadoop.apache.org/
 </details>
 		
 		
