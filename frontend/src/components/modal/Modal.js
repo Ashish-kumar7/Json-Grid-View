@@ -88,10 +88,14 @@ const CustomizeModal = (props) => {
           initialDF.searchColauto = {};
           initialDF.searchColmulti = {};
           initialDF.tableName = tableName;
+          initialDF.splitDict = {};
           for (var i = 0; i < initialDF.cols.length; i++) {
             initialDF.searchColauto[initialDF.cols[i]] = "";
             initialDF.searchColmulti[initialDF.cols[i]] = new Set();
+            initialDF.splitDict[initialDF.cols[i]] = {"split":1,"separator":'', "columns":['First Column']};
           }
+          
+
           setUploadPercentage(100);
           setDisable(false);
           setButtonId("downloadButton");
@@ -210,7 +214,7 @@ const CustomizeModal = (props) => {
                     <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
                         <Card.Title style={{ color: "black" }}>
-                          Normalized Indexed Table
+                          Normalized Indexed View
                         </Card.Title>
                         Normalized table with additional column of index for multiple values.
                       </Card.Text>
