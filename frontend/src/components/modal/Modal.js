@@ -114,6 +114,9 @@ const CustomizeModal = (props) => {
   const charhandler = (e) => {
     console.log("joiner changed");
     console.log(e.target.value);
+    //Alert to the user SQL query dont work with . and - as the column name
+    if(e.target.value == "." || e.target.value== "-")
+      alert("SQL query will not work with " + e.target.value + " as join character");
     setJoinChar(e.target.value);
   };
 
