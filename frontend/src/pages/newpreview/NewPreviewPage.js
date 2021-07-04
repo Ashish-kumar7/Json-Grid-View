@@ -483,7 +483,7 @@ const NewPreviewPage = () => {
                   <Col lg="6" xs="2"></Col>
                   <Col lg="2" xs="5">
                     <Button
-                      title={"SplitFilter"}
+                      title={"SplitAttribute"}
                       classId={"filterButton"}
                       id={"btn3"}
                       clickFunc={splitmodalhandler}
