@@ -11,5 +11,7 @@
 /backend/generatedDB.db
 /backend/generatedCsvFile.csv
 /backend/generatedXlsxFile.xlsx
-
+/backend/dist/Json-Grid-View Setup 1.0.0.exe
+/backend/dist/win-unpacked/Json-Grid-View.exe 
+/backend/dist/win-unpacked/resources/app.asar
 
