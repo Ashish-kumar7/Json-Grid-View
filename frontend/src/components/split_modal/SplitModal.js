@@ -40,16 +40,19 @@ const SplitModal = (props) => {
   const [delimeter, setDelimeter] = useState("_");
   // dictionary to store info of all columns related to splitting
   const [splitdata, setSplitData] = useState(initialDataFrame.splitDict);
+  let colWithIdx = [];
 
   // update variables on rendering the page
   useEffect(() => {
     setSelectionSplit(initialDataFrame.cols);
     setSplitData(initialDataFrame.splitDict);
+    for (var i = 0; i < initialDataFrame.cols.length; i++) {
+      colWithIdx[i] = initialDataFrame.cols[i];
+    }
   });
 
   // column list
   let colList = [];
-  let colWithIdx = [];
   for (var i = 0; i < selectionsplit.length; i++) {
     let number = i;
     colWithIdx[number] = selectionsplit[i];
@@ -265,6 +268,7 @@ const SplitModal = (props) => {
               </Col>
               <Col lg="6">
                 <Row className="entry3">
+                  <Col lg="8">
                   <Form.Label>
                     Enter delimeter for " {colWithIdx[selectedIndex]} " to split
                   </Form.Label>
@@ -275,6 +279,10 @@ const SplitModal = (props) => {
                     value={splitdata[colWithIdx[selectedIndex]]["separator"]}
                     onChange={(event) => delimeterhandler(event)}
                   />
+                  </Col>
+                 <Col lg="4">
+                   <label>Display Delimeter:</label>
+                   <pre>"{splitdata[colWithIdx[selectedIndex]]["separator"]}"</pre></Col>
                 </Row>
               </Col>
             </Row>

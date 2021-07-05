@@ -355,6 +355,19 @@ const NewPreviewPage = () => {
           setGridCol1(response.data.tableCols);
           setResultTotalRecords(response.data.total_records);
           setResultRows(response.data.rows_per_page);
+          initialDataFrame.cols = response.data.columns;
+          initialDataFrame.splitDict = {};
+          initialDataFrame.searchColauto = {};
+          initialDataFrame.searchColmulti = {};
+          for (var i = 0; i < response.data.columns.length; i++) {
+            initialDataFrame.searchColauto[response.data.columns[i]] = "";
+            initialDataFrame.searchColmulti[response.data.columns[i]] = new Set();
+            initialDataFrame.splitDict[response.data.columns[i]] = {
+              split: 1,
+              separator: "",
+              columns: ["First Column"],
+            };
+          }
         } else {
           alert("Reset not performed");
         }
