@@ -27,11 +27,14 @@
     "dev": "concurrently \"electron .\" \"cd frontend && npm start\"",
     "build": "cd frontend && npm run build && cd .. && electron-builder"
   },
+  "win": {
+    "icon": "./jsonGridViewIcon.png"
+  },
   "keywords": [],
   "author": "Abhishek Tiwari",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^13.1.4"
+    "electron": "^13.1.5"
   },
   "dependencies": {
     "electron-is-dev": "^2.0.0"

@@ -18,4 +18,5 @@
 /src/node_modules/
 /dist/
 /build/
+/lfs/
 /frontend/node_modules
