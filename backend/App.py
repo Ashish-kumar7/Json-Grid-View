@@ -290,7 +290,7 @@ def resetData():
         tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
 
     response = jsonify(
-        tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+        tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=list(PreviewDF.columns))
 
     return response
 
