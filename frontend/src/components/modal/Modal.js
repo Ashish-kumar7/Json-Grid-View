@@ -2,17 +2,16 @@ import axios from "axios";
 import { useState } from "react";
 import { Card, Col, Form, InputGroup, Modal, Row } from "react-bootstrap";
 import { useHistory } from "react-router";
-// import artboard from "../../assets/table.png";
-import tab001 from "../../assets/tab001.PNG";
-import tab002 from "../../assets/tab002.PNG";
-import tab003 from "../../assets/tab003.PNG";
 import initialDF from "../../global_variable";
 import Button from "../button/Button";
 import "./Modal.css";
 import { ProgressBar } from "react-bootstrap";
+import tab001 from "../../assets/tab001.PNG";
+import tab002 from "../../assets/tab002.PNG";
+import tab003 from "../../assets/tab003.PNG";
 import io from "socket.io-client";
 import IOSwitch from "../../material-styles/IOSwitch";
-const socket = io("http://localhost:50000/");
+const socket = io("http://localhost:5000/");
 
 const CustomizeModal = (props) => {
   // for rendering page without reloading
@@ -75,7 +74,7 @@ const CustomizeModal = (props) => {
       formData.set("nullName", nullName);
       // process with options , data frame received
       axios
-        .post("http://localhost:50000/api/process", formData)
+        .post("http://localhost:5000/api/process", formData)
         .then((res) => {
           // dataframe after converson is received and all other required properties are set here to display on preview page
           props.closeFunc();
@@ -88,10 +87,14 @@ const CustomizeModal = (props) => {
           initialDF.searchColauto = {};
           initialDF.searchColmulti = {};
           initialDF.tableName = tableName;
+          initialDF.splitDict = {};
           for (var i = 0; i < initialDF.cols.length; i++) {
             initialDF.searchColauto[initialDF.cols[i]] = "";
             initialDF.searchColmulti[initialDF.cols[i]] = new Set();
+            initialDF.splitDict[initialDF.cols[i]] = {"split":1,"separator":'', "columns":['First Column']};
           }
+          
+
           setUploadPercentage(100);
           setDisable(false);
           setButtonId("downloadButton");
@@ -109,11 +112,13 @@ const CustomizeModal = (props) => {
         });
     }
   };
-
+  
   // handlers to store form values
   const charhandler = (e) => {
     console.log("joiner changed");
     console.log(e.target.value);
+    if(e.target.value == "." || e.target.value== "-")
+      alert("SQL query will not work with " + e.target.value + " as join character");
     setJoinChar(e.target.value);
   };
 
@@ -176,7 +181,7 @@ const CustomizeModal = (props) => {
             <Col lg="12">
               <h4>Select Table Type:</h4>
               <Row>
-              <Col lg="4">
+                <Col lg="4">
                   <Card onClick={() => tableselect("2")} className={card2class}>
                     <Card.Img variant="top" src={tab001} />
                     <Card.Body style={{ color: "grey" }}>
@@ -190,7 +195,6 @@ const CustomizeModal = (props) => {
                     </Card.Body>
                   </Card>
                 </Col>
-
                 <Col lg="4">
                   <Card onClick={() => tableselect("1")} className={card1class}>
                     <Card.Img variant="top" src={tab002} />
@@ -205,17 +209,15 @@ const CustomizeModal = (props) => {
                     </Card.Body>
                   </Card>
                 </Col>
-                
                 <Col lg="4">
                   <Card onClick={() => tableselect("3")} className={card3class}>
                     <Card.Img variant="top" src={tab003} />
                     <Card.Body style={{ color: "grey" }}>
                       <Card.Text>
                         <Card.Title style={{ color: "black" }}>
-                          Normalized Indexed Table
+                          Normalized Indexed View
                         </Card.Title>
-                        Normalized table with additional column of index for multiple
-                        values.
+                        Normalized table with additional column of index for multiple values.
                       </Card.Text>
                     </Card.Body>
                   </Card>

@@ -1,7 +1,7 @@
 @echo off
 title Starting Json-Grid-View/backend
 
-echo Starting Backend ...
+echo Starting Backend in virtual env...
 
 cd E:\DBInternProject\InternProject\Json-Grid-View\backend
 echo The current directory is %CD%

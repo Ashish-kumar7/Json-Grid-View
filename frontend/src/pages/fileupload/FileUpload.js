@@ -11,7 +11,7 @@ import Modal from "../../components/modal/Modal";
 import { css } from "@emotion/react";
 import RingLoader from "react-spinners/RingLoader";
 
-// const socket = io("http://localhost:50000/");
+// const socket = io("http://localhost:5000/");
 
 const override = css`
   display: block;
@@ -68,7 +68,7 @@ const FileUpload = () => {
       formData.set("input_type", "file");
 
       axios
-        .post("http://localhost:50000/api/upload", formData)
+        .post("http://localhost:5000/api/upload", formData)
         .then((res) => {
           console.log("json loaded and checked");
           setLoading(false);

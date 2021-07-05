@@ -54,7 +54,7 @@ const FileUrl = () => {
       formData.append("Url", inputUrl);
       formData.set("input_type", "url");
       axios
-        .post("http://localhost:50000/api/upload", formData)
+        .post("http://localhost:5000/api/upload", formData)
         .then((res) => {
           console.log("json loaded and checked");
           setLoading(false);

@@ -60,7 +60,7 @@ const JsonInput = () => {
       formData.set("input_type", "text");
       // this api checks whether json is valid or not
       axios
-        .post("http://localhost:50000/api/upload", formData)
+        .post("http://localhost:5000/api/upload", formData)
         .then((res) => {
           console.log("json loaded and checked");
           setLoading(false);

@@ -40,94 +40,129 @@ This project fetches the JSON in different ways and parses it into tabular form 
 	<summary>Install Node</summary>
 
 		  Step 1: Download Node.js Installer
-		    In a web browser, navigate to https://nodejs.org/en/download/. 
-		    Click the Windows Installer button to download the latest default version. The Node.js installer includes the NPM package manager.
+		    In a web browser, navigate to https://nodejs.org/en/download/ to download Node in your system.
+		    Click the Windows Installer button to download the latest default version. 
+			The Node.js installer includes the NPM package manager.
+
+			Congratulations !! You have succesfully downloaded the Node  in the machine.
 
 		  Step 2: Install Node.js and NPM from Browser
 			  1. Once the installer finishes downloading, launch it. 
-			     Open the downloads link in your browser and click the file. Or, browse to the location where you have saved the file and double-click it to 					launch.
+			     Open the downloads link in your browser and click the file. Or, browse to the location where you have saved the file and double-click on it to launch.
 
-			  2. The system will ask if you want to run the software – click Run.
+			  2. A pop up will be generated which will ask if you want to run the software – click Run.
 
-			  3. You will be welcomed to the Node.js Setup Wizard – click Next.
+			  3. You will be welcomed to the Node.js Setup Wizard.
+			  	 Now – click Next.
 
-			  4. On the next screen, review the license agreement. Click Next if you agree to the terms and install the software.
+			  4. On the next screen, review the license agreement. 
+			  	Click Next for all and agree for all the the terms and install the software in the machine.
 
-			  5. The installer will prompt you for the installation location. Leave the default location, unless you have a specific need to install it 						somewhere else – then click Next.
+			  5. The installer will prompt you for the installation location. 
+			  	Leave the default location, unless you have a specific need to install it somewhere else – then click Next.
+				(In most cases the by default the installation location is in C drive. )
 
-			  6. The wizard will let you select components to include or remove from the installation. Again, unless you have a specific need, accept the 						defaults by clicking Next.
+			  6. The wizard will let you select components to include or remove from the installation. 
+			  	  Accepting the defaults is preferred.
+			  	 Again, unless you have a specific need, accept the defaults by clicking Next.
 
-			  7. Finally, click the Install button to run the installer. When it finishes, click Finish.
+			  7. Finally, click the Install button to run the installer. 
+			  	When it finishes, click Finish.
+
+				Congratulations !! You have succesfully installed the Node and npm in the machine.
 
 		Step 3: Verify Installation
 		  Open a command prompt (or PowerShell), and enter the following:
-
+			
+			To check the version of Node.
 			node -v
-			The system should display the Node.js version installed on your system. 
+			If node was succesfully installed , the system should display the Node.js version installed on your system.
+			If it is not the case try following the steps again. 
 
+			To check the version of npm.
 			npm -v
-			The system should display the npm version installed on your system.
+			If node was succesfully installed , the system should the system should display the npm version installed on your system.
+			If it is not the case try following the steps again. 
 </details>
 	
 	
 <details>
-	  <summary>Install Hadoop and Java</summary>
-		  Install Hadoop 2.9.1 on Windows 10 platform. (Setting up a Single Node Hadoop Cluster)
+	  <summary>Install Hadoop</summary>
+		  Installing  Hadoop 2.9.1 on Windows 10 platform. 
+		  (Here we are Setting up for Single Node Hadoop Cluster).
 
-		  Prerequistes:
-		  JAVA: You need to install the Java 8 package on your system.
-		  HADOOP: You require Hadoop 2.9.1 package.
+		  Step 1 : You can Download the hadoop version 2.9.1 from the link provided below:
 
-		  Step 1. Download the hadoop 2.9.1 from the link provided below:
-		  Hadoop Download Link: https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
+		  Download Link: https://www.apache.org/dyn/closer.cgi/hadoop/common/hadoop-2.9.1/hadoop-2.9.1.tar.gz
 
-		  Step 2. Create a folder path as below and copy the downloaded msi into this folder.
+		  Step 2 : Create a folder path as given below and copy the downloaded msi into this folder.
+		  (User can also create folders with different name. Here we will follow ‘C:/Hadoop/hadoop-2.9.1’).
+
 		  Path: ‘C:/Hadoop/hadoop-2.9.1’
 
-		  Step 3.Then download the windows compatible binaries from the git hub repo.
-		  Link:- https://github.com/ParixitOdedara/Hadoop
+		  Step 3: The user then needs to download the windows compatible binaries .
+		  These files can be also downloaded from other sources just keep a check of the version of binary files.
+		  The user can download these files from under given links.
 
-		  Step 4.Extract the zip and copy all the files present under bin folder to C:\Hadoop\hadoop-2.9.1\bin.
-		  Replace the existing files as well.
-		  Go to C:/Hadoop/hadoop-2.9.1 and create a folder ‘data’. 
-		  Inside the ‘data’ folder create two folders ‘datanode’ and ‘namenode’.
+		  Link: https://github.com/ParixitOdedara/Hadoop
 
-		  Step 5.Now Setting up the Environment Variables for your Machine.
-		  To set these variables, go to My Computer or This PC. 
-		  Right click --> Properties --> Advanced System settings --> Environment variables.
-		  Click New to create a new environment variables.
+		  Step 4: Extract the downloaded zip using 7-zip or any unzipping tool
+		  and copy all the files present under bin folder to C:\Hadoop\hadoop-2.9.1\bin.
+		  If conflict arises Replace the existing files as well.
 
-		  Environment variables to be set:
+		  Step 5: Go inside C:/Hadoop/hadoop-2.9.1 and create a folder with name ‘data’. 
+		  Inside the ‘data’ folder create two other folders namely: ‘datanode’ and ‘namenode’.
+
+		  Step 6: Now the user needs to set up the Environment Variables for the Machine.
+		  To set up the Environment variables follow the following steps:
+		  (i). Go to My computer 
+		  (ii). Right Click
+		  (iii). Properties
+		  (iv). Advanced System settings
+		  (v). Environment variables
+		  (vi). Now Click New to create a new environment variables.
+
+		  The Environment variables to be set:
+		  For hadoop we need to set up HADOOP_HOME and HADOOP_BIN.
 
 		  HADOOP_HOME=”C:\Hadoop\hadoop-2.9.1″
 		  HADOOP_BIN=”C:\Hadoop\hadoop-2.9.1\bin”
-		  JAVA_HOME=<JDK installation location>”
 
-		  Just to validate the above setting, open new cmd and check the output.
+		  Just to validate if the environment variable were succesfully set, open new cmd and try the following commands:
+		  
 		  -- echo %HADOOP_HOME%
 		      This should return "C:\Hadoop\hadoop-2.9.1".
+			  If it is not the try case try the above steps again.
+
 		  -- echo %HADOOP_BIN%
 		      This should return "C:\Hadoop\hadoop-2.9.1\bin".
+			  If it is not the try case try the above steps again.
 
-		  To configure the hadoop on Windows10 we have to edit below mention files in the extracted location.
+		  Now in order to configure the hadoop on Windows10 we have to edit below mention files in their respective loactions.
+			  The files are:
 
 		      1. hadoop-env.cmd
 		      2. core-site.xml
 		      3. hdfs-site.xml
 		      4. mapred-site.xml
 
-		  Step 6.Edit hadoop-env.cmd
+		  Step 7: Edit the hadoop-env.cmd 
+		
 		  File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hadoop-env.cmd
+
 		  Need to add:-
 		      set HADOOP_PREFIX=%HADOOP_HOME%
 		      set HADOOP_CONF_DIR=%HADOOP_PREFIX%\etc\hadoop
 		      set YARN_CONF_DIR=%HADOOP_CONF_DIR%
 		      set PATH=%PATH%;%HADOOP_PREFIX%\bin
 
-		  Step 7.Edit core-site.xml
+		  Step 8: Edit core-site.xml
+
 		  File Location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\core-site.xml 
+
 		  Need to add:-
-		  ( content within <configuration> </configuration> tags.)
+
+		  ( content to written within <configuration> </configuration> tags.)
 		   <configuration>
 		     <property>
 		       <name>fs.default.name</name>
@@ -135,9 +170,12 @@ This project fetches the JSON in different ways and parses it into tabular form 
 		     </property>
 		  </configuration>
 
-		  Step 8.Edit hdfs-site.xml 
+		  Step 9: Edit hdfs-site.xml 
+
 		  File Location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hdfs-site.xml.
+
 		  Need to add:- 
+
 		      (below content within <configuration> </configuration> tags.)
 		   <configuration>
 		     <property>
@@ -154,12 +192,15 @@ This project fetches the JSON in different ways and parses it into tabular form 
 		     </property>
 		  </configuration>
 
-		  Step 9.Edit mapred-site.xml
-		  File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\mapred-site.xml
+		  Step 10: Edit mapred-site.xml
+
+		  File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\mapred-site.xml.
+
 		  Need to add:- 
+
 		      (below content within <configuration> </configuration> tags. 
-		      If you don’t see mapred-site.xml then open mapred-site.xml.template file 
-		      and rename it to mapred-site.xml )
+		      If you don’t see mapred-site.xml then open mapred-site.xml.template file and rename it to mapred-site.xml )
+
 		   <configuration>
 		     <property>
 			<name>mapreduce.job.user.name</name>
@@ -179,31 +220,40 @@ This project fetches the JSON in different ways and parses it into tabular form 
 		     </property>
 		  </configuration>
 
-		  Step 10.Additional Configuration:- 
+		  Step 11: Additional Configuration:- 
 
 		  Check if:
+
 		      C:\Hadoop\hadoop-2.9.1\etc\hadoop\slaves file is present, 
-		      if that file not available create the file called slave and insert localhost.
+		      if that file not available create the file with name slave.txt and write localhost inside it.
+
 
 		  Note:
 		      One most common issue one can get is illegal character Exception.
-		      This occurs when someone has a space in the name of their PC.
-		      In this we need to open the hadoop-env.cmd and do the following changes.
-
+		      This generally occurs when someone has a space in the name of their PC.
+		      In this we need to open the hadoop-env.cmd file .
+			  	
 		      File location:- C:\Hadoop\hadoop-2.9.1\etc\hadoop\hadoop-env.cmd
-		      set HADOOP_IDENT_STRING="The name of your PC without Spacebar"
+			   Do the following changes.
 
-		  Step 11.Node formatting
-		  To format the node, open the cmd and execute the below command:
+		      set HADOOP_IDENT_STRING="The name of your PC without Spacebar"
+			  This removes the extra character and resolves the issue.
+
+		  Step 12: Node formatting
+
+		  To format the node, open the cmd in administrative mode and execute the below command:
+
 		      --hadoop namenode -format
 
-		  Step 12.To enable the hadoop open the CMD as Administrator and type below command. 
+		  Step 13: To start the hadoop open the CMD as Administrator and type below command. 
+
 		      -- start-all.cmd
+
 		      It will open 4 new windows cmd terminals for 4 daemon processes, namely :
-		      --namenode
-		      --datanode
 		      --nodemanager
 		      --resourcemanager
+			  --namenode
+		      --datanode
 
 		  -- To access Resource Manager go to http://localhost:8088 from your web browser.
 
@@ -216,7 +266,55 @@ This project fetches the JSON in different ways and parses it into tabular form 
 
 		  Reference :- https://hadoop.apache.org/
 </details>
-		
+
+<details>
+	<summary>Install JAVA</summary>
+		  Check whether Java is already installed on the system or not. 
+		  Use the command javac in cmd.
+		  If not installed it will show unknown command.
+
+ 		  Step 1: Download JDK
+
+		    Click the below link to download jdk 1.8 for you windows 64 bit system.
+
+			Download JDK Link For Windows : http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-windows-x64.exe
+
+			Congratulations !! You have succesfully downloaded the JDK  in the machine.
+
+		  Step 2: Install JDK
+		  	  
+			  1. Open the executable file which you have just downloaded and follow the steps:
+
+			  (i).On the first page Click Next to continue
+			  (ii). Now chose Just Choose Development Tools and click Next.
+			  (iii). Set up is being ready.
+			  (iv). Now Choose the Destination folder in which you want to install JDK. 
+			  	Click Next to continue with the installation.
+			  (v). Set up is installing Java to the computer.
+			  (vi). Congratulations!!! We have successfully installed Java SE development kit 8. 
+			  	Close the installation set up.
+
+		  Step 3: Now set up the Environment variables for JAVA.
+			  
+			To set up the Environment variables follow the following steps:
+		  	(i). Go to My computer 
+		  	(ii). Right Click
+		  	(iii). Properties
+		  	(iv). Advanced System settings
+		  	(v). Environment variables
+		  	(vi). Now Click New to create a new environment variables.
+
+			Enter "path" in variable name and enter the path to the bin folder inside your JDK in the variable value.
+			Click OK.
+			Set up:
+
+			JAVA_HOME=<JDK installation location>”
+
+			Congratulations !! You have succesfully set up the environment varibale.
+			
+</details>
+	
+
 		
 </details>
 	

@@ -12,9 +12,10 @@ import Button from "../../components/button/Button";
 import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
 import { useHistory } from "react-router";
+import SplitModal from "../../components/split_modal/SplitModal";
 
 // initialization of connection between server and client
-const socket = io("http://localhost:50000/");
+const socket = io("http://localhost:5000/");
 //used to download file after conversion
 var FileDownload = require("js-file-download");
 
@@ -167,12 +168,16 @@ const NewPreviewPage = () => {
   const [tableName, setTableName] = useState(initialDataFrame.tableName);
   // to redirect to another page
   let history = useHistory();
+  // on clicking split filter button modal will be shown (split detail page)
+  const [open, setOpen] = useState(false);
 
   // checks if data is undefined (after reloading), it redirects to home page
   if (gridCols == undefined) {
     window.location.reload();
     history.push("/");
   }
+
+
 
   // for checking if page is reloaded or not - if reloaded display an alert
   useEffect(() => {
@@ -229,14 +234,19 @@ const NewPreviewPage = () => {
     const formData = new FormData();
     formData.set("page_number", currentPage);
     axios
-      .post("http://localhost:50000/api/page", formData)
+      .post("http://localhost:5000/api/page", formData)
       .then((response) => {
         // receives 1000 records for the page number which was sent to backend
-        setGridCols(response.data.tableCols);
-        setGridCol1(response.data.tableCols);
-        setGridRows(response.data.tableRows);
+        if (response.status == 200) {
+          setGridCols(response.data.tableCols);
+          setGridCol1(response.data.tableCols);
+          setGridRows(response.data.tableRows);
+        } else {
+          alert("Records not received from backend");
+        }
       })
       .catch((err) => {
+        alert("Server is not started");
         console.log(err);
       });
   };
@@ -246,6 +256,7 @@ const NewPreviewPage = () => {
     if (disable) {
       console.log("disable true");
     } else {
+      setShowDownload(false);
       setDisable(true);
       setButtonId("disableButton");
       setUploadPercentage(10);
@@ -253,18 +264,18 @@ const NewPreviewPage = () => {
       formData.set("content_type", val);
       // formData.set("data_type" , dataType);
       if (val == "excel") {
-        setFileExtension("output.xlsx");
+        setFileExtension("generated_Excel.xlsx");
         setDownloadText("Download Excel");
       } else if (val == "csv") {
-        setFileExtension("output.csv");
+        setFileExtension("generated_CSV.csv");
         setDownloadText("Download CSV");
       } else {
-        setFileExtension("output.db");
+        setFileExtension(tableName + "_DB_File.db");
         setDownloadText("Download DB");
       }
       // send data according to button clicked
       axios
-        .post("http://localhost:50000/api/convert", formData, {
+        .post("http://localhost:5000/api/convert", formData, {
           responseType: "blob",
         })
         .then((response) => {
@@ -274,12 +285,16 @@ const NewPreviewPage = () => {
           setUploadPercentage(100);
           setTimeout(() => {
             setUploadPercentage(0);
+            setShowDownload(true);
           }, 1000);
-          setDownloadContent(response.data);
-          console.log(response);
-          setShowDownload(true);
+          if (response.status == 200) {
+            setDownloadContent(response.data);
+          } else {
+            alert("Generated file not received from backend");
+          }
         })
         .catch((err) => {
+          alert("Server is not started");
           setDisable(false);
           setButtonId("uploadButton");
           console.log(err);
@@ -304,7 +319,7 @@ const NewPreviewPage = () => {
     const formData = new FormData();
     formData.set("query_text", query);
     axios
-      .post("http://localhost:50000/api/query", formData)
+      .post("http://localhost:5000/api/query", formData)
       .then((response) => {
         console.log(response);
         if (
@@ -331,14 +346,21 @@ const NewPreviewPage = () => {
     const formData = new FormData();
     formData.set("reset", "true");
     axios
-      .post("http://localhost:50000/api/dataReset", formData)
+      .post("http://localhost:5000/api/dataReset", formData)
       .then((response) => {
         //resets the data in grid to initial dataframe
-        setGridRows(response.data.tableRows);
-        setResultTotalRecords(response.data.total_records);
-        setResultRows(response.data.rows_per_page);
+        if (response.status == 200) {
+          setGridRows(response.data.tableRows);
+          setGridCols(response.data.tableCols);
+          setGridCol1(response.data.tableCols);
+          setResultTotalRecords(response.data.total_records);
+          setResultRows(response.data.rows_per_page);
+        } else {
+          alert("Reset not performed");
+        }
       })
       .catch((err) => {
+        alert("Server not started");
         console.log(err);
       });
   };
@@ -381,16 +403,52 @@ const NewPreviewPage = () => {
     }
 
     axios
-      .post("http://localhost:50000/api/searchRecord", formData)
+      .post("http://localhost:5000/api/searchRecord", formData)
       .then((response) => {
-        setGridRows(response.data.tableRows);
-        setResultTotalRecords(response.data.total_records);
-        setResultRows(response.data.rows_per_page);
+        if (response.status == 200) {
+          setGridRows(response.data.tableRows);
+          setResultTotalRecords(response.data.total_records);
+          setResultRows(response.data.rows_per_page);
+        } else {
+          alert("Search not performed on whole data. Something went wrong");
+        }
       })
       .catch((err) => {
+        alert("Server not running");
         console.log(err);
       });
   };
+
+  // function to close split filter page
+  const hideModal = () => {
+    setOpen(false);
+    if(initialDataFrame.afterSplit != undefined){
+      setGridCol1(initialDataFrame.afterSplit.data.tableCols);
+      setGridCols(initialDataFrame.afterSplit.data.tableCols);
+      setGridRows(initialDataFrame.afterSplit.data.tableRows);
+      setGridRows1(initialDataFrame.afterSplit.data.tableRows);
+      initialDataFrame.cols = initialDataFrame.afterSplit.data.columns;
+      initialDataFrame.splitDict = {};
+
+            for (var i = 0; i < initialDataFrame.afterSplit.data.columns.length; i++) {
+
+            initialDataFrame.splitDict[initialDataFrame.afterSplit.data.columns[i]] = {"split":1,"separator":'', "columns":['First Column']};
+
+          }
+    }
+  };
+  
+  // function to open split filter page
+  const showModal = () => {
+    setOpen(true);
+  };
+
+  // function called when split filter button clicked
+  const splitmodalhandler = () => {
+    showModal();
+  };
+
+  
 
   return (
     <div className="newpreview">
@@ -421,7 +479,15 @@ const NewPreviewPage = () => {
               </Col>
               <Col lg="10 " xs="8">
                 <Row>
-                  <Col lg="8" xs="2"></Col>
+                  <Col lg="6" xs="2"></Col>
+                  <Col lg="2" xs="5">
+                    <Button
+                      title={"SplitFilter"}
+                      classId={"filterButton"}
+                      id={"btn3"}
+                      clickFunc={splitmodalhandler}
+                    ></Button>
+                  </Col>
                   <Col lg="2" xs="5">
                     <Button
                       title={"AutoComplete"}
@@ -567,6 +633,7 @@ const NewPreviewPage = () => {
           </Col>
         </Row>
       </div>
+      <SplitModal show={open} openFunc={showModal} closeFunc={hideModal} />
     </div>
   );
 };

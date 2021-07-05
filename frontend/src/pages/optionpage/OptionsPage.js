@@ -43,7 +43,6 @@ const OptionsPage = () => {
           </Col>
         </Row>
       </Container>
-      <Footer />
     </div>
   );
 };

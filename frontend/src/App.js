@@ -29,7 +29,7 @@ function App() {
         <JsonInput />
       </Route>
       <Route path="/newpreview">
-        <NewPreview></NewPreview>
+        <NewPreview />
       </Route>
     </div>
   );

@@ -1,38 +1,42 @@
 .jsonnavbar button {
-    margin: 0 1vh;
+  margin: 0;
 }
 
 .jsonnavbar .navbar {
-    background-color: #212342;
+  background-color: #212342;
 }
 
 .jsonnavbar .navbar-brand {
-    color: yellow;
-    font-weight: bold;
-    font-family: 'Times New Roman', Times, serif;
-    font-size: xx-large;
+  color: yellow;
+  font-weight: bold;
+  font-family: "Times New Roman", Times, serif;
+  font-size: xx-large;
 }
 
 #b2 {
-    background-color: #f50057;
-    color: white;
-
+  background-color: #f50057;
+  color: white;
 }
 
 #b3 {
-    background-color: #03a9f4;
-    color: white;
-
+  background-color: #03a9f4;
+  color: white;
 }
 
 #b4 {
-    background-color: #64dd17;
-    color: white;
-
+  background-color: #64dd17;
+  color: white;
+  width: 12vh;
+}
+#b5 {
+  background-color: #aa00ff;
+  color: white;
+  width: 26vh;
 }
 
-#b5 {
-    background-color: #aa00ff;
-    color: white;
-
+@media (max-width: 575.98px) {
+  .jsonnavbar .buttons {
+    float: left;
+    margin-left: -17px;
+  }
 }

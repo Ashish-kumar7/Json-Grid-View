@@ -19,9 +19,9 @@ spark = SparkSession.builder \
     .appName("Learning_Spark") \
     .getOrCreate()
 
-from pyspark.sql import HiveContext
-sc = spark.sparkContext
-hiveCtx = HiveContext(sc)
+# from pyspark.sql import HiveContext
+# sc = spark.sparkContext
+# hiveCtx = HiveContext(sc)
 
 # 1. convert into csv than load it using spark and save the dataframe into hdfs
 # 2. save the csv file into hdfs
@@ -48,5 +48,5 @@ def saveFile(DF):
     param=Hadoop_URL_String+file_name
     
     df.write.format("parquet").mode("overwrite").save(param)
-    df_load = spark.read.load(param)
-    df_load.show()
+    # df_load = spark.read.load(param)
+    # df_load.show()
