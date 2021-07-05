@@ -372,13 +372,13 @@ def convertFile():
         extension = request.form['content_type']
         # Generate CSV
         if extension == "csv":
-            DF.to_csv(CSV_FILENAME + '.csv')
+            PreviewDF.to_csv(CSV_FILENAME + '.csv')
             socketio.emit('progress', 80, broadcast=True)
             return send_file(CSV_FILENAME + '.csv')
 
         # Generate XLSX
         if extension == "excel":
-            DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+            PreviewDF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
             socketio.emit('progress', 80, broadcast=True)
             return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
 
