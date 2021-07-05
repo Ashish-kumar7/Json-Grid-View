@@ -372,34 +372,34 @@ def convertFile():
         extension = request.form['content_type']
         # Generate CSV
         if extension == "csv":
-            DF.to_csv(CSV_FILENAME + '.csv')
+            PreviewDF.to_csv(CSV_FILENAME + '.csv')
             socketio.emit('progress', 80, broadcast=True)
             return send_file(CSV_FILENAME + '.csv')
 
         # Generate XLSX
         if extension == "excel":
-            DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+            PreviewDF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
             socketio.emit('progress', 80, broadcast=True)
             return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
 
         # Generate SQL Database, Table
         if extension == "hive":
-            # startTime = time.time()
-            # sql_engine = sqlalchemy.create_engine(
-            #     'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
-            # sqlite_connection = sql_engine.connect()
+            startTime = time.time()
+            sql_engine = sqlalchemy.create_engine(
+                'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
+            sqlite_connection = sql_engine.connect()
 
-            # print("Conenction Made to SQL")
+            print("Conenction Made to SQL")
 
             # if data_type == 1 :
             #     DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
             # else :
-            #     PreviewDF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+            PreviewDF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
 
-            # print("\n\nTABLE\n")
-            # # print(engine.execute("SELECT * FROM " + tableName).fetchall())
-            # sqlite_connection.close()
-            # print("Time to gen db : ", time.time() - startTime)
+            print("\n\nTABLE\n")
+            # print(engine.execute("SELECT * FROM " + tableName).fetchall())
+            sqlite_connection.close()
+            print("Time to gen db : ", time.time() - startTime)
 
             # startTime = time.time()
             # print("Total time taken : ", startTime - initTime)
@@ -412,11 +412,6 @@ def convertFile():
             #         PreviewDF.to_csv('test.csv')
             #         hadoopstorage.saveFile(PreviewDF)
 
-            # code to convert csv file and saving it to hdfs
-            # df = pd.read_csv('generatedCsvFile.csv')
-            # df.to_parquet("/test_parquet", compression="GZIP")
-            # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
-            # subprocess.call(hdfs_cmd, shell=True)
             return send_file(SQL_DB_NAME + '.db')
 
     except Exception as e:

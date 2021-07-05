@@ -12,11 +12,16 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     maxWidth: 360,
-    backgroundColor: "yellow",
+    backgroundColor: "#9575cd",
+    color:"black",
   },
   colVal:{
     fontWeight: "bold",
     paddingTop: "4vh",
+  },
+  textBox:{
+    width:"80%",
+    
   },
 }));
 
@@ -148,12 +153,14 @@ const SplitModal = (props) => {
         onChange={(event) => splitColListhandler(event, number)}
       >
         <Col>
-          <Form.Label>Column {number + 1} Name:</Form.Label>
-          <Form.Control required type="text" placeholder="Column Value" />
+          <Form.Label> Enter Column {number + 1} Name:</Form.Label>
+          <Form.Control className={classes.textBox} required type="text" placeholder="Column Value" />
         </Col>
         <Col>
           <ListItem>
-            <p className={classes.colVal}> {splitdata[colWithIdx[selectedIndex]]["columns"][number]}</p>
+            <label className={classes.colVal}>View Column {number + 1} Name: {splitdata[colWithIdx[selectedIndex]]["columns"][number]}</label>
+            
+           
           </ListItem>
         </Col>
       </Row>
@@ -197,7 +204,7 @@ const SplitModal = (props) => {
       })
       .catch((err) => {
         props.closeFunc();
-        alert("Server not started");
+        alert("Error in Split" );
         console.log(err);
       });
   };
@@ -233,12 +240,13 @@ const SplitModal = (props) => {
                     No. of Splits for " {colWithIdx[selectedIndex]} "
                   </Form.Label>
                   <Col lg="1">
-                    <button onClick={(event) => decreasehandler(event)}>
+                    <button className="valueButton" onClick={(event) => decreasehandler(event)}>
                       -
                     </button>
                   </Col>
                   <Col lg="3">
                     <Form.Control
+                      className={classes.textBox}
                       required
                       type="number"
                       placeholder="First name"
@@ -249,7 +257,7 @@ const SplitModal = (props) => {
                     />
                   </Col>
                   <Col>
-                    <button onClick={(event) => increasehandler(event)}>
+                    <button className="valueButton" onClick={(event) => increasehandler(event)}>
                       +
                     </button>
                   </Col>
@@ -261,6 +269,7 @@ const SplitModal = (props) => {
                     Enter delimeter for " {colWithIdx[selectedIndex]} " to split
                   </Form.Label>
                   <Form.Control
+                  className={classes.textBox}
                     required
                     type="text"
                     value={splitdata[colWithIdx[selectedIndex]]["separator"]}
