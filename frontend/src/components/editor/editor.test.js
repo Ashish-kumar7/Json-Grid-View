@@ -34,6 +34,3 @@ it('able to find the <textarea> element', () => {
 it('able to find the count of <textarea> element', () => {
     expect(shallowWrapper.find('textarea').length).toBe(1);
 });
-
-
-

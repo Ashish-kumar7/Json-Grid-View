@@ -37,7 +37,7 @@ it('able to find the <button> element', () => {
 
 //Find the count of <button> element
 it('able to find the count of <button> element', () => {
-    expect(shallowWrapper.find('button').length).toBe(5);
+    expect(shallowWrapper.find('button').length).toBe(4);
 });
 
 // Find the <nav> element
@@ -69,4 +69,3 @@ it('able to find the <form> element', () => {
 it('able to find the count of <form> element', () => {
     expect(shallowWrapper.find('form').length).toBe(1);
 });
-
