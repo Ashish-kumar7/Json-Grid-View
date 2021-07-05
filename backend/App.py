@@ -290,7 +290,11 @@ def resetData():
         tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
 
     response = jsonify(
+<<<<<<< HEAD
         tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE,columns=list(PreviewDF.columns))
+=======
+        tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=list(PreviewDF.columns))
+>>>>>>> 7182aab3e15499065ae0135a453bff19e71efda7
 
     return response
 
@@ -344,7 +348,7 @@ def splitColumns():
         queryDict = dict(json.loads(request.form['split_dict']))
         print("res\n\n\n\n\n\n" , queryDict)
         
-        PreviewDF = utilities.splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True)
+        PreviewDF = utilities.splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True, FILL_MISSING= FILL_MISSING_WITH)
 
         tableCols = []
         for c in PreviewDF.columns:
