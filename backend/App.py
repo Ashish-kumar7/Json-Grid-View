@@ -344,7 +344,7 @@ def splitColumns():
         queryDict = dict(json.loads(request.form['split_dict']))
         print("res\n\n\n\n\n\n" , queryDict)
         
-        PreviewDF = utilities.splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True)
+        PreviewDF = utilities.splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True, FILL_MISSING= FILL_MISSING_WITH)
 
         tableCols = []
         for c in PreviewDF.columns:
