@@ -142,10 +142,10 @@ const NewPreviewPage = () => {
   const classes = useStyles();
   // filters for grid for autocomplete filter
   const [filters, setFilters] = useState({});
-  const filteredRows = getRows(gridRows, filters);
+  let filteredRows = getRows(gridRows, filters);
   // filters for grid for multiselect filter
   const [filters2, setFilters2] = useState({});
-  const filteredRows2 = getRows(gridRows, filters2);
+  let filteredRows2 = getRows(gridRows, filters2);
   // store first 1000 rows of dataframe
   const [resultRows, setResultRows] = useState(initialDataFrame.rows);
   // store download content of file when received from backend
@@ -177,7 +177,14 @@ const NewPreviewPage = () => {
     history.push("/");
   }
 
-
+  useEffect(()=>{
+    setGridRows(initialDataFrame.dfrow);
+    setGridRows1(initialDataFrame.dfrow);
+    setGridCols(initialDataFrame.dfcol);
+    setGridCol1(initialDataFrame.dfcol);
+    setResultTotalRecords(initialDataFrame.records);
+    setResultRows(initialDataFrame.rows);
+  })
 
   // for checking if page is reloaded or not - if reloaded display an alert
   useEffect(() => {
@@ -185,7 +192,7 @@ const NewPreviewPage = () => {
     return () => {
       window.removeEventListener("beforeunload", alertUser);
     };
-  }, []);
+  },[]);
   const alertUser = (e) => {
     e.preventDefault();
     e.returnValue = "";
@@ -342,7 +349,8 @@ const NewPreviewPage = () => {
   };
 
   // function called when reset button is clicked
-  const resetHandler = () => {
+  const resetHandler = (event) => {
+    event.preventDefault();
     const formData = new FormData();
     formData.set("reset", "true");
     axios
@@ -350,11 +358,17 @@ const NewPreviewPage = () => {
       .then((response) => {
         //resets the data in grid to initial dataframe
         if (response.status == 200) {
-          setGridRows(response.data.tableRows);
-          setGridCols(response.data.tableCols);
-          setGridCol1(response.data.tableCols);
-          setResultTotalRecords(response.data.total_records);
-          setResultRows(response.data.rows_per_page);
+          // setGridRows(initialDataFrame.dfrow);
+          // setGridCols(initialDataFrame.dfcol);
+          // setGridCol1(initialDataFrame.dfcol);
+          // setResultTotalRecords(initialDataFrame.records);
+          // setResultRows(initialDataFrame.rows);
+          //  filteredRows2 = getRows(gridRows, filters2);
+          //  filteredRows = getRows(gridRows, filters);
+          initialDataFrame.dfcol = response.data.tableCols;
+          initialDataFrame.dfrow = response.data.tableRows;
+          initialDataFrame.rows = response.data.rows_per_page;
+          initialDataFrame.records = response.data.total_records;
           initialDataFrame.cols = response.data.columns;
           initialDataFrame.splitDict = {};
           initialDataFrame.searchColauto = {};
@@ -368,6 +382,8 @@ const NewPreviewPage = () => {
               columns: ["First Column"],
             };
           }
+          
+         setState({});
         } else {
           alert("Reset not performed");
         }
@@ -488,7 +504,7 @@ const NewPreviewPage = () => {
                   title={"Reset"}
                   classId={"workButton"}
                   id={"btn1"}
-                  clickFunc={resetHandler}
+                  clickFunc={(event)=>resetHandler(event)}
                 ></Button>
               </Col>
               <Col lg="10 " xs="8">

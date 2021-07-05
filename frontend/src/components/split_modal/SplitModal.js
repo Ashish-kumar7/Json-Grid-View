@@ -207,7 +207,7 @@ const SplitModal = (props) => {
       })
       .catch((err) => {
         props.closeFunc();
-        alert("Error in Split" );
+        alert("Could not perform split, please check your data again!!" );
         console.log(err);
       });
   };
