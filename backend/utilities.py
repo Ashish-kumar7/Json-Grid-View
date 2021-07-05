@@ -22,7 +22,6 @@ __FILL_MISSING_WITH = 'null'
 __ADD_INDEX_FOR_LIST = False
 __INDEX_FOR_LIST_SUFFIX = 'INDEX'
 
-
 # isScalarData(data):
 #     Working:    Checks if data is scalar.
 #     Parameters: data: (list, dict, str, int, float, None)
@@ -635,6 +634,8 @@ def splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True) :
 #                     Write(cdf, row, colName, colTree, {}, __NULL)
 #                 else:
 #                     Write(cdf, row, colName, colTree, data[noPreCol], __NULL)
+
+#------------------------------------------------------------------------------------------------------------------
 
 # WriteToDF(cdf, data, colTree) :
 #     Working:    Writes data in Pandas-dataframe by calling Write
