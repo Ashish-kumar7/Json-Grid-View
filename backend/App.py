@@ -32,8 +32,8 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Constants
 
 # File Constants
-ELECTRON_PATH = ""                      # Use for dev 
-# ELECTRON_PATH = os.path.abspath(os.getcwd()) + "\\GeneratedFiles\\"   # Use for production
+# ELECTRON_PATH = ""                      # Use for dev 
+ELECTRON_PATH = os.path.abspath(os.getcwd()) + "\\GeneratedFiles\\"   # Use for production
 CSV_FILENAME = 'generatedCsvFile'
 XLSX_FILENAME = 'generatedXlsxFile'
 SQL_DB_NAME = 'generatedDB'
@@ -230,7 +230,6 @@ def processFile():
         response = jsonify(tableRows=tableRows, tableCols=tableCols,
                            total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=list(PreviewDF.columns))
         socketio.emit('progress', 0, broadcast=True)
-        print(response)
         return response
 
     except Exception as e:
@@ -334,7 +333,6 @@ def splitColumns():
 
     try:
         queryDict = dict(json.loads(request.form['split_dict']))
-        print("res\n\n\n\n\n\n" , queryDict)
         
         PreviewDF = utilities.splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True, FILL_MISSING= FILL_MISSING_WITH)
 
@@ -356,8 +354,6 @@ def splitColumns():
 
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=list(PreviewDF.columns))
-        
-        print(response)
         return response
     except Exception as e:
         print(e)

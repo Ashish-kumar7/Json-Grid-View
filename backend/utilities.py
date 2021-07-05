@@ -462,11 +462,7 @@ def splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True, FILL_MISS
                 newColOrder.extend(queryDict[col]['columns'])
             else :
                 newColOrder.append(col)
-        print(PreviewDF.head())
         PreviewDF = PreviewDF[newColOrder]
-        print(PreviewDF.head())
-    
-    print("return", PreviewDF.head())
     
     return pd.DataFrame(PreviewDF)
 

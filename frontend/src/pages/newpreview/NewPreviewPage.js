@@ -34,7 +34,6 @@ const { MultiSelectFilter } = Filters;
 // function to handle autocomplete filter -  stores search value to process on whole data
 const handleFilterChange = (filter) => (filters) => {
   initialDataFrame.searchColauto[filter.column.key] = filter.filterTerm;
-  console.log(initialDataFrame.searchColauto);
   const newFilters = { ...filters };
   if (filter.filterTerm) {
     newFilters[filter.column.key] = filter;
@@ -180,16 +179,16 @@ const NewPreviewPage = () => {
 
 
   // for checking if page is reloaded or not - if reloaded display an alert
-  useEffect(() => {
-    window.addEventListener("beforeunload", alertUser);
-    return () => {
-      window.removeEventListener("beforeunload", alertUser);
-    };
-  }, []);
-  const alertUser = (e) => {
-    e.preventDefault();
-    e.returnValue = "";
-  };
+  // useEffect(() => {
+  //   window.addEventListener("beforeunload", alertUser);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", alertUser);
+  //   };
+  // }, []);
+  // const alertUser = (e) => {
+  //   e.preventDefault();
+  //   e.returnValue = "";
+  // };
 
   // function called when autocomplete filter button is clicked
   const filterhandler = () => {
@@ -200,7 +199,6 @@ const NewPreviewPage = () => {
     }
     setGridCols(newCol2);
     setGridCol1(newCol2);
-    console.log(gridCols);
     setShowFilter(true);
     setShowFilter1(false);
     setState({});
@@ -210,11 +208,11 @@ const NewPreviewPage = () => {
   const filter1handler = () => {
     //sets the grid according to multiselect filter
     const newCol2 = gridCols;
+
     for (var i = 0; i < gridCols.length; i++) {
       newCol2[i]["filterRenderer"] = MultiSelectFilter;
     }
     setGridCol1(newCol2);
-    console.log(gridCol1);
     setShowFilter1(true);
     setShowFilter(false);
     setState({});
@@ -223,13 +221,11 @@ const NewPreviewPage = () => {
   // listening from backend to update progress bar value
   socket.on("progress", (val) => {
     setUploadPercentage(val);
-    console.log(val);
   });
 
   // page change function for df preview , called when page number is clicked from paging tab
   const onPageChanged = (data) => {
     const { currentPage, totalPages, pageLimit } = data;
-    console.log("currentPage " + currentPage);
     // sends page number to backend
     const formData = new FormData();
     formData.set("page_number", currentPage);
@@ -254,7 +250,6 @@ const NewPreviewPage = () => {
   // this function is called when any of the convert button is clicked
   const handleConversion = (val) => {
     if (disable) {
-      console.log("disable true");
     } else {
       setShowDownload(false);
       setDisable(true);
@@ -321,7 +316,7 @@ const NewPreviewPage = () => {
     axios
       .post("http://localhost:5000/api/query", formData)
       .then((response) => {
-        console.log(response);
+        console.log(response.status);
         if (
           response.data &&
           response.data.message &&
@@ -351,10 +346,14 @@ const NewPreviewPage = () => {
         //resets the data in grid to initial dataframe
         if (response.status == 200) {
           setGridRows(response.data.tableRows);
+          // initialDataFrame.gridRows = response.data.tableRows;
+          
           setGridCols(response.data.tableCols);
           setGridCol1(response.data.tableCols);
           setResultTotalRecords(response.data.total_records);
           setResultRows(response.data.rows_per_page);
+          setGridRows(response.data.tableRows);
+          setGridRows1(response.data.tableRows);
           initialDataFrame.cols = response.data.columns;
           initialDataFrame.splitDict = {};
           initialDataFrame.searchColauto = {};
