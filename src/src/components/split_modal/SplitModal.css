@@ -1,0 +1,8 @@
+.splitcol {
+    overflow-x: scroll;
+}
+
+.splitvalues {
+    max-height: 40vh;
+    overflow-y: scroll;
+}
