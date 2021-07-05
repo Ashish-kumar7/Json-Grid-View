@@ -433,7 +433,7 @@ def GenReactDataGridRows(tableRows, df, ROWS_PER_PAGE, SELECTED_PAGE):
             tableRow[colName] = str(tableRow[colName])
 
 
-def splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True) :
+def splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True, FILL_MISSING = '') :
     oldColOrder = list(PreviewDF.columns)
     for colName in queryDict:
         delim = queryDict[colName]['separator']
@@ -450,6 +450,7 @@ def splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True) :
                 PreviewDF[ colName ].str.split( delim , expand=True, n= splits-1 )
                 .rename(columns={k: col for k, col in enumerate(splitColList)})
             )
+            exploded.fillna(FILL_MISSING, inplace=True)
             PreviewDF = PreviewDF.join(exploded)
             PreviewDF.drop([colName] , axis = 1, inplace= True)
 
