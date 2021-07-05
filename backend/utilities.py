@@ -22,7 +22,6 @@ __FILL_MISSING_WITH = 'null'
 __ADD_INDEX_FOR_LIST = False
 __INDEX_FOR_LIST_SUFFIX = 'INDEX'
 
-
 # isScalarData(data):
 #     Working:    Checks if data is scalar.
 #     Parameters: data: (list, dict, str, int, float, None)
@@ -434,6 +433,41 @@ def GenReactDataGridRows(tableRows, df, ROWS_PER_PAGE, SELECTED_PAGE):
             tableRow[colName] = str(tableRow[colName])
 
 
+def splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True) :
+    oldColOrder = list(PreviewDF.columns)
+    for colName in queryDict:
+        delim = queryDict[colName]['separator']
+        splitColList = queryDict[colName]['columns']
+        splits = int(queryDict[colName]['split'])
+        if delim != "":
+            # Split and return error if k splits not possible
+            # PreviewDF[splitColList] = PreviewDF[colName].str.split(
+            #     delim, n=splits-1, expand=True)
+            # PreviewDF.drop([colName], axis=1, inplace=True)
+
+            # Split and fill None if k splits not possible
+            exploded = (
+                PreviewDF[ colName ].str.split( delim , expand=True, n= splits-1 )
+                .rename(columns={k: col for k, col in enumerate(splitColList)})
+            )
+            PreviewDF = PreviewDF.join(exploded)
+            PreviewDF.drop([colName] , axis = 1, inplace= True)
+
+    # Reorder columns 
+    if keepColOrder : 
+        newColOrder = []
+        for col in oldColOrder : 
+            if (col in queryDict) and queryDict[col]['separator'] != "" : 
+                newColOrder.extend(queryDict[col]['columns'])
+            else :
+                newColOrder.append(col)
+        print(PreviewDF.head())
+        PreviewDF = PreviewDF[newColOrder]
+        print(PreviewDF.head())
+    
+    print("return", PreviewDF.head())
+    
+    return pd.DataFrame(PreviewDF)
 
 # ------------------------------------------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------------------------------------------
@@ -600,6 +634,8 @@ def GenReactDataGridRows(tableRows, df, ROWS_PER_PAGE, SELECTED_PAGE):
 #                     Write(cdf, row, colName, colTree, {}, __NULL)
 #                 else:
 #                     Write(cdf, row, colName, colTree, data[noPreCol], __NULL)
+
+#------------------------------------------------------------------------------------------------------------------
 
 # WriteToDF(cdf, data, colTree) :
 #     Working:    Writes data in Pandas-dataframe by calling Write

@@ -32,9 +32,6 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Constants
 
 # File Constants
-# ELECTRON_PATH = ""                      # Use for dev 
-ELECTRON_PATH = os.path.abspath(os.getcwd()) + "\\GeneratedFiles\\"   # Use for production
-
 CSV_FILENAME = 'generatedCsvFile'
 XLSX_FILENAME = 'generatedXlsxFile'
 SQL_DB_NAME = 'generatedDB'
@@ -68,11 +65,15 @@ columnListOrd = ''
 initTime = ''
 
 # Using SocketIO for updating progress-bar
+
+
 @socketio.on('connect')
 def connected():
     print('connected with socketio')
 
 # Custom JSON Encoder for Numpy data types
+
+
 class NumpyEncoder(json.JSONEncoder):
     """ Custom encoder for numpy data types """
 
@@ -100,22 +101,25 @@ class NumpyEncoder(json.JSONEncoder):
 
         return json.JSONEncoder.default(self, obj)
 
+
 # Set default json_encoder to NumpyEncoder
 app.json_encoder = NumpyEncoder
 
 # Route for loading Json-data
+
+
 @app.route('/api/upload', methods=['POST'])
 @cross_origin()
 def uploadFile():
     global jsonData
 
     # Delete existing files
-    try : 
-        utilities.DeleteIfExists(ELECTRON_PATH + SQL_DB_NAME + '.db')
-        utilities.DeleteIfExists(ELECTRON_PATH + CSV_FILENAME + '.csv')
-        utilities.DeleteIfExists(ELECTRON_PATH + XLSX_FILENAME + '.xlsx')
-    except Exception as e :
-        print("Exception while deleting " , e)
+    try:
+        utilities.DeleteIfExists(SQL_DB_NAME + '.db')
+        utilities.DeleteIfExists(CSV_FILENAME + '.csv')
+        utilities.DeleteIfExists(XLSX_FILENAME + '.xlsx')
+    except Exception as e:
+        print("Exception while deleting ", e)
 
     try:
         type = request.form['input_type']
@@ -139,6 +143,8 @@ def uploadFile():
         return response
 
 # Process json-data and generate schema, data-dict, pandas-dataframe
+
+
 @app.route('/api/process', methods=['POST'])
 @cross_origin()
 def processFile():
@@ -208,7 +214,7 @@ def processFile():
 
         startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
-            'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
+            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
 
         DF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
@@ -216,19 +222,19 @@ def processFile():
         sqlite_connection.close()
 
         socketio.emit('progress', 90, broadcast=True)
-        
+
         # html_string = utilities.GenPageHTML(df = PreviewDF, Page=1, ROWS_PER_PAGE=ROWS_PER_PAGE)
         TOTAL_PAGES = ceil(PreviewDF.shape[0]/ROWS_PER_PAGE)
         # table = PreviewDF.iloc[startRow : endRow][:].to_dict()
 
         tableCols = []
-        for c in PreviewDF.columns :
-            tableCols.append({'key' : c , 'name' : c})
-        
-        tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
-        # print(tableRows)
+        for c in PreviewDF.columns:
+            tableCols.append({'key': c, 'name': c})
 
+        tableRows = []
+        utilities.GenReactDataGridRows(
+            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
+        # print(tableRows)
         response = jsonify(tableRows=tableRows, tableCols=tableCols,
                            total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=list(PreviewDF.columns))
         socketio.emit('progress', 0, broadcast=True)
@@ -240,6 +246,8 @@ def processFile():
         return jsonify({'message:', 'error'})
 
 # Returns data for selected_page in preview-page
+
+
 @app.route('/api/page', methods=['POST'])
 @cross_origin()
 def returnDataFrame():
@@ -248,11 +256,12 @@ def returnDataFrame():
         page = max(page, 1)
 
         tableCols = []
-        for c in PreviewDF.columns :
-            tableCols.append({'key' : c , 'name' : c})
+        for c in PreviewDF.columns:
+            tableCols.append({'key': c, 'name': c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = page)
+        utilities.GenReactDataGridRows(
+            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=page)
 
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
@@ -263,6 +272,8 @@ def returnDataFrame():
         return jsonify({'message:', 'error'})
 
 # API to reset Preview-Table to Json-Table
+
+
 @app.route('/api/dataReset', methods=['POST'])
 @cross_origin()
 def resetData():
@@ -271,20 +282,23 @@ def resetData():
     PreviewDF = DF.copy()
 
     tableCols = []
-    for c in PreviewDF.columns :
-        tableCols.append({'key' : c , 'name' : c})
+    for c in PreviewDF.columns:
+        tableCols.append({'key': c, 'name': c})
 
     tableRows = []
-    utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
-    
+    utilities.GenReactDataGridRows(
+        tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
+
     response = jsonify(
         tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
 
     return response
 
-# API to query on full data 
+# API to query on full data
 # Supports :    auto-complete filter
 #               multi-select filter
+
+
 @app.route('/api/searchRecord', methods=['POST'])
 @cross_origin()
 def searchRecords():
@@ -293,21 +307,22 @@ def searchRecords():
 
     try:
         filter_type = request.form['filter_type']
-        if filter_type == "autoComplete" :
+        if filter_type == "autoComplete":
             queryDict = dict(json.loads(request.form['search_dict_auto']))
             PreviewDF = utilities.queryUsingForm(PreviewDF, queryDict)
 
-        elif filter_type == "multiSelect" :
+        elif filter_type == "multiSelect":
             queryDict = dict(json.loads(request.form['search_dict_multi']))
             PreviewDF = utilities.queryUsingDict(PreviewDF, queryDict)
 
         tableCols = []
-        for c in PreviewDF.columns :
-            tableCols.append({'key' : c , 'name' : c})
+        for c in PreviewDF.columns:
+            tableCols.append({'key': c, 'name': c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
-        
+        utilities.GenReactDataGridRows(
+            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
+
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
 
@@ -316,8 +331,9 @@ def searchRecords():
         print(e)
         return jsonify({'message:', 'error'})
 
+# API to split columns
 
-# API to split columns  
+
 @app.route('/api//splitQuery', methods=['POST'])
 @cross_origin()
 def splitColumns():
@@ -326,31 +342,29 @@ def splitColumns():
 
     try:
         queryDict = dict(json.loads(request.form['split_dict']))
-
-        for colName in queryDict : 
-            delim = queryDict[colName]['delimiter']
-            splitColList = queryDict[colName]['splitColList']
-            splits = queryDict[colName]['splits']
-
-            PreviewDF[splitColList] = PreviewDF[colName].str.split(delim, n = splits-1, expand = True)
-            PreviewDF.drop([colName], axis =1 , inplace = True)
+        print("res\n\n\n\n\n\n" , queryDict)
         
+        PreviewDF = utilities.splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True)
+
         tableCols = []
-        for c in PreviewDF.columns :
-            tableCols.append({'key' : c , 'name' : c})
+        for c in PreviewDF.columns:
+            tableCols.append({'key': c, 'name': c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
-        
-        response = jsonify(
-            tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+        utilities.GenReactDataGridRows(
+            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=1)
 
+        response = jsonify(
+            tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE, columns=list(PreviewDF.columns))
+        print(response)
         return response
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
 
 # API to generate csv, xlsx, db files and save data to hadoop
+
+
 @app.route('/api/convert', methods=['POST'])
 @cross_origin()
 def convertFile():
@@ -358,15 +372,15 @@ def convertFile():
         extension = request.form['content_type']
         # Generate CSV
         if extension == "csv":
-            DF.to_csv(ELECTRON_PATH + CSV_FILENAME + '.csv')
+            DF.to_csv(CSV_FILENAME + '.csv')
             socketio.emit('progress', 80, broadcast=True)
-            return send_file(ELECTRON_PATH + CSV_FILENAME + '.csv')
+            return send_file(CSV_FILENAME + '.csv')
 
         # Generate XLSX
         if extension == "excel":
-            DF.to_excel(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+            DF.to_excel(XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
             socketio.emit('progress', 80, broadcast=True)
-            return send_file(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
+            return send_file(XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
 
         # Generate SQL Database, Table
         if extension == "hive":
@@ -398,18 +412,20 @@ def convertFile():
             #         PreviewDF.to_csv('test.csv')
             #         hadoopstorage.saveFile(PreviewDF)
 
-                # code to convert csv file and saving it to hdfs
-                # df = pd.read_csv('generatedCsvFile.csv')
-                # df.to_parquet("/test_parquet", compression="GZIP")
-                # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
-                # subprocess.call(hdfs_cmd, shell=True)
-            return send_file(ELECTRON_PATH + SQL_DB_NAME + '.db')
+            # code to convert csv file and saving it to hdfs
+            # df = pd.read_csv('generatedCsvFile.csv')
+            # df.to_parquet("/test_parquet", compression="GZIP")
+            # hdfs_cmd = "hadoop fs -put /test_parquet /hbase/storedCSV"
+            # subprocess.call(hdfs_cmd, shell=True)
+            return send_file(SQL_DB_NAME + '.db')
 
     except Exception as e:
         print(e)
         return jsonify({'message:', 'error'})
 
 # API to run sql-query on data
+
+
 @app.route('/api/query', methods=['POST'])
 @cross_origin()
 def fetchQueryData():
@@ -418,7 +434,7 @@ def fetchQueryData():
         queryText = request.form['query_text']
         startTime = time.time()
         sql_engine = sqlalchemy.create_engine(
-            'sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
+            'sqlite:///' + SQL_DB_NAME + '.db', echo=False)
         sqlite_connection = sql_engine.connect()
 
         PreviewDF = pd.read_sql_query(queryText, sqlite_connection)
@@ -426,11 +442,12 @@ def fetchQueryData():
 
         page = 1
         tableCols = []
-        for c in PreviewDF.columns :
-            tableCols.append({'key' : c , 'name' : c})
+        for c in PreviewDF.columns:
+            tableCols.append({'key': c, 'name': c})
 
         tableRows = []
-        utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = page)
+        utilities.GenReactDataGridRows(
+            tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE=page)
         response = jsonify(
             tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
 
@@ -439,6 +456,7 @@ def fetchQueryData():
     except Exception as e:
         print(e)
         return jsonify(message="Error: " + str(e))
+
 
 # Main
 if __name__ == "__main__":
@@ -477,7 +495,6 @@ if __name__ == "__main__":
 #     except Exception as e:
 #         print(e)
 #         return jsonify({'message:', 'error'})
-
 
 
 # API to perform multi-select query on full-data
@@ -559,5 +576,3 @@ if __name__ == "__main__":
 #         print(e)
 #         response = jsonify(message="Error: " + str(e))
 #         return response
-
-
