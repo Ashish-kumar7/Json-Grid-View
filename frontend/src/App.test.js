@@ -15,11 +15,6 @@ it('should return a <div>', () => {
     expect(shallowWrapper.type()).toEqual('div');
 });
 
-// // Find the text of <a> element
-// it('able to find the text of <a> element ', () => {
-//     expect(shallowWrapper.find('a').text()).toEqual('JSON Grid Viewer');
-// })
-
 // Find the <div> element
 it('able to find the <div> element', () => {
     expect(shallowWrapper.find('div').exists()).toEqual(true);

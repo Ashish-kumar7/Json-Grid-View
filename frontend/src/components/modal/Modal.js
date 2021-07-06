@@ -7,7 +7,7 @@ import tab001 from "../../assets/tab001.PNG";
 import tab002 from "../../assets/tab002.PNG";
 import tab003 from "../../assets/tab003.PNG";
 import initialDF from "../../global_variable";
-import Button from "../button/Button";
+import Button from "../button/Button";  
 import "./Modal.css";
 import { ProgressBar } from "react-bootstrap";
 import io from "socket.io-client";
