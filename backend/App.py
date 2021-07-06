@@ -286,6 +286,14 @@ def resetData():
 
     PreviewDF = DF.copy()
 
+    # Gen SQL DB again
+    utilities.DeleteIfExists(ELECTRON_PATH + SQL_DB_NAME + '.db')
+    
+    sql_engine = sqlalchemy.create_engine('sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
+    sqlite_connection = sql_engine.connect()
+    PreviewDF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+    sqlite_connection.close()
+    
     tableCols = []
     for c in PreviewDF.columns :
         tableCols.append({'key' : c , 'name' : c})
@@ -294,7 +302,8 @@ def resetData():
     utilities.GenReactDataGridRows(tableRows, PreviewDF, ROWS_PER_PAGE, SELECTED_PAGE = 1)
     
     response = jsonify(
-        tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE)
+        tableRows=tableRows, tableCols=tableCols, total_records=PreviewDF.shape[0], rows_per_page=ROWS_PER_PAGE,
+        columns=list(PreviewDF.columns))
 
     return response
 
@@ -345,8 +354,16 @@ def splitColumns():
         queryDict = dict(json.loads(request.form['split_dict']))
         print("res\n\n\n\n\n\n" , queryDict)
         
-        PreviewDF = utilities.splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True)
+        PreviewDF = utilities.splitAttributeUsingDict(PreviewDF, queryDict, keepColOrder = True, FILL_MISSING= FILL_MISSING_WITH)
 
+        # Gen SQL DB again
+        utilities.DeleteIfExists(ELECTRON_PATH + SQL_DB_NAME + '.db')
+
+        sql_engine = sqlalchemy.create_engine('sqlite:///' + ELECTRON_PATH + SQL_DB_NAME + '.db', echo=False)
+        sqlite_connection = sql_engine.connect()
+        PreviewDF.to_sql(SQL_TAB_NAME, sqlite_connection, if_exists='fail')
+        sqlite_connection.close()
+        
         tableCols = []
         for c in PreviewDF.columns:
             tableCols.append({'key': c, 'name': c})
@@ -372,7 +389,7 @@ def convertFile():
         # Generate CSV
         if extension == "csv":
             print("started CSV conversion....")
-            DF.to_csv(ELECTRON_PATH + CSV_FILENAME + '.csv')
+            PreviewDF.to_csv(ELECTRON_PATH + CSV_FILENAME + '.csv')
             print("Done CSV conversion....")
             socketio.emit('progress', 80, broadcast=True)
             return send_file(ELECTRON_PATH + CSV_FILENAME + '.csv')
@@ -380,7 +397,7 @@ def convertFile():
         # Generate XLSX
         if extension == "excel":
             print("started excel conversion....")
-            DF.to_excel(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
+            PreviewDF.to_excel(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', sheet_name=SHEET_NAME)
             print("Done excel conversion....")
             socketio.emit('progress', 80, broadcast=True)
             return send_file(ELECTRON_PATH + XLSX_FILENAME + '.xlsx', as_attachment=True, mimetype="EXCELMIME")
@@ -391,7 +408,7 @@ def convertFile():
 
             socketio.emit('progress', 10, broadcast=True)
             if HADOOP_INSTALLED:
-                DF.to_csv('test.csv')
+                PreviewDF.to_csv('test.csv')
                 socketio.emit('progress', 60, broadcast=True)
                 hadoopstorage.saveFile(DF)
                 socketio.emit('progress', 80, broadcast=True)
@@ -425,7 +442,7 @@ def fetchQueryData():
         page = 1
         
         tableCols = []
-        for c in columnListOrd :
+        for c in PreviewDF.columns :
             tableCols.append({'key' : c , 'name' : c})
 
         tableRows = []
