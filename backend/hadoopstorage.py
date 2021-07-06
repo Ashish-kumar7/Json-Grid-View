@@ -4,11 +4,11 @@ import time
 
 # Add the appropriate locations of the Hadoop and Java.
 
-# os.environ["JAVA_HOME"] = "C:\Progra~1\Java\jdk-12.0.1"
-# os.environ["SPARK_HOME"] = "C:\Spark"
+os.environ["JAVA_HOME"] = "C:\Progra~1\Java\jdk-12.0.1"
+os.environ["SPARK_HOME"] = "C:\Spark"
 #The user needs to add the path here in the line 10 and line 11 according to the directory of installation.
-os.environ["JAVA_HOME"] = "C:/Progra~1/Java/jdk1.8.0_65"
-os.environ["SPARK_HOME"] = "E:/hadoop-env/spark-3.0.2-bin-hadoop2.7"
+# os.environ["JAVA_HOME"] = "C:/Progra~1/Java/jdk1.8.0_65"
+# os.environ["SPARK_HOME"] = "E:/hadoop-env/spark-3.0.2-bin-hadoop2.7"
 
 import findspark
 findspark.init()
@@ -44,7 +44,7 @@ def saveFile(DF):
     timestr = time.strftime("%Y%m%d-%H%M%S")
     print (timestr)
     file_name="testFile" + timestr + ".parquet"
-    Hadoop_URL_String="hdfs://0.0.0.0:19000/"
+    Hadoop_URL_String="hdfs://localhost:9000/"
     param=Hadoop_URL_String+file_name
     
     df.write.format("parquet").mode("overwrite").save(param)

@@ -409,8 +409,8 @@ def convertFile():
             #         DF.to_csv('test.csv')
             #         hadoopstorage.saveFile(DF)
             #     else:
-            #         PreviewDF.to_csv('test.csv')
-            #         hadoopstorage.saveFile(PreviewDF)
+            PreviewDF.to_csv('test.csv')
+            hadoopstorage.saveFile(PreviewDF)
 
             # code to convert csv file and saving it to hdfs
             # df = pd.read_csv('generatedCsvFile.csv')
